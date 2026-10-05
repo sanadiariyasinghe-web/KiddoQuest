@@ -4,13 +4,38 @@ struct ContentView: View {
     @State private var navigationPath = NavigationPath()
     @AppStorage("has_seen_intro") private var hasSeenIntro: Bool = false
     @State private var showWelcomeScreen: Bool = true
+    @State private var playTime = PlayTimeTracker.shared
+    
+    /// How often the daily play-time clock is updated while the app is open.
+    private let playTimeCheckInterval: Duration = .seconds(20)
     
     var body: some View {
-        Group {
-            if showWelcomeScreen && !hasSeenIntro {
-                welcomeStartupView
-            } else {
-                mainNavigationView
+        ZStack {
+            Group {
+                if showWelcomeScreen && !hasSeenIntro {
+                    welcomeStartupView
+                } else {
+                    mainNavigationView
+                }
+            }
+            .accessibilityHidden(playTime.isLimitReached)
+            
+            // Daily limit reached: a calm break screen covers the whole app
+            if playTime.isLimitReached {
+                BreakTimeView {
+                    withAnimation(.easeInOut) {
+                        playTime.unlockForToday()
+                    }
+                }
+                .transition(.opacity)
+                .zIndex(1)
+            }
+        }
+        .animation(.easeInOut(duration: 0.6), value: playTime.isLimitReached)
+        .task {
+            while !Task.isCancelled {
+                try? await Task.sleep(for: playTimeCheckInterval)
+                playTime.tick()
             }
         }
     }

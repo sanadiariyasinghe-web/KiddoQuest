@@ -5,15 +5,11 @@ struct ParentSettingsView: View {
     
     // Parent Gate State
     @State private var isGateUnlocked: Bool = false
-    @State private var gateAnswer: String = ""
-    @State private var gateError: Bool = false
-    private let num1 = 5
-    private let num2 = 3
     
     // Settings toggles
     @AppStorage("sound_effects_enabled") private var soundEnabled: Bool = true
     @AppStorage(MusicService.settingsKey) private var musicEnabled: Bool = true
-    @AppStorage("session_limit_minutes") private var sessionLimitMinutes: Int = 20
+    @AppStorage(PlayTimeTracker.limitKey) private var sessionLimitMinutes: Int = PlayTimeTracker.defaultLimitMinutes
     @State private var showResetConfirmation: Bool = false
     
     var body: some View {
@@ -22,91 +18,17 @@ struct ParentSettingsView: View {
                 .ignoresSafeArea()
             
             if !isGateUnlocked {
-                parentGateView
+                ParentGateView {
+                    withAnimation(.spring()) {
+                        isGateUnlocked = true
+                    }
+                }
             } else {
                 settingsContentView
             }
         }
         .navigationTitle("Parent Settings")
         .navigationBarTitleDisplayMode(.inline)
-    }
-    
-    // MARK: - Parent Gate Security Screen
-    private var parentGateView: some View {
-        VStack(spacing: 24) {
-            ZStack {
-                Circle()
-                    .fill(Theme.ColorPalette.shapesPurple.opacity(0.15))
-                    .frame(width: 80, height: 80)
-                Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 40))
-                    .foregroundStyle(Theme.ColorPalette.shapesPurple)
-            }
-            
-            VStack(spacing: 8) {
-                Text("Grown-Ups Only")
-                    .font(Theme.Typography.title(size: 24))
-                    .foregroundStyle(Theme.ColorPalette.primaryText)
-                
-                Text("Please solve this math question to continue:")
-                    .font(Theme.Typography.body(size: 16))
-                    .foregroundStyle(Theme.ColorPalette.secondaryText)
-                    .multilineTextAlignment(.center)
-            }
-            
-            Text("\(num1) + \(num2) = ?")
-                .font(.system(size: 32, weight: .heavy, design: .rounded))
-                .foregroundStyle(Theme.ColorPalette.shapesPurple)
-                .padding(.vertical, 8)
-            
-            TextField("Answer", text: $gateAnswer)
-                .keyboardType(.numberPad)
-                .font(.system(size: 24, weight: .bold, design: .rounded))
-                .multilineTextAlignment(.center)
-                .frame(width: 140, height: 50)
-                .background(Theme.ColorPalette.cardBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(gateError ? Theme.ColorPalette.softRedWarning : Theme.ColorPalette.cardBorder, lineWidth: 2)
-                )
-            
-            if gateError {
-                Text("Please try again.")
-                    .font(Theme.Typography.caption())
-                    .foregroundStyle(Theme.ColorPalette.softRedWarning)
-            }
-            
-            Button {
-                checkGate()
-            } label: {
-                Text("Unlock Settings")
-                    .font(Theme.Typography.headline(size: 18))
-                    .foregroundStyle(.white)
-                    .frame(width: 200, height: 50)
-                    .background(Theme.ColorPalette.shapesPurple)
-                    .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.button))
-            }
-            .buttonStyle(BouncyButtonStyle())
-        }
-        .padding(24)
-        .background(Theme.ColorPalette.cardBackground)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
-        .shadow(color: .black.opacity(0.08), radius: 10, y: 5)
-        .padding(.horizontal, Theme.Spacing.large)
-    }
-    
-    private func checkGate() {
-        if Int(gateAnswer.trimmingCharacters(in: .whitespaces)) == (num1 + num2) {
-            withAnimation(.spring()) {
-                isGateUnlocked = true
-                gateError = false
-            }
-        } else {
-            withAnimation(.default) {
-                gateError = true
-            }
-        }
     }
     
     // MARK: - Settings Content
@@ -155,6 +77,13 @@ struct ParentSettingsView: View {
                         Text("No Limit").tag(0)
                     }
                     .pickerStyle(.segmented)
+                    .onChange(of: sessionLimitMinutes) { _, _ in
+                        PlayTimeTracker.shared.refresh()
+                    }
+                    
+                    Text("Played today: \(PlayTimeTracker.shared.minutesPlayedToday) min. When the limit is reached, KiddoQuest shows a calm break screen.")
+                        .font(Theme.Typography.caption())
+                        .foregroundStyle(Theme.ColorPalette.secondaryText)
                 }
                 .padding(20)
                 .background(Theme.ColorPalette.cardBackground)
