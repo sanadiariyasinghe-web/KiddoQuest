@@ -1,7 +1,7 @@
 import SwiftUI
 
 // MARK: - Round Results View
-// Shown when every game round finishes: score, stars, correct answers, a positive message,
+// Shown when every game round finishes: stars, correct answers, a positive message,
 // and big, clear next actions (Home / More Games) so children always know what to do next.
 
 struct RoundResultsView: View {
@@ -118,10 +118,6 @@ struct RoundResultsView: View {
             Text("This Round")
                 .font(Theme.Typography.headline(size: 22))
                 .foregroundStyle(Theme.ColorPalette.primaryText)
-            
-            summaryRow(icon: "sparkles", iconColor: Theme.ColorPalette.numbersYellow, label: "Score") {
-                Text("\(result.score)")
-            }
             
             summaryRow(icon: "star.circle.fill", iconColor: Theme.ColorPalette.starGold, label: "Stars") {
                 HStack(spacing: 4) {

@@ -38,13 +38,6 @@ struct ColoringGameView: View {
                         .font(Theme.Typography.headline(size: 15))
                         .foregroundStyle(Theme.ColorPalette.secondaryText)
                     Spacer()
-                    Text("Score: \(viewModel.score)")
-                        .font(Theme.Typography.headline(size: 16))
-                        .foregroundStyle(Theme.ColorPalette.primaryText)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(Theme.ColorPalette.cardBackground)
-                        .clipShape(Capsule())
                 }
                 .padding(.horizontal, Theme.Spacing.medium)
                 
@@ -137,6 +130,7 @@ struct ColoringGameView: View {
                 .buttonStyle(BouncyButtonStyle())
                 .disabled(viewModel.isFilled)
                 .accessibilityLabel("Paint \(option.name)")
+                .hintTarget(option.name == viewModel.currentTask.targetColorName)
             }
         }
     }

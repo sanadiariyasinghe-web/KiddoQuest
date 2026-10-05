@@ -93,13 +93,6 @@ struct CountingPopGameView: View {
             
             Spacer()
             
-            Text("Score: \(viewModel.score)")
-                .font(Theme.Typography.headline(size: 16))
-                .foregroundStyle(Theme.ColorPalette.primaryText)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(Theme.ColorPalette.cardBackground)
-                .clipShape(Capsule())
         }
         .padding(.horizontal, Theme.Spacing.medium)
     }
@@ -178,5 +171,6 @@ struct CountingPopGameView: View {
         .animatedFeedback(isSuccess: isOptionCorrect, isGentleRetry: isOptionRetry)
         .disabled(viewModel.isCorrect)
         .accessibilityLabel("Answer: \(option)")
+        .hintTarget(option == viewModel.targetCount)
     }
 }

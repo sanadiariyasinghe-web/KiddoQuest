@@ -15,13 +15,31 @@ struct GameFlowContainer<Content: View>: View {
     @ViewBuilder let content: () -> Content
     
     @State private var phase: GamePhase = .instructions
+    @State private var isShowingHint = false
+    @State private var lastInteraction = ContinuousClock.now
     
     /// Short pause so the child sees the success celebration before the results appear.
     private let celebrationDelay: Duration = .seconds(1.4)
+    /// The pointing hand appears shortly after play starts...
+    private let firstHintDelay: Duration = .seconds(0.8)
+    /// ...and again whenever the child hasn't tapped anything for this long.
+    private let idleHintDelay: Duration = .seconds(8)
+    private let hintDuration: Duration = .seconds(2.2)
     
     var body: some View {
         ZStack {
             content()
+                .overlayPreferenceValue(HintTargetKey.self) { anchor in
+                    GeometryReader { proxy in
+                        if isShowingHint, phase == .playing, !isFinished, let anchor {
+                            let target = proxy[anchor]
+                            HintHandView(color: instructions.themeColor)
+                                .position(x: target.midX, y: target.midY)
+                                .transition(.opacity)
+                        }
+                    }
+                }
+                .simultaneousGesture(TapGesture().onEnded { childInteracted() })
                 .blur(radius: phase == .playing ? 0 : 6)
                 .allowsHitTesting(phase == .playing)
                 .accessibilityHidden(phase != .playing)
@@ -47,6 +65,9 @@ struct GameFlowContainer<Content: View>: View {
             }
         }
         .navigationBarBackButtonHidden(phase == .results)
+        .task(id: phase) {
+            await runHintLoop()
+        }
         .onChange(of: isFinished) { _, finished in
             guard finished, phase == .playing else { return }
             Task {
@@ -55,6 +76,36 @@ struct GameFlowContainer<Content: View>: View {
                     phase = .results
                 }
             }
+        }
+    }
+    
+    // MARK: - Pointing-Hand Hints
+    /// Shows the hint once at the start of play, then again after each idle period.
+    private func runHintLoop() async {
+        guard phase == .playing else { return }
+        try? await Task.sleep(for: firstHintDelay)
+        await showHint()
+        while !Task.isCancelled, phase == .playing {
+            try? await Task.sleep(for: .seconds(1))
+            if ContinuousClock.now - lastInteraction >= idleHintDelay {
+                await showHint()
+            }
+        }
+    }
+    
+    private func showHint() async {
+        guard !Task.isCancelled, !isFinished else { return }
+        withAnimation(.easeIn(duration: 0.25)) { isShowingHint = true }
+        try? await Task.sleep(for: hintDuration)
+        withAnimation(.easeOut(duration: 0.25)) { isShowingHint = false }
+        lastInteraction = .now
+    }
+    
+    /// Any tap counts as activity and hides a hint that's on screen.
+    private func childInteracted() {
+        lastInteraction = .now
+        if isShowingHint {
+            withAnimation(.easeOut(duration: 0.2)) { isShowingHint = false }
         }
     }
     
