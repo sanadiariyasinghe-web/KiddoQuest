@@ -6,8 +6,28 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		F3D2584A3073C78D00B6134E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3D2583C3073C78C00B6134E;
+			remoteInfo = "KiddoQuest TV";
+		};
+		F3D258543073C78D00B6134E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3D2583C3073C78C00B6134E;
+			remoteInfo = "KiddoQuest TV";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* KiddoQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KiddoQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3D2583D3073C78C00B6134E /* KiddoQuest TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KiddoQuest TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3D258493073C78D00B6134E /* KiddoQuest TVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "KiddoQuest TVTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3D258533073C78D00B6134E /* KiddoQuest TVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "KiddoQuest TVUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +36,40 @@
 			path = KiddoQuest;
 			sourceTree = "<group>";
 		};
+		F3D2583E3073C78C00B6134E /* KiddoQuest TV */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "KiddoQuest TV";
+			sourceTree = "<group>";
+		};
+		F3D2584C3073C78D00B6134E /* KiddoQuest TVTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "KiddoQuest TVTests";
+			sourceTree = "<group>";
+		};
+		F3D258563073C78D00B6134E /* KiddoQuest TVUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "KiddoQuest TVUITests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		000000000000000130000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		F3D2583A3073C78C00B6134E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		F3D258463073C78D00B6134E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		F3D258503073C78D00B6134E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
 			);
@@ -31,6 +81,9 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000010 /* KiddoQuest */,
+				F3D2583E3073C78C00B6134E /* KiddoQuest TV */,
+				F3D2584C3073C78D00B6134E /* KiddoQuest TVTests */,
+				F3D258563073C78D00B6134E /* KiddoQuest TVUITests */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -39,6 +92,9 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000120 /* KiddoQuest.app */,
+				F3D2583D3073C78C00B6134E /* KiddoQuest TV.app */,
+				F3D258493073C78D00B6134E /* KiddoQuest TVTests.xctest */,
+				F3D258533073C78D00B6134E /* KiddoQuest TVUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,6 +120,66 @@
 			productReference = 000000000000000000000120 /* KiddoQuest.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F3D2583C3073C78C00B6134E /* KiddoQuest TV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3D2585F3073C78D00B6134E /* Build configuration list for PBXNativeTarget "KiddoQuest TV" */;
+			buildPhases = (
+				F3D258393073C78C00B6134E /* Sources */,
+				F3D2583A3073C78C00B6134E /* Frameworks */,
+				F3D2583B3073C78C00B6134E /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				F3D2583E3073C78C00B6134E /* KiddoQuest TV */,
+			);
+			name = "KiddoQuest TV";
+			productName = "KiddoQuest TV";
+			productReference = F3D2583D3073C78C00B6134E /* KiddoQuest TV.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F3D258483073C78D00B6134E /* KiddoQuest TVTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3D258603073C78D00B6134E /* Build configuration list for PBXNativeTarget "KiddoQuest TVTests" */;
+			buildPhases = (
+				F3D258453073C78D00B6134E /* Sources */,
+				F3D258463073C78D00B6134E /* Frameworks */,
+				F3D258473073C78D00B6134E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3D2584B3073C78D00B6134E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F3D2584C3073C78D00B6134E /* KiddoQuest TVTests */,
+			);
+			name = "KiddoQuest TVTests";
+			productName = "KiddoQuest TVTests";
+			productReference = F3D258493073C78D00B6134E /* KiddoQuest TVTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F3D258523073C78D00B6134E /* KiddoQuest TVUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3D258613073C78D00B6134E /* Build configuration list for PBXNativeTarget "KiddoQuest TVUITests" */;
+			buildPhases = (
+				F3D2584F3073C78D00B6134E /* Sources */,
+				F3D258503073C78D00B6134E /* Frameworks */,
+				F3D258513073C78D00B6134E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3D258553073C78D00B6134E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F3D258563073C78D00B6134E /* KiddoQuest TVUITests */,
+			);
+			name = "KiddoQuest TVUITests";
+			productName = "KiddoQuest TVUITests";
+			productReference = F3D258533073C78D00B6134E /* KiddoQuest TVUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -71,11 +187,22 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					F3D2583C3073C78C00B6134E = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					F3D258483073C78D00B6134E = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = F3D2583C3073C78C00B6134E;
+					};
+					F3D258523073C78D00B6134E = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = F3D2583C3073C78C00B6134E;
 					};
 				};
 			};
@@ -94,12 +221,30 @@
 			projectRoot = "";
 			targets = (
 				000000000000000100000000 /* KiddoQuest */,
+				F3D2583C3073C78C00B6134E /* KiddoQuest TV */,
+				F3D258483073C78D00B6134E /* KiddoQuest TVTests */,
+				F3D258523073C78D00B6134E /* KiddoQuest TVUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		000000000000000140000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		F3D2583B3073C78C00B6134E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		F3D258473073C78D00B6134E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		F3D258513073C78D00B6134E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -112,7 +257,35 @@
 			files = (
 			);
 		};
+		F3D258393073C78C00B6134E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		F3D258453073C78D00B6134E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		F3D2584F3073C78D00B6134E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F3D2584B3073C78D00B6134E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3D2583C3073C78C00B6134E /* KiddoQuest TV */;
+			targetProxy = F3D2584A3073C78D00B6134E /* PBXContainerItemProxy */;
+		};
+		F3D258553073C78D00B6134E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3D2583C3073C78C00B6134E /* KiddoQuest TV */;
+			targetProxy = F3D258543073C78D00B6134E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "KiddoQuest" */ = {
@@ -321,6 +494,194 @@
 			};
 			name = Release;
 		};
+		F3D258593073C78D00B6134E /* Debug configuration for PBXNativeTarget "KiddoQuest TV" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.KiddoQuest-TV";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		F3D2585A3073C78D00B6134E /* Release configuration for PBXNativeTarget "KiddoQuest TV" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.KiddoQuest-TV";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
+		F3D2585B3073C78D00B6134E /* Debug configuration for PBXNativeTarget "KiddoQuest TVTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.KiddoQuest-TVTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KiddoQuest TV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/KiddoQuest TV";
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		F3D2585C3073C78D00B6134E /* Release configuration for PBXNativeTarget "KiddoQuest TVTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.KiddoQuest-TVTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KiddoQuest TV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/KiddoQuest TV";
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
+		F3D2585D3073C78D00B6134E /* Debug configuration for PBXNativeTarget "KiddoQuest TVUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.KiddoQuest-TVUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = "KiddoQuest TV";
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		F3D2585E3073C78D00B6134E /* Release configuration for PBXNativeTarget "KiddoQuest TVUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.KiddoQuest-TVUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = "KiddoQuest TV";
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -337,6 +698,30 @@
 			buildConfigurations = (
 				000000000000000111000000 /* Debug configuration for PBXNativeTarget "KiddoQuest" */,
 				000000000000000112000000 /* Release configuration for PBXNativeTarget "KiddoQuest" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		F3D2585F3073C78D00B6134E /* Build configuration list for PBXNativeTarget "KiddoQuest TV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3D258593073C78D00B6134E /* Debug configuration for PBXNativeTarget "KiddoQuest TV" */,
+				F3D2585A3073C78D00B6134E /* Release configuration for PBXNativeTarget "KiddoQuest TV" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		F3D258603073C78D00B6134E /* Build configuration list for PBXNativeTarget "KiddoQuest TVTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3D2585B3073C78D00B6134E /* Debug configuration for PBXNativeTarget "KiddoQuest TVTests" */,
+				F3D2585C3073C78D00B6134E /* Release configuration for PBXNativeTarget "KiddoQuest TVTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		F3D258613073C78D00B6134E /* Build configuration list for PBXNativeTarget "KiddoQuest TVUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3D2585D3073C78D00B6134E /* Debug configuration for PBXNativeTarget "KiddoQuest TVUITests" */,
+				F3D2585E3073C78D00B6134E /* Release configuration for PBXNativeTarget "KiddoQuest TVUITests" */,
 			);
 			defaultConfigurationName = Release;
 		};
