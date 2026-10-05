@@ -84,8 +84,6 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Count floating yummy treats and pop the right number!",
             iconName: "1.circle.fill",
             gameType: .countingPop,
-            starsEarned: 3,
-            completionPercentage: 100,
             isUnlocked: true
         ),
         GameInfo(
@@ -95,8 +93,6 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Match number cards to the groups of cute objects.",
             iconName: "hand.draw.fill",
             gameType: .dragMatch,
-            starsEarned: 2,
-            completionPercentage: 60,
             isUnlocked: true
         ),
         
@@ -108,8 +104,6 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Match uppercase and lowercase letters together.",
             iconName: "textformat.abc",
             gameType: .dragMatch,
-            starsEarned: 2,
-            completionPercentage: 50,
             isUnlocked: true
         ),
         GameInfo(
@@ -119,8 +113,6 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Find and bubble-pop all the target letters!",
             iconName: "magnifyingglass.circle.fill",
             gameType: .letterHunt,
-            starsEarned: 1,
-            completionPercentage: 30,
             isUnlocked: true
         ),
         
@@ -132,8 +124,6 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Pick bright colors and fill in beautiful shapes!",
             iconName: "paintpalette.fill",
             gameType: .coloring,
-            starsEarned: 3,
-            completionPercentage: 100,
             isUnlocked: true
         ),
         GameInfo(
@@ -143,8 +133,6 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Drag dropping shapes into their matching bins.",
             iconName: "tray.2.fill",
             gameType: .shapeSort,
-            starsEarned: 2,
-            completionPercentage: 70,
             isUnlocked: true
         ),
         
@@ -156,8 +144,6 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Give each hungry animal the food it loves!",
             iconName: "carrot.fill",
             gameType: .feedAnimals,
-            starsEarned: 1,
-            completionPercentage: 25,
             isUnlocked: true
         ),
         GameInfo(

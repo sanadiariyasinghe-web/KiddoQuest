@@ -4,9 +4,12 @@ struct GameListView: View {
     let category: IslandCategory
     @Binding var navigationPath: NavigationPath
     
-    // Filter sample games for this category
+    // Games for this island, with stars and completion from saved Core Data progress
     var gamesForCategory: [GameInfo] {
-        GameInfo.sampleGames.filter { $0.category == category }
+        let progress = CoreDataManager.shared.progressByGame
+        return GameInfo.sampleGames
+            .filter { $0.category == category }
+            .map { ProgressSummary.decorated($0, with: progress) }
     }
     
     var body: some View {

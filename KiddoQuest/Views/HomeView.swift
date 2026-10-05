@@ -168,7 +168,7 @@ struct HomeView: View {
                 
                 // Stars Row
                 HStack(spacing: 3) {
-                    ForEach(0..<4) { index in
+                    ForEach(0..<progress.maxStars, id: \.self) { index in
                         Image(systemName: index < progress.stars ? "star.fill" : "star")
                             .font(.system(size: 14))
                             .foregroundStyle(index < progress.stars ? Theme.ColorPalette.starGold : Theme.ColorPalette.secondaryText.opacity(0.4))
@@ -192,7 +192,7 @@ struct HomeView: View {
             .shadow(color: category.themeColor.opacity(0.2), radius: 10, y: 5)
         }
         .buttonStyle(BouncyButtonStyle())
-        .accessibilityLabel("\(category.title), \(progress.percentage) percent complete, \(progress.stars) stars earned")
+        .accessibilityLabel("\(category.title), \(progress.percentage) percent complete, \(progress.stars) of \(progress.maxStars) stars earned")
     }
     
     // MARK: - AR Banner
