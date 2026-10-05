@@ -12,15 +12,8 @@ final class HomeViewModel {
         CoreDataManager.shared.currentProfile.totalStars
     }
     
-    // Island completion summaries
-    var categoryProgress: [IslandCategory: (stars: Int, percentage: Int, isUnlocked: Bool)] = [
-        .numbers: (stars: 3, percentage: 80, isUnlocked: true),
-        .letters: (stars: 2, percentage: 50, isUnlocked: true),
-        .shapes: (stars: 4, percentage: 100, isUnlocked: true),
-        .animals: (stars: 1, percentage: 25, isUnlocked: true)
-    ]
-    
-    func progressFor(category: IslandCategory) -> (stars: Int, percentage: Int, isUnlocked: Bool) {
-        categoryProgress[category] ?? (stars: 0, percentage: 0, isUnlocked: true)
+    /// Real island progress built from the stars saved in Core Data.
+    func progressFor(category: IslandCategory) -> IslandProgress {
+        ProgressSummary.island(category, progress: CoreDataManager.shared.progressByGame)
     }
 }

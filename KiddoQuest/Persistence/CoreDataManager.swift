@@ -15,6 +15,8 @@ final class CoreDataManager {
     var currentProfile: ChildProfile = ChildProfile.preview
     var badges: [Badge] = Badge.initialBadges
     var recentSessions: [SessionHistory] = []
+    /// Saved progress for every finished game, keyed by game ID.
+    var progressByGame: [String: GameProgress] = [:]
     
     init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
         self.context = context
@@ -26,6 +28,7 @@ final class CoreDataManager {
         _ = fetchOrCreateProfile()
         fetchBadges()
         fetchSessions()
+        fetchAllProgress()
     }
     
     // MARK: - Child Profile Operations
@@ -56,11 +59,11 @@ final class CoreDataManager {
                 newEntity.avatar = "🦁"
                 newEntity.age = 5
                 newEntity.createdDate = Date()
-                newEntity.totalStars = 12
+                newEntity.totalStars = 0
                 
                 try context.save()
                 
-                let profile = ChildProfile(id: newId, name: "Leo", avatar: "🦁", age: 5, createdDate: Date(), totalStars: 12)
+                let profile = ChildProfile(id: newId, name: "Leo", avatar: "🦁", age: 5, createdDate: Date(), totalStars: 0)
                 self.currentProfile = profile
                 return profile
             }
@@ -132,6 +135,7 @@ final class CoreDataManager {
             entity.lastPlayed = Date()
             
             try context.save()
+            fetchAllProgress()
             
             // Add stars to overall profile
             addStars(stars)
@@ -140,6 +144,32 @@ final class CoreDataManager {
             checkBadgeUnlocks(for: category)
         } catch {
             print("Failed to save game progress: \(error)")
+        }
+    }
+    
+    /// Loads saved progress for all games so Home and the game lists show real stars.
+    func fetchAllProgress() {
+        let request: NSFetchRequest<GameProgressEntity> = NSFetchRequest(entityName: "GameProgressEntity")
+        
+        do {
+            let results = try context.fetch(request)
+            var progress: [String: GameProgress] = [:]
+            for entity in results {
+                guard let gameID = entity.gameID else { continue }
+                progress[gameID] = GameProgress(
+                    id: entity.id ?? UUID(),
+                    gameID: gameID,
+                    category: entity.category ?? "",
+                    completed: entity.completed,
+                    stars: Int(entity.stars),
+                    score: Int(entity.score),
+                    bestScore: Int(entity.bestScore),
+                    lastPlayed: entity.lastPlayed ?? Date()
+                )
+            }
+            progressByGame = progress
+        } catch {
+            print("Failed to fetch all game progress: \(error)")
         }
     }
     
