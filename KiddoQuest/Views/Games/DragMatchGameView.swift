@@ -45,13 +45,6 @@ struct DragMatchGameView: View {
                 HStack {
                     ProgressStarBar(stars: viewModel.starsEarned, maxStars: 3, starSize: 18)
                     Spacer()
-                    Text("Score: \(viewModel.score)")
-                        .font(Theme.Typography.headline(size: 16))
-                        .foregroundStyle(Theme.ColorPalette.primaryText)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(Theme.ColorPalette.cardBackground)
-                        .clipShape(Capsule())
                 }
                 .padding(.horizontal, Theme.Spacing.medium)
                 
@@ -149,6 +142,8 @@ struct DragMatchGameView: View {
         .buttonStyle(BouncyButtonStyle())
         .disabled(isMatched)
         .accessibilityLabel("\(pair.sourceDisplay), \(isMatched ? "already matched" : "tap to select")")
+        // Hint: first pick the next unmatched item on the left...
+        .hintTarget(selectedSourceId == nil && pair.id == viewModel.pairs.first(where: { !viewModel.matchedPairIds.contains($0.id) })?.id)
     }
     
     // MARK: - Target Item (Right)
@@ -199,5 +194,7 @@ struct DragMatchGameView: View {
         .buttonStyle(BouncyButtonStyle())
         .disabled(isMatched)
         .accessibilityLabel("Match target: \(pair.targetDisplay)")
+        // ...then tap its match on the right
+        .hintTarget(selectedSourceId == pair.id)
     }
 }

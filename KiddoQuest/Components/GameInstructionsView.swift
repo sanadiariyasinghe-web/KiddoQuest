@@ -2,7 +2,8 @@ import SwiftUI
 
 // MARK: - Game Instructions View
 // Shown at the start of every game: what is the goal, what to tap, and a big "Let's Play!" button.
-// Steps appear one at a time with big icons so children who can't read yet can still follow.
+// A picture sentence (e.g. 🐰 → 👆 → 🥕) explains the game to children who can't read yet;
+// short text steps underneath help grown-ups read along.
 
 struct GameInstructionsView: View {
     let instructions: GameInstructions
@@ -19,37 +20,21 @@ struct GameInstructionsView: View {
             VStack(spacing: Theme.Spacing.large) {
                 GameJourneyIndicator(phase: .instructions, themeColor: instructions.themeColor)
                 
-                // Game identity
-                VStack(spacing: 8) {
-                    ZStack {
-                        Circle()
-                            .fill(instructions.themeColor.opacity(0.25))
-                            .frame(width: 110, height: 110)
-                        Text(instructions.emoji)
-                            .font(.system(size: 60))
-                    }
-                    .scaleEffect(hasAppeared ? 1.0 : 0.5)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.55), value: hasAppeared)
-                    .accessibilityHidden(true)
-                    
-                    Text(instructions.title)
-                        .font(Theme.Typography.title(size: 30))
-                        .foregroundStyle(Theme.ColorPalette.primaryText)
-                        .multilineTextAlignment(.center)
-                }
+                Text(instructions.title)
+                    .font(Theme.Typography.title(size: 30))
+                    .foregroundStyle(Theme.ColorPalette.primaryText)
+                    .multilineTextAlignment(.center)
                 
-                // Numbered steps
-                VStack(spacing: 12) {
+                pictureStory
+                
+                // Short text steps for grown-ups reading along
+                VStack(spacing: 8) {
                     ForEach(Array(instructions.steps.enumerated()), id: \.element.id) { index, step in
                         stepRow(number: index + 1, step: step)
-                            .opacity(hasAppeared ? 1 : 0)
-                            .offset(y: hasAppeared ? 0 : 18)
-                            .animation(
-                                .spring(response: 0.5, dampingFraction: 0.75).delay(0.3 + Double(index) * 0.6),
-                                value: hasAppeared
-                            )
                     }
                 }
+                .opacity(hasAppeared ? 1 : 0)
+                .animation(.easeIn(duration: 0.4).delay(1.4), value: hasAppeared)
                 
                 // Clear next action
                 PrimaryChildButton(
@@ -63,6 +48,7 @@ struct GameInstructionsView: View {
                 }
                 .scaleEffect(isPulsing ? 1.04 : 1.0)
                 .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: isPulsing)
+                .accessibilityIdentifier("instructions.play")
             }
             .padding(Theme.Spacing.large)
             .background(Theme.ColorPalette.cardBackground)
@@ -76,29 +62,64 @@ struct GameInstructionsView: View {
         }
     }
     
+    // MARK: - Picture Sentence
+    /// Big pictures joined by arrows, appearing one after another.
+    private var pictureStory: some View {
+        HStack(spacing: 8) {
+            ForEach(Array(instructions.pictureStory.enumerated()), id: \.offset) { index, picture in
+                if index > 0 {
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 22, weight: .heavy))
+                        .foregroundStyle(instructions.themeColor)
+                        .opacity(hasAppeared ? 1 : 0)
+                        .animation(.easeIn(duration: 0.3).delay(Double(index) * 0.45), value: hasAppeared)
+                }
+                pictureTile(picture)
+                    .scaleEffect(hasAppeared ? 1 : 0.4)
+                    .opacity(hasAppeared ? 1 : 0)
+                    .animation(
+                        .spring(response: 0.45, dampingFraction: 0.6).delay(0.15 + Double(index) * 0.45),
+                        value: hasAppeared
+                    )
+            }
+        }
+        .padding(.vertical, 14)
+        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity)
+        .background(instructions.themeColor.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(instructions.steps.map(\.text).joined(separator: " "))
+    }
+    
+    private func pictureTile(_ picture: PictureStep) -> some View {
+        Text(picture.symbol)
+            .font(.system(size: 44, weight: .heavy, design: .rounded))
+            .foregroundStyle(Theme.ColorPalette.primaryText)
+            .colorMultiply(picture.isShadow ? .black : .white)
+            .minimumScaleFactor(0.5)
+            .lineLimit(1)
+            .frame(minWidth: 64, minHeight: 64)
+            .padding(6)
+            .background(Theme.ColorPalette.cardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.minimum))
+    }
+    
     private func stepRow(number: Int, step: InstructionStep) -> some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 10) {
             Text("\(number)")
-                .font(Theme.Typography.title(size: 22))
+                .font(Theme.Typography.headline(size: 15))
                 .foregroundStyle(.white)
-                .frame(width: 42, height: 42)
+                .frame(width: 26, height: 26)
                 .background(Circle().fill(instructions.themeColor))
             
-            Image(systemName: step.icon)
-                .font(.system(size: 24, weight: .bold))
-                .foregroundStyle(instructions.themeColor)
-                .frame(width: 30)
-            
             Text(step.text)
-                .font(Theme.Typography.headline(size: 21))
-                .foregroundStyle(Theme.ColorPalette.primaryText)
+                .font(Theme.Typography.body(size: 17))
+                .foregroundStyle(Theme.ColorPalette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             
             Spacer(minLength: 0)
         }
-        .padding(12)
-        .background(instructions.themeColor.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Step \(number): \(step.text)")
     }

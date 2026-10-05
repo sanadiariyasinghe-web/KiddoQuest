@@ -83,13 +83,6 @@ struct AnimalPictureGameView: View {
                 .background(Theme.ColorPalette.cardBackground)
                 .clipShape(Capsule())
             Spacer()
-            Text("Score: \(viewModel.score)")
-                .font(Theme.Typography.headline(size: 16))
-                .foregroundStyle(Theme.ColorPalette.primaryText)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(Theme.ColorPalette.cardBackground)
-                .clipShape(Capsule())
         }
         .padding(.horizontal, Theme.Spacing.medium)
     }
@@ -182,6 +175,7 @@ struct AnimalPictureGameView: View {
         .buttonStyle(BouncyButtonStyle())
         .disabled(isWrong || viewModel.isCorrect)
         .accessibilityLabel(choice.name)
+        .hintTarget(choice == viewModel.currentRound.answer)
     }
 }
 
