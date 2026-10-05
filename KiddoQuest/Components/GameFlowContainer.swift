@@ -15,6 +15,7 @@ struct GameFlowContainer<Content: View>: View {
     @ViewBuilder let content: () -> Content
     
     @State private var phase: GamePhase = .instructions
+    @State private var earnedSticker: Sticker?
     @State private var isShowingHint = false
     @State private var lastInteraction = ContinuousClock.now
     
@@ -57,6 +58,7 @@ struct GameFlowContainer<Content: View>: View {
                 RoundResultsView(
                     result: result,
                     themeColor: instructions.themeColor,
+                    sticker: earnedSticker,
                     onHome: goHome,
                     onMoreGames: goToMoreGames,
                     onPlayAgain: playAgain
@@ -72,6 +74,8 @@ struct GameFlowContainer<Content: View>: View {
             guard finished, phase == .playing else { return }
             Task {
                 try? await Task.sleep(for: celebrationDelay)
+                // Every finished round adds a sticker to the child's sticker book
+                earnedSticker = StickerBook.shared.awardSticker(for: instructions.title)
                 withAnimation(.spring(response: 0.55, dampingFraction: 0.85)) {
                     phase = .results
                 }

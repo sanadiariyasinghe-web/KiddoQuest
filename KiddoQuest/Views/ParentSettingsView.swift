@@ -107,10 +107,11 @@ struct ParentSettingsView: View {
                     .confirmationDialog("Reset Progress?", isPresented: $showResetConfirmation, titleVisibility: .visible) {
                         Button("Reset All Progress", role: .destructive) {
                             CoreDataManager.shared.resetAllData()
+                            StickerBook.shared.reset()
                         }
                         Button("Cancel", role: .cancel) { }
                     } message: {
-                        Text("This will reset all earned stars and island completions.")
+                        Text("This will reset all earned stars, stickers and island completions.")
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

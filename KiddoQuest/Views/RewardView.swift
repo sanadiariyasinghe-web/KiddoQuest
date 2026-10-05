@@ -3,6 +3,7 @@ import SwiftUI
 struct RewardView: View {
     @Binding var navigationPath: NavigationPath
     @State private var coreData = CoreDataManager.shared
+    @State private var stickerBook = StickerBook.shared
     @State private var starScale: CGFloat = 0.5
     
     var body: some View {
@@ -44,6 +45,8 @@ struct RewardView: View {
                     .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
                     .shadow(color: .black.opacity(0.08), radius: 10, y: 5)
                     .padding(.horizontal, Theme.Spacing.medium)
+                    
+                    stickerBookSection
                     
                     // Badges Grid
                     VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
@@ -89,6 +92,54 @@ struct RewardView: View {
                 starScale = 1.0
             }
         }
+    }
+    
+    // MARK: - Sticker Book
+    /// One page with a slot for every sticker; collected ones are shown, the rest wait as "?".
+    private var stickerBookSection: some View {
+        let collected = stickerBook.collectedEmojis
+        
+        return VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+            HStack {
+                Text("My Sticker Book")
+                    .font(Theme.Typography.headline(size: 20))
+                    .foregroundStyle(Theme.ColorPalette.primaryText)
+                Spacer()
+                Text("\(collected.count) / \(StickerBook.allStickers.count)")
+                    .font(Theme.Typography.headline(size: 16))
+                    .foregroundStyle(Theme.ColorPalette.secondaryText)
+            }
+            
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 4), spacing: 10) {
+                ForEach(StickerBook.allStickers, id: \.self) { emoji in
+                    let isCollected = collected.contains(emoji)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: Theme.Radius.minimum)
+                            .fill(isCollected ? Theme.ColorPalette.numbersYellow.opacity(0.2) : Theme.ColorPalette.cardBorder.opacity(0.5))
+                        if isCollected {
+                            Text(emoji)
+                                .font(.system(size: 40))
+                        } else {
+                            Text("?")
+                                .font(Theme.Typography.title(size: 26))
+                                .foregroundStyle(Theme.ColorPalette.secondaryText.opacity(0.5))
+                        }
+                    }
+                    .aspectRatio(1, contentMode: .fit)
+                    .accessibilityLabel(isCollected ? "Sticker \(emoji)" : "Empty sticker space")
+                }
+            }
+            
+            if collected.isEmpty {
+                Text("Finish a game to get your first sticker!")
+                    .font(Theme.Typography.body(size: 15))
+                    .foregroundStyle(Theme.ColorPalette.secondaryText)
+            }
+        }
+        .padding(Theme.Spacing.medium)
+        .background(Theme.ColorPalette.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
+        .padding(.horizontal, Theme.Spacing.medium)
     }
     
     // MARK: - Badge Card
