@@ -7,6 +7,8 @@ import SwiftUI
 struct RoundResultsView: View {
     let result: RoundResult
     var themeColor: Color = Theme.ColorPalette.animalsGreen
+    /// The sticker earned for finishing this round (added to the sticker book).
+    var sticker: Sticker? = nil
     let onHome: () -> Void
     let onMoreGames: () -> Void
     let onPlayAgain: () -> Void
@@ -32,6 +34,9 @@ struct RoundResultsView: View {
                 VStack(spacing: Theme.Spacing.large) {
                     GameJourneyIndicator(phase: .results, themeColor: themeColor)
                     
+                    // Buddy dances — a bigger dance for 3 stars
+                    CelebratingOwlView(stars: result.stars)
+                    
                     // Celebration headline
                     VStack(spacing: 8) {
                         Text("Great Job! 🎉")
@@ -46,6 +51,10 @@ struct RoundResultsView: View {
                     }
                     
                     roundSummaryCard
+                    
+                    if let sticker {
+                        newStickerCard(sticker)
+                    }
                     
                     // Next actions
                     VStack(spacing: 14) {
@@ -110,6 +119,36 @@ struct RoundResultsView: View {
                 }
             }
         }
+    }
+    
+    // MARK: - New Sticker
+    private func newStickerCard(_ sticker: Sticker) -> some View {
+        HStack(spacing: 16) {
+            Text(sticker.emoji)
+                .font(.system(size: 54))
+                .rotationEffect(.degrees(hasAppeared ? -8 : -40))
+                .scaleEffect(hasAppeared ? 1 : 0.2)
+                .animation(.spring(response: 0.5, dampingFraction: 0.5).delay(1.4), value: hasAppeared)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("New sticker!")
+                    .font(Theme.Typography.title(size: 22))
+                    .foregroundStyle(Theme.ColorPalette.primaryText)
+                Text("It's in your sticker book.")
+                    .font(Theme.Typography.body(size: 15))
+                    .foregroundStyle(Theme.ColorPalette.secondaryText)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(Theme.Spacing.medium)
+        .background(Theme.ColorPalette.numbersYellow.opacity(0.18))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .overlay(
+            RoundedRectangle(cornerRadius: Theme.Radius.card)
+                .strokeBorder(Theme.ColorPalette.numbersYellow, style: StrokeStyle(lineWidth: 2, dash: [6, 4]))
+        )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("New sticker added to your sticker book")
     }
     
     // MARK: - Round Summary
@@ -207,7 +246,8 @@ struct RoundResultsView: View {
 
 #Preview {
     RoundResultsView(
-        result: RoundResult(score: 80, stars: 2, correctAnswers: 4, totalQuestions: 5),
+        result: RoundResult(score: 80, stars: 3, correctAnswers: 4, totalQuestions: 5),
+        sticker: Sticker(emoji: "🦄", gameTitle: "Counting Pop", earnedDate: Date()),
         onHome: { },
         onMoreGames: { },
         onPlayAgain: { }
