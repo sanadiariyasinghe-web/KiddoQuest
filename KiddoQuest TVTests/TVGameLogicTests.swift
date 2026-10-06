@@ -1,7 +1,8 @@
+import Foundation
 import Testing
 @testable import KiddoQuest_TV
 
-/// Answer validation for Counting Pop, Shape Hunt and the prototypes.
+/// Answer validation for Counting Pop, Shape Hunt and the choice games.
 @MainActor
 struct TVGameLogicTests {
 
@@ -159,23 +160,25 @@ struct TVGameLogicTests {
         #expect(model.foundLabel == "Found: 0 / 0")
     }
 
-    // MARK: - Prototypes
+    // MARK: - Choice games
 
-    @Test(arguments: [TVGameKind.dragToMatch, .tapToReveal, .animalMatch, .shapeSort])
-    func prototypeRoundsAreValid(kind: TVGameKind) throws {
+    @Test(arguments: [TVGameKind.dragToMatch, .tapToReveal, .feedAnimals, .animalShadows, .shapeSort])
+    func choiceGamesHaveFiveValidRounds(kind: TVGameKind) throws {
         let game = try #require(TVGameDataService.game(for: kind))
-        #expect(game.availability == .prototype)
+        #expect(game.availability == .playable)
         for category in game.categories {
-            let rounds = TVGameDataService.prototypeRounds(for: kind, category: category)
-            #expect(!rounds.isEmpty)
+            let rounds = TVGameDataService.choiceRounds(for: kind, category: category)
+            #expect(rounds.count == TVGameDataService.choiceRoundCount)
+            #expect(rounds.map(\.id) == Array(0..<rounds.count))
             for round in rounds {
                 #expect(round.correctOption != nil, "\(kind) round \(round.id) has no correct option")
+                #expect(Set(round.options.map(\.id)).count == round.options.count, "\(kind) has duplicate options")
             }
         }
     }
 
-    @Test func prototypeCorrectAndIncorrectAnswers() throws {
-        let model = TVPrototypeGameViewModel(kind: .shapeSort, category: .shapes)
+    @Test func choiceCorrectAndIncorrectAnswers() throws {
+        let model = TVChoiceGameViewModel(kind: .shapeSort, category: .shapes)
         let round = try #require(model.currentRound)
         let wrong = try #require(round.options.first { !round.isCorrect($0.id) })
         #expect(model.select(optionID: wrong.id) == .incorrect)
@@ -184,18 +187,59 @@ struct TVGameLogicTests {
         #expect(model.feedbackMessage == round.successMessage)
     }
 
-    @Test func dragToMatchMatchesAppleGroupToThree() throws {
-        let model = TVPrototypeGameViewModel(kind: .dragToMatch, category: .numbers)
+    @Test func tapToMatchAnswerIsTheGroupSize() throws {
+        let model = TVChoiceGameViewModel(kind: .dragToMatch, category: .numbers)
         let round = try #require(model.currentRound)
-        #expect(round.subject == .group(emoji: "🍎", count: 3))
-        #expect(model.select(optionID: "3") == .correct(points: TVScoring.firstTryPoints))
+        guard case .group(_, let count) = round.subject else {
+            Issue.record("Expected a group to count")
+            return
+        }
+        #expect(round.correctOptionID == "\(count)")
+        #expect(model.select(optionID: "\(count)") == .correct(points: TVScoring.firstTryPoints))
     }
 
-    @Test func libraryContainsAllSixGamesWithHonestStatus() {
-        #expect(TVGameDataService.games.count == 6)
+    @Test func feedTheAnimalsOffersTheRightFood() throws {
+        let rounds = TVGameDataService.choiceRounds(for: .feedAnimals, category: .animals)
+        for round in rounds {
+            guard case .hungryAnimal(_, let name, let food) = round.subject else {
+                Issue.record("Expected a hungry animal")
+                continue
+            }
+            let pair = try #require(TVGameDataService.animalFoods.first { $0.name == name })
+            #expect(pair.food == food)
+            #expect(round.correctOptionID == pair.foodName)
+        }
+    }
+
+    @Test func animalShadowsAnswerIsTheShadowAnimal() {
+        for round in TVGameDataService.choiceRounds(for: .animalShadows, category: .animals) {
+            guard case .animalShadow(_, let name) = round.subject else {
+                Issue.record("Expected an animal shadow")
+                continue
+            }
+            #expect(round.correctOptionID == name)
+        }
+    }
+
+    @Test func shapeSortUsesEveryShape() {
+        for _ in 0..<10 {
+            let rounds = TVGameDataService.choiceRounds(for: .shapeSort, category: .shapes)
+            #expect(Set(rounds.map(\.correctOptionID)) == ["triangle", "circle", "square"])
+        }
+    }
+
+    @Test func libraryContainsAllSevenFullGames() {
+        #expect(TVGameDataService.games.count == 7)
         #expect(Set(TVGameDataService.games.map(\.kind)) == Set(TVGameKind.allCases))
-        let playable = TVGameDataService.games.filter { $0.availability == .playable }.map(\.kind)
-        #expect(Set(playable) == [.countingPop, .shapeHunt])
+        #expect(TVGameDataService.games.allSatisfy { $0.availability == .playable })
+        #expect(TVGameDataService.games(in: .animals).map(\.kind).contains(.feedAnimals))
+        #expect(TVGameDataService.games(in: .animals).map(\.kind).contains(.animalShadows))
+    }
+
+    @Test func savedAnimalMatchProgressLoadsAsFeedTheAnimals() throws {
+        let data = Data(#"["animalMatch","countingPop"]"#.utf8)
+        let kinds = try JSONDecoder().decode([TVGameKind].self, from: data)
+        #expect(kinds == [.feedAnimals, .countingPop])
     }
 
     @Test func everyCategoryHasAtLeastOneGame() {
@@ -205,7 +249,7 @@ struct TVGameLogicTests {
     }
 
     @Test func launchCategoryFallsBackToPrimary() throws {
-        let game = try #require(TVGameDataService.game(for: .animalMatch))
+        let game = try #require(TVGameDataService.game(for: .feedAnimals))
         #expect(game.launchCategory(preferred: .numbers) == .animals)
         #expect(game.launchCategory(preferred: nil) == .animals)
         #expect(game.launchCategory(preferred: .animals) == .animals)

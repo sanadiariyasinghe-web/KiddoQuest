@@ -227,7 +227,7 @@ private struct TVFamilyChallengePlayView: View {
                 .accessibilityIdentifier("familyChallenge.question")
 
             if question.subject != .none {
-                TVPrototypeSubjectView(subject: question.subject, isSolved: model.isShowingSuccess)
+                TVRoundSubjectView(subject: question.subject, isSolved: model.isShowingSuccess)
                     .scaleEffect(0.7)
                     .frame(height: 200)
             }
@@ -239,7 +239,7 @@ private struct TVFamilyChallengePlayView: View {
                         Button {
                             choose(option)
                         } label: {
-                            TVPrototypeOptionView(option: option, isWinner: isWinner)
+                            TVChoiceOptionView(option: option, isWinner: isWinner)
                                 .frame(width: 260, height: 220)
                         }
                         .tvCardButtonStyle(

@@ -1,15 +1,32 @@
 import Foundation
 
-/// The six KiddoQuest game concepts carried over from Part A.
+/// The seven KiddoQuest games, matching the Part A iOS app.
 nonisolated enum TVGameKind: String, CaseIterable, Identifiable, Codable, Hashable {
     case countingPop
     case dragToMatch
     case tapToReveal
     case shapeHunt
-    case animalMatch
+    case feedAnimals
+    case animalShadows
     case shapeSort
 
     var id: String { rawValue }
+
+    /// Raw value of the retired "Animal Match" game, which older saved progress may contain.
+    static let legacyAnimalMatchRawValue = "animalMatch"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        if let kind = TVGameKind(rawValue: rawValue) {
+            self = kind
+        } else if rawValue == Self.legacyAnimalMatchRawValue {
+            // Animal Match was replaced by Feed the Animals; keep the child's progress.
+            self = .feedAnimals
+        } else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unknown game kind \(rawValue)")
+        }
+    }
 }
 
 /// How complete a game is in this tvOS prototype. Shown on every game card

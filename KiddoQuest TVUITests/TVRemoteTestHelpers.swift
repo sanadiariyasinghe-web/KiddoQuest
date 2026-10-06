@@ -102,6 +102,15 @@ extension XCTestCase {
         XCTAssertEqual(result, .completed, "\(identifier) label never contained \"\(text)\" (was \"\(target.label)\")", file: file, line: line)
     }
 
+    /// Every game opens with the picture instructions; press Let's Play! to start.
+    @MainActor
+    func startGameFromInstructions(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let play = element("instructions.play", in: app)
+        guard play.waitForExistence(timeout: 5) else { return }
+        moveFocus(to: play, in: app, file: file, line: line)
+        XCUIRemote.shared.press(.select)
+    }
+
     /// Home → PLAY → pick Ava → Learning World.
     @MainActor
     func goToLearningWorld(in app: XCUIApplication, player: String = "Ava") {

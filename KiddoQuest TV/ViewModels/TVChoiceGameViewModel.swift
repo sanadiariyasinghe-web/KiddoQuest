@@ -1,10 +1,10 @@
 import Foundation
 import Observation
 
-/// Shared engine for the four simplified prototype games
-/// (Drag-to-Match, Tap-to-Reveal, Animal Match and Shape Sort).
+/// Shared engine for the five choice games
+/// (Tap-to-Match, Tap-to-Reveal, Feed the Animals, Animal Shadows and Shape Sort).
 @Observable
-final class TVPrototypeGameViewModel {
+final class TVChoiceGameViewModel {
     enum Feedback: Equatable {
         case none
         case correct(points: Int)
@@ -22,7 +22,7 @@ final class TVPrototypeGameViewModel {
     init(kind: TVGameKind, category: TVCategory, rounds: [TVChoiceRound]? = nil) {
         self.kind = kind
         self.category = category
-        self.rounds = rounds ?? TVGameDataService.prototypeRounds(for: kind, category: category)
+        self.rounds = rounds ?? TVGameDataService.choiceRounds(for: kind, category: category)
         isFinished = self.rounds.isEmpty
     }
 

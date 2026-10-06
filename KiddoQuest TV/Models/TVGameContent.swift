@@ -72,7 +72,7 @@ nonisolated struct TVHuntChallenge: Identifiable, Hashable {
     var targetCount: Int { items.filter(\.isTarget).count }
 }
 
-// MARK: - Choice rounds (prototypes and Family Challenge)
+// MARK: - Choice rounds (choice games and Family Challenge)
 
 /// What the player is looking at while choosing an answer.
 nonisolated enum TVRoundSubject: Hashable {
@@ -82,8 +82,10 @@ nonisolated enum TVRoundSubject: Hashable {
     case letter(String)
     /// An outlined picture that should be coloured in.
     case colorReveal(symbol: String, name: String, answer: TVColorChoice)
-    /// The front half of an animal that needs its back half.
-    case animalHalf(emoji: String, name: String)
+    /// A hungry animal waiting for the food it loves (Feed the Animals).
+    case hungryAnimal(emoji: String, name: String, food: String)
+    /// The dark shadow of an animal to identify (Animal Shadows).
+    case animalShadow(emoji: String, name: String)
     /// A shape that should be dropped into the matching bin.
     case shape(TVShapeKind)
     /// No picture: the prompt alone carries the question.
@@ -95,7 +97,7 @@ nonisolated enum TVOptionVisual: Hashable {
     case number(Int)
     case letter(String)
     case color(TVColorChoice)
-    case animalBackHalf(emoji: String)
+    /// A large picture (an animal or a food).
     case animal(emoji: String)
     case shapeBin(TVShapeKind)
     case shape(TVShapeKind)

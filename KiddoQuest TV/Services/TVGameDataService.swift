@@ -1,6 +1,6 @@
 import Foundation
 
-/// Local, bundled content for every game. The prototype needs no backend,
+/// Local, bundled content for every game. The app needs no backend,
 /// so all rounds are defined here as plain data.
 nonisolated enum TVGameDataService {
 
@@ -17,10 +17,10 @@ nonisolated enum TVGameDataService {
         ),
         TVGame(
             kind: .dragToMatch,
-            title: "Drag-to-Match",
-            summary: "Move focus to the matching number or letter and snap it in place.",
+            title: "Tap-to-Match",
+            summary: "Pick the number or little letter that matches.",
             categories: [.numbers, .letters],
-            availability: .prototype,
+            availability: .playable,
             emoji: "🧲"
         ),
         TVGame(
@@ -28,7 +28,7 @@ nonisolated enum TVGameDataService {
             title: "Tap-to-Reveal",
             summary: "Choose the right colour to reveal the picture.",
             categories: [.shapes],
-            availability: .prototype,
+            availability: .playable,
             emoji: "🎨"
         ),
         TVGame(
@@ -40,19 +40,27 @@ nonisolated enum TVGameDataService {
             emoji: "🔍"
         ),
         TVGame(
-            kind: .animalMatch,
-            title: "Animal Match",
-            summary: "Join the front and back halves of animal friends.",
+            kind: .feedAnimals,
+            title: "Feed the Animals",
+            summary: "Give each hungry animal the food it loves.",
             categories: [.animals],
-            availability: .prototype,
-            emoji: "🧩"
+            availability: .playable,
+            emoji: "🥕"
+        ),
+        TVGame(
+            kind: .animalShadows,
+            title: "Animal Shadows",
+            summary: "Look at the shadow and find the animal.",
+            categories: [.animals],
+            availability: .playable,
+            emoji: "🦒"
         ),
         TVGame(
             kind: .shapeSort,
             title: "Shape Sort",
             summary: "Send each shape to its matching bin.",
             categories: [.shapes],
-            availability: .prototype,
+            availability: .playable,
             emoji: "🗂️"
         )
     ]
@@ -132,162 +140,175 @@ nonisolated enum TVGameDataService {
         )
     }
 
-    // MARK: - Prototype games
+    // MARK: - Choice games
 
-    static func prototypeRounds(for kind: TVGameKind, category: TVCategory) -> [TVChoiceRound] {
+    /// Rounds in every choice game (Tap-to-Match, Tap-to-Reveal, Feed the Animals,
+    /// Animal Shadows and Shape Sort), matching the length of the iOS games.
+    static let choiceRoundCount = 5
+
+    /// Builds a fresh, shuffled set of rounds so replays feel new.
+    static func choiceRounds(for kind: TVGameKind, category: TVCategory) -> [TVChoiceRound] {
+        let rounds: [TVChoiceRound]
         switch kind {
         case .dragToMatch:
-            return category == .letters ? letterMatchRounds : numberMatchRounds
+            rounds = category == .letters ? letterMatchRounds() : numberMatchRounds()
         case .tapToReveal:
-            return colorRevealRounds
-        case .animalMatch:
-            return animalMatchRounds
+            rounds = colorRevealRounds()
+        case .feedAnimals:
+            rounds = feedAnimalsRounds()
+        case .animalShadows:
+            rounds = animalShadowRounds()
         case .shapeSort:
-            return shapeSortRounds
+            rounds = shapeSortRounds()
         case .countingPop, .shapeHunt:
-            // These have dedicated full game engines.
-            return []
+            // These have dedicated game engines.
+            rounds = []
         }
+        // Give rounds stable, sequential ids after shuffling.
+        return rounds.enumerated().map { index, round in
+            TVChoiceRound(
+                id: index, prompt: round.prompt, subject: round.subject,
+                options: round.options, correctOptionID: round.correctOptionID,
+                successMessage: round.successMessage
+            )
+        }
+    }
+
+    /// The correct option plus `distractors`, in a random order.
+    private static func shuffledOptions(correct: TVChoiceOption, distractors: [TVChoiceOption]) -> [TVChoiceOption] {
+        ([correct] + distractors).shuffled()
     }
 
     private static func numberOption(_ value: Int) -> TVChoiceOption {
         TVChoiceOption(id: "\(value)", label: "\(value)", visual: .number(value))
     }
 
-    private static let numberMatchRounds: [TVChoiceRound] = [
-        TVChoiceRound(
-            id: 0, prompt: "Match the apples to their number!",
-            subject: .group(emoji: "🍎", count: 3),
-            options: [numberOption(2), numberOption(3), numberOption(5)],
-            correctOptionID: "3", successMessage: "Snap! 3 apples!"
-        ),
-        TVChoiceRound(
-            id: 1, prompt: "Match the stars to their number!",
-            subject: .group(emoji: "⭐", count: 5),
-            options: [numberOption(4), numberOption(6), numberOption(5)],
-            correctOptionID: "5", successMessage: "Snap! 5 stars!"
-        ),
-        TVChoiceRound(
-            id: 2, prompt: "Match the balloons to their number!",
-            subject: .group(emoji: "🎈", count: 2),
-            options: [numberOption(2), numberOption(1), numberOption(3)],
-            correctOptionID: "2", successMessage: "Snap! 2 balloons!"
-        )
-    ]
+    private static func numberMatchRounds() -> [TVChoiceRound] {
+        let groups: [(emoji: String, name: String)] = [
+            ("🍎", "apples"), ("⭐", "stars"), ("🎈", "balloons"), ("🍓", "strawberries"),
+            ("🐟", "fish"), ("🌸", "flowers"), ("🚗", "cars")
+        ]
+        return groups.shuffled().prefix(choiceRoundCount).map { group in
+            let count = Int.random(in: 1...5)
+            let others = (1...6).filter { $0 != count }.shuffled().prefix(2).map(numberOption)
+            return TVChoiceRound(
+                id: 0, prompt: "Match the \(group.name) to their number!",
+                subject: .group(emoji: group.emoji, count: count),
+                options: shuffledOptions(correct: numberOption(count), distractors: Array(others)),
+                correctOptionID: "\(count)", successMessage: "Snap! \(count) \(group.name)!"
+            )
+        }
+    }
 
     private static func letterOption(_ letter: String) -> TVChoiceOption {
         TVChoiceOption(id: letter, label: "Letter \(letter)", visual: .letter(letter))
     }
 
-    private static let letterMatchRounds: [TVChoiceRound] = [
-        TVChoiceRound(
-            id: 0, prompt: "Find the little letter that matches A!",
-            subject: .letter("A"),
-            options: [letterOption("e"), letterOption("a"), letterOption("o")],
-            correctOptionID: "a", successMessage: "Snap! A and a!"
-        ),
-        TVChoiceRound(
-            id: 1, prompt: "Find the little letter that matches B!",
-            subject: .letter("B"),
-            options: [letterOption("b"), letterOption("d"), letterOption("p")],
-            correctOptionID: "b", successMessage: "Snap! B and b!"
-        ),
-        TVChoiceRound(
-            id: 2, prompt: "Find the little letter that matches T!",
-            subject: .letter("T"),
-            options: [letterOption("f"), letterOption("l"), letterOption("t")],
-            correctOptionID: "t", successMessage: "Snap! T and t!"
-        )
-    ]
-
-    private static var colorOptions: [TVChoiceOption] {
-        TVColorChoice.allCases.map { TVChoiceOption(id: $0.rawValue, label: $0.name, visual: .color($0)) }
-    }
-
-    private static var colorRevealRounds: [TVChoiceRound] {
-        [
-            TVChoiceRound(
-                id: 0, prompt: "What colour should this sun be?",
-                subject: .colorReveal(symbol: "sun.max", name: "Sun", answer: .yellow),
-                options: colorOptions, correctOptionID: TVColorChoice.yellow.rawValue,
-                successMessage: "A bright yellow sun!"
-            ),
-            TVChoiceRound(
-                id: 1, prompt: "What colour should this leaf be?",
-                subject: .colorReveal(symbol: "leaf", name: "Leaf", answer: .green),
-                options: colorOptions, correctOptionID: TVColorChoice.green.rawValue,
-                successMessage: "A lovely green leaf!"
-            ),
-            TVChoiceRound(
-                id: 2, prompt: "What colour should this heart be?",
-                subject: .colorReveal(symbol: "heart", name: "Heart", answer: .red),
-                options: colorOptions, correctOptionID: TVColorChoice.red.rawValue,
-                successMessage: "A big red heart!"
-            ),
-            TVChoiceRound(
-                id: 3, prompt: "What colour should this raindrop be?",
-                subject: .colorReveal(symbol: "drop", name: "Raindrop", answer: .blue),
-                options: colorOptions, correctOptionID: TVColorChoice.blue.rawValue,
-                successMessage: "A shiny blue raindrop!"
+    private static func letterMatchRounds() -> [TVChoiceRound] {
+        let letters = ["A", "B", "C", "D", "E", "M", "S", "T"]
+        return letters.shuffled().prefix(choiceRoundCount).map { letter in
+            let small = letter.lowercased()
+            let others = letters.map { $0.lowercased() }.filter { $0 != small }.shuffled().prefix(2).map(letterOption)
+            return TVChoiceRound(
+                id: 0, prompt: "Find the little letter that matches \(letter)!",
+                subject: .letter(letter),
+                options: shuffledOptions(correct: letterOption(small), distractors: Array(others)),
+                correctOptionID: small, successMessage: "Snap! \(letter) and \(small)!"
             )
+        }
+    }
+
+    private static func colorRevealRounds() -> [TVChoiceRound] {
+        let pictures: [(symbol: String, name: String, color: TVColorChoice, message: String)] = [
+            ("sun.max", "sun", .yellow, "A bright yellow sun!"),
+            ("leaf", "leaf", .green, "A lovely green leaf!"),
+            ("heart", "heart", .red, "A big red heart!"),
+            ("drop", "raindrop", .blue, "A shiny blue raindrop!"),
+            ("star", "star", .yellow, "A twinkly yellow star!"),
+            ("tree", "tree", .green, "A tall green tree!")
         ]
+        return pictures.shuffled().prefix(choiceRoundCount).map { picture in
+            let options = TVColorChoice.allCases.shuffled().map {
+                TVChoiceOption(id: $0.rawValue, label: $0.name, visual: .color($0))
+            }
+            return TVChoiceRound(
+                id: 0, prompt: "What colour should this \(picture.name) be?",
+                subject: .colorReveal(symbol: picture.symbol, name: picture.name.capitalized, answer: picture.color),
+                options: options, correctOptionID: picture.color.rawValue,
+                successMessage: picture.message
+            )
+        }
     }
 
-    private static func backHalf(_ emoji: String, _ name: String) -> TVChoiceOption {
-        TVChoiceOption(id: name, label: "\(name) back half", visual: .animalBackHalf(emoji: emoji))
+    private static func pictureOption(_ emoji: String, _ name: String) -> TVChoiceOption {
+        TVChoiceOption(id: name, label: name.capitalized, visual: .animal(emoji: emoji))
     }
 
-    private static let animalMatchRounds: [TVChoiceRound] = [
-        TVChoiceRound(
-            id: 0, prompt: "Who does this half belong to?",
-            subject: .animalHalf(emoji: "🦁", name: "Lion"),
-            options: [backHalf("🐶", "Dog"), backHalf("🦁", "Lion"), backHalf("🐘", "Elephant")],
-            correctOptionID: "Lion", successMessage: "Roar! The lion is complete!"
-        ),
-        TVChoiceRound(
-            id: 1, prompt: "Who does this half belong to?",
-            subject: .animalHalf(emoji: "🐵", name: "Monkey"),
-            options: [backHalf("🐵", "Monkey"), backHalf("🐱", "Cat"), backHalf("🐶", "Dog")],
-            correctOptionID: "Monkey", successMessage: "Ooh ooh! The monkey is complete!"
-        ),
-        TVChoiceRound(
-            id: 2, prompt: "Who does this half belong to?",
-            subject: .animalHalf(emoji: "🐘", name: "Elephant"),
-            options: [backHalf("🐱", "Cat"), backHalf("🦁", "Lion"), backHalf("🐘", "Elephant")],
-            correctOptionID: "Elephant", successMessage: "Toot! The elephant is complete!"
-        ),
-        TVChoiceRound(
-            id: 3, prompt: "Who does this half belong to?",
-            subject: .animalHalf(emoji: "🐱", name: "Cat"),
-            options: [backHalf("🐱", "Cat"), backHalf("🐵", "Monkey"), backHalf("🐶", "Dog")],
-            correctOptionID: "Cat", successMessage: "Meow! The cat is complete!"
-        )
+    /// Animals and the food each one loves (same pairs as the iOS game).
+    static let animalFoods: [(animal: String, name: String, food: String, foodName: String)] = [
+        ("🐰", "bunny", "🥕", "carrots"),
+        ("🐶", "dog", "🦴", "bones"),
+        ("🐵", "monkey", "🍌", "bananas"),
+        ("🐱", "cat", "🐟", "fish"),
+        ("🐭", "mouse", "🧀", "cheese"),
+        ("🐼", "panda", "🎋", "bamboo"),
+        ("🐝", "bee", "🌻", "flowers"),
+        ("🐔", "hen", "🌽", "corn")
     ]
+
+    private static func feedAnimalsRounds() -> [TVChoiceRound] {
+        animalFoods.shuffled().prefix(choiceRoundCount).map { pair in
+            let others = animalFoods.filter { $0.foodName != pair.foodName }
+                .shuffled().prefix(2)
+                .map { pictureOption($0.food, $0.foodName) }
+            return TVChoiceRound(
+                id: 0, prompt: "What does the \(pair.name) eat?",
+                subject: .hungryAnimal(emoji: pair.animal, name: pair.name, food: pair.food),
+                options: shuffledOptions(correct: pictureOption(pair.food, pair.foodName), distractors: Array(others)),
+                correctOptionID: pair.foodName,
+                successMessage: "Yum! The \(pair.name) loves \(pair.foodName)!"
+            )
+        }
+    }
+
+    /// Animals with clear, recognisable outlines for the shadow game.
+    static let shadowAnimals: [(emoji: String, name: String)] = [
+        ("🐘", "elephant"), ("🦒", "giraffe"), ("🐢", "turtle"), ("🐧", "penguin"), ("🦁", "lion"),
+        ("🐰", "bunny"), ("🐌", "snail"), ("🦋", "butterfly"), ("🐙", "octopus"), ("🦀", "crab")
+    ]
+
+    private static func animalShadowRounds() -> [TVChoiceRound] {
+        shadowAnimals.shuffled().prefix(choiceRoundCount).map { animal in
+            let others = shadowAnimals.filter { $0.name != animal.name }
+                .shuffled().prefix(2)
+                .map { pictureOption($0.emoji, $0.name) }
+            return TVChoiceRound(
+                id: 0, prompt: "Whose shadow is this?",
+                subject: .animalShadow(emoji: animal.emoji, name: animal.name),
+                options: shuffledOptions(correct: pictureOption(animal.emoji, animal.name), distractors: Array(others)),
+                correctOptionID: animal.name,
+                successMessage: "Yes! It is the \(animal.name)!"
+            )
+        }
+    }
 
     private static func bin(_ kind: TVShapeKind) -> TVChoiceOption {
         TVChoiceOption(id: kind.rawValue, label: "\(kind.name) bin", visual: .shapeBin(kind))
     }
 
-    private static let shapeSortRounds: [TVChoiceRound] = [
-        TVChoiceRound(
-            id: 0, prompt: "Which bin does the triangle go in?",
-            subject: .shape(.triangle),
-            options: [bin(.circle), bin(.triangle), bin(.square)],
-            correctOptionID: TVShapeKind.triangle.rawValue, successMessage: "Sorted! Triangle bin!"
-        ),
-        TVChoiceRound(
-            id: 1, prompt: "Which bin does the circle go in?",
-            subject: .shape(.circle),
-            options: [bin(.square), bin(.triangle), bin(.circle)],
-            correctOptionID: TVShapeKind.circle.rawValue, successMessage: "Sorted! Circle bin!"
-        ),
-        TVChoiceRound(
-            id: 2, prompt: "Which bin does the square go in?",
-            subject: .shape(.square),
-            options: [bin(.square), bin(.circle), bin(.triangle)],
-            correctOptionID: TVShapeKind.square.rawValue, successMessage: "Sorted! Square bin!"
-        )
-    ]
+    private static func shapeSortRounds() -> [TVChoiceRound] {
+        let kinds: [TVShapeKind] = [.triangle, .circle, .square]
+        // Every shape appears at least once, in a random order.
+        let queue = (kinds + (0..<(choiceRoundCount - kinds.count)).compactMap { _ in kinds.randomElement() }).shuffled()
+        return queue.map { kind in
+            TVChoiceRound(
+                id: 0, prompt: "Which bin does the \(kind.name.lowercased()) go in?",
+                subject: .shape(kind),
+                options: kinds.shuffled().map(bin),
+                correctOptionID: kind.rawValue, successMessage: "Sorted! \(kind.name) bin!"
+            )
+        }
+    }
 
     // MARK: - Family Challenge
 
@@ -378,7 +399,7 @@ nonisolated enum TVGameDataService {
 
     // MARK: - Players
 
-    /// The sample family shown on first launch so the prototype is demo-ready.
+    /// The sample family shown on first launch so the app is demo-ready.
     static func demoPlayers() -> [TVPlayer] {
         [
             TVPlayer(
@@ -391,7 +412,7 @@ nonisolated enum TVGameDataService {
                         .shapes: TVCategoryProgress(stars: 8, correctAnswers: 12, gamesPlayed: 4),
                         .animals: TVCategoryProgress(stars: 22, correctAnswers: 18, gamesPlayed: 7)
                     ],
-                    completedGames: [.countingPop, .dragToMatch, .animalMatch, .tapToReveal]
+                    completedGames: [.countingPop, .dragToMatch, .feedAnimals, .tapToReveal]
                 ),
                 earnedRewards: [.numberExplorer, .letterExplorer, .animalFriend, .familyLearner]
             ),
@@ -404,7 +425,7 @@ nonisolated enum TVGameDataService {
                         .shapes: TVCategoryProgress(stars: 7, correctAnswers: 8, gamesPlayed: 3),
                         .animals: TVCategoryProgress(stars: 10, correctAnswers: 10, gamesPlayed: 4)
                     ],
-                    completedGames: [.countingPop, .shapeHunt, .animalMatch]
+                    completedGames: [.countingPop, .shapeHunt, .feedAnimals]
                 ),
                 earnedRewards: [.letterExplorer, .animalFriend]
             ),

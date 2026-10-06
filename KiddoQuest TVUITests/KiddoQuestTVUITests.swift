@@ -87,15 +87,15 @@ final class KiddoQuestTVUITests: XCTestCase {
     }
 
     @MainActor
-    func testGameLibraryListsAllSixGames() {
+    func testGameLibraryListsAllSevenGames() {
         let app = launchKiddoQuestTV()
         goToLearningWorld(in: app)
         select("world.gameLibrary", in: app)
-        for game in ["countingPop", "dragToMatch", "tapToReveal", "shapeHunt", "animalMatch", "shapeSort"] {
+        for game in ["countingPop", "dragToMatch", "tapToReveal", "shapeHunt", "feedAnimals", "animalShadows", "shapeSort"] {
             XCTAssertTrue(element("game.\(game)", in: app).waitForExistence(timeout: 5), "\(game) missing from library")
         }
-        XCTAssertTrue(element("game.dragToMatch", in: app).label.contains("Prototype"))
-        XCTAssertTrue(element("game.countingPop", in: app).label.contains("Full game"))
+        XCTAssertTrue(element("game.dragToMatch", in: app).label.contains("Full game"))
+        XCTAssertTrue(element("game.feedAnimals", in: app).label.contains("Full game"))
     }
 
     // MARK: - Games
@@ -161,14 +161,27 @@ final class KiddoQuestTVUITests: XCTestCase {
     }
 
     @MainActor
-    func testPrototypeGameIsClearlyLabelled() {
+    func testFeedTheAnimalsAcceptsTheRightFood() {
+        // Same animal → food pairs as TVGameDataService.animalFoods
+        let foods = [
+            "bunny": "carrots", "dog": "bones", "monkey": "bananas", "cat": "fish",
+            "mouse": "cheese", "panda": "bamboo", "bee": "flowers", "hen": "corn"
+        ]
         let app = launchKiddoQuestTV()
         goToLearningWorld(in: app)
         select("category.animals", in: app)
-        select("game.animalMatch", in: app)
-        waitFor("game.prototypeBadge", in: app)
-        select("prototype.option.Lion", in: app)
-        waitForLabel(of: "feedback.banner", containing: "lion is complete", in: app)
+        select("game.feedAnimals", in: app)
+        startGameFromInstructions(in: app)
+
+        let prompt = element("choice.prompt", in: app)
+        XCTAssertTrue(prompt.waitForExistence(timeout: 5))
+        let animal = foods.keys.first { prompt.label.contains("the \($0) eat") }
+        guard let animal, let food = foods[animal] else {
+            XCTFail("Unexpected prompt: \(prompt.label)")
+            return
+        }
+        select("choice.option.\(food)", in: app)
+        waitForLabel(of: "feedback.banner", containing: "loves \(food)", in: app)
     }
 
     @MainActor
