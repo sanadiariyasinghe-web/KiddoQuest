@@ -3,7 +3,11 @@ import SwiftUI
 @main
 struct KiddoQuestApp: App {
     @Environment(\.scenePhase) private var scenePhase
-    
+
+    init() {
+        AppEnvironment.prepareForUITestingIfNeeded()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

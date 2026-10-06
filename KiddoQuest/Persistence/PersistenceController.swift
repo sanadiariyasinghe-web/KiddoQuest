@@ -5,7 +5,12 @@ import CoreData
 // supporting SQLite persistent storage and in-memory storage for previews/unit tests.
 
 struct PersistenceController {
-    static let shared = PersistenceController()
+    /// The app's store. Automated tests get an in-memory store so real progress is never touched.
+    static let shared = PersistenceController(inMemory: AppEnvironment.usesInMemoryStore)
+
+    /// One shared model for every store. Creating a new model per store makes Core Data
+    /// unable to tell which entity description a managed object class belongs to.
+    private static let managedObjectModel = createManagedObjectModel()
     
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
@@ -42,8 +47,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
     
     init(inMemory: Bool = false) {
-        let model = Self.createManagedObjectModel()
-        container = NSPersistentContainer(name: "KiddoQuestModel", managedObjectModel: model)
+        container = NSPersistentContainer(name: "KiddoQuestModel", managedObjectModel: Self.managedObjectModel)
         
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
