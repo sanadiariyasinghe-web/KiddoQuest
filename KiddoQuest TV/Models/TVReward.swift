@@ -49,6 +49,20 @@ nonisolated enum TVRewardKind: String, CaseIterable, Identifiable, Codable, Hash
     }
 }
 
+/// Stickers for the sticker book. Every finished game gives one, preferring
+/// stickers the player doesn't have yet (the same set as the iOS app).
+nonisolated enum TVStickerRules {
+    static let allStickers = [
+        "🦁", "🐼", "🦄", "🌈", "⭐", "🐬", "🦋", "🍓",
+        "🚀", "🌻", "🐢", "🎈", "🐙", "🍦", "🦖", "🐝"
+    ]
+
+    static func nextSticker(collected: Set<String>, pool: [String] = allStickers) -> String {
+        let missing = pool.filter { !collected.contains($0) }
+        return (missing.isEmpty ? pool : missing).randomElement() ?? "⭐"
+    }
+}
+
 /// Rules that decide which badges a player has earned.
 nonisolated enum TVRewardRules {
     static let starsPerCategoryBadge = 10
