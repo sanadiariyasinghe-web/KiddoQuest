@@ -76,6 +76,7 @@ struct TVCountingPopView: View {
         .padding(.vertical, 40)
         .tvScreenBackground()
         .defaultFocus($focusedAnswer, round.options.first.map { AnswerFocus(round: model.roundIndex, value: $0) })
+        .tvHintActivity(model.tracker.correctAnswers + model.tracker.mistakes)
         .onAppear(perform: revealObjects)
         .onChange(of: model.roundIndex) { _, _ in
             shakeCounts = [:]
@@ -146,6 +147,7 @@ struct TVCountingPopView: View {
                 .accessibilityLabel("\(option)")
                 .accessibilityHint("Answer \(option) \(round.objectName)")
                 .accessibilityIdentifier("countingPop.option.\(option)")
+                .tvHintTarget(!model.isShowingSuccess && round.isCorrect(option))
             }
         }
         .focusSection()

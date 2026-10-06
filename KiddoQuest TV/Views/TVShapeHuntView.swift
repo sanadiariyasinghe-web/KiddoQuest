@@ -90,6 +90,7 @@ struct TVShapeHuntView: View {
         .tvScreenBackground()
         .animation(TVTheme.Motion.pop, value: model.isChallengeComplete)
         .defaultFocus($focus, .item(challenge.items.first?.id ?? 0))
+        .tvHintActivity(model.tracker.correctAnswers + model.tracker.mistakes)
         .onChange(of: model.isChallengeComplete) { _, isComplete in
             if isComplete {
                 sound.play(.reward)
@@ -152,6 +153,8 @@ struct TVShapeHuntView: View {
                 .animation(TVTheme.Motion.pop, value: isFound)
                 .accessibilityLabel(isFound ? "\(item.content.spokenName), found" : item.content.spokenName)
                 .accessibilityIdentifier("shapeHunt.item.\(item.id)")
+                // Hint: the next target that hasn't been found yet
+                .tvHintTarget(!model.isChallengeComplete && item.id == challenge.items.first { $0.isTarget && !model.isFound($0) }?.id)
             }
         }
         .focusSection()
