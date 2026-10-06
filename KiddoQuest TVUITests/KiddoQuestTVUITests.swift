@@ -257,6 +257,21 @@ final class KiddoQuestTVUITests: XCTestCase {
     }
 
     @MainActor
+    func testSettingsCalmModeAndDailyLimit() {
+        let app = launchKiddoQuestTV()
+        select("home.settings", in: app)
+        let calm = element("settings.calmMode", in: app)
+        XCTAssertTrue(calm.waitForExistence(timeout: 8))
+        XCTAssertEqual(calm.value as? String, "Off")
+        select("settings.calmMode", in: app)
+        XCTAssertEqual(element("settings.calmMode", in: app).value as? String, "On")
+
+        XCTAssertEqual(element("settings.dailyLimit", in: app).value as? String, "No limit")
+        select("settings.dailyLimit", in: app)
+        XCTAssertEqual(element("settings.dailyLimit", in: app).value as? String, "15 min")
+    }
+
+    @MainActor
     func testResetProgressAsksForConfirmation() {
         let app = launchKiddoQuestTV()
         select("home.settings", in: app)

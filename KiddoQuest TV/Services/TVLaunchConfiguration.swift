@@ -27,6 +27,15 @@ struct TVLaunchConfiguration {
         }
     }
 
+    /// UI tests keep play time in a separate, freshly cleared store.
+    func makePlayTimeDefaults() -> UserDefaults {
+        guard isUITesting else { return .standard }
+        let suiteName = "KiddoQuestTV.UITests.PlayTime"
+        let defaults = UserDefaults(suiteName: suiteName) ?? .standard
+        defaults.removePersistentDomain(forName: suiteName)
+        return defaults
+    }
+
     /// UI tests use memory-only storage so they never touch saved family data.
     func makePersistence() -> TVPersistenceStoring {
         guard isUITesting else { return TVUserDefaultsPersistence() }
