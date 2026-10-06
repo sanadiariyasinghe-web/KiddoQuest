@@ -25,12 +25,20 @@ final class ColoringViewModel {
         ColoringTask(shapeName: "Triangle", shapeSymbol: "triangle.fill", targetColorName: "Green", targetColor: Theme.ColorPalette.animalsGreen)
     ]
     
-    let colorOptions: [ColorOption] = [
+    /// All paints; each round shows the right one plus a few others depending on the level.
+    private let allColorOptions: [ColorOption] = [
         ColorOption(id: "red", name: "Red", color: Color.red, emoji: "🔴"),
         ColorOption(id: "blue", name: "Blue", color: Theme.ColorPalette.lettersBlue, emoji: "🔵"),
         ColorOption(id: "yellow", name: "Yellow", color: Theme.ColorPalette.numbersYellow, emoji: "🟡"),
         ColorOption(id: "green", name: "Green", color: Theme.ColorPalette.animalsGreen, emoji: "🟢")
     ]
+    
+    /// Paints shown this round.
+    var colorOptions: [ColorOption] = []
+    
+    /// Gentle level: decides how many paints to choose from.
+    let level: Int = GameLevelStore.shared.level(for: "shp_1")
+    private(set) var newLevel: Int? = nil
     
     var currentTask: ColoringTask {
         tasks[currentTaskIndex]
@@ -54,7 +62,8 @@ final class ColoringViewModel {
             score: score,
             stars: GameScoring.finalStars(correct: correctAnswers, total: tasks.count),
             correctAnswers: correctAnswers,
-            totalQuestions: tasks.count
+            totalQuestions: tasks.count,
+            newLevel: newLevel
         )
     }
     
@@ -71,6 +80,11 @@ final class ColoringViewModel {
         hasMissedThisRound = false
         mascotMood = .idle
         mascotMessage = "Paint the \(currentTask.shapeName) \(currentTask.targetColorName)!"
+        
+        let choiceCount = GameLevels.choiceCount(forLevel: level)
+        let rightPaint = allColorOptions.filter { $0.name == currentTask.targetColorName }
+        let otherPaints = allColorOptions.filter { $0.name != currentTask.targetColorName }.shuffled()
+        colorOptions = (rightPaint + otherPaints.prefix(choiceCount - 1)).shuffled()
     }
     
     func selectColor(_ option: ColorOption) {
@@ -103,6 +117,7 @@ final class ColoringViewModel {
                 } else {
                     self.isGameCompleted = true
                     self.starsEarned = self.result.stars
+                    self.newLevel = GameLevelStore.shared.recordRound(gameID: "shp_1", stars: self.starsEarned)
                     self.mascotMessage = "You painted every shape! 🎉"
                     SoundService.shared.playRewardCelebration()
                     

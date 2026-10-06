@@ -12,6 +12,8 @@ struct HuntItem: Identifiable, Hashable {
 @Observable
 final class LetterShapeHuntViewModel {
     var isShapeMode: Bool = false
+    /// Easy-to-tell-apart capital letters for kindergarten children.
+    static let letterPool = ["A", "B", "C", "D", "E", "F", "M", "O", "S", "T"]
     var targetSymbol: String = "A"
     var targetPrompt: String = "Find all the A letters!"
     var items: [HuntItem] = []
@@ -72,13 +74,12 @@ final class LetterShapeHuntViewModel {
                 )
             }
         } else {
-            targetSymbol = "A"
-            targetPrompt = "Find all the A letters!"
-            let rawList: [(String, Bool)] = [
-                ("A", true), ("B", false), ("A", true),
-                ("C", false), ("A", true), ("D", false),
-                ("E", false), ("B", false)
-            ]
+            // A different letter each game keeps replays fresh
+            targetSymbol = Self.letterPool.randomElement() ?? "A"
+            targetPrompt = "Find all the \(targetSymbol) letters!"
+            let distractors = Self.letterPool.filter { $0 != targetSymbol }.shuffled().prefix(5)
+            let rawList: [(String, Bool)] = (Array(repeating: (targetSymbol, true), count: totalRequired)
+                + distractors.map { ($0, false) }).shuffled()
             items = rawList.enumerated().map { index, entry in
                 HuntItem(
                     symbol: entry.0,
@@ -89,7 +90,7 @@ final class LetterShapeHuntViewModel {
             }
         }
         
-        mascotMessage = isShapeMode ? "Tap each triangle!" : "Tap each A!"
+        mascotMessage = isShapeMode ? "Tap each triangle!" : "Tap each \(targetSymbol)!"
     }
     
     func tapItem(_ item: HuntItem) {

@@ -28,6 +28,9 @@ final class CountingPopViewModel {
     var totalRounds: Int = 5
     var currentRound: Int = 1
     var difficultyLevel: Int = 1
+    /// Gentle level: decides how many number cards to choose from.
+    let level: Int = GameLevelStore.shared.level(for: "num_1")
+    private(set) var newLevel: Int? = nil
     private var hasMissedThisRound = false
     
     // Feedback
@@ -43,7 +46,8 @@ final class CountingPopViewModel {
             score: score,
             stars: GameScoring.finalStars(correct: correctAnswers, total: totalRounds),
             correctAnswers: correctAnswers,
-            totalQuestions: totalRounds
+            totalQuestions: totalRounds,
+            newLevel: newLevel
         )
     }
     
@@ -96,10 +100,11 @@ final class CountingPopViewModel {
         questionText = "How many \(selectedItem.name)?"
         mascotMessage = "Count the \(selectedItem.name). Then tap the number!"
         
-        // Generate options (4 unique cards)
+        // Generate unique number cards (2, 3 or 4 depending on the child's level)
+        let choiceCount = GameLevels.choiceCount(forLevel: level)
         var choices = Set<Int>()
         choices.insert(targetCount)
-        while choices.count < 4 {
+        while choices.count < choiceCount {
             let offset = Int.random(in: -3...3)
             let candidate = targetCount + offset
             if candidate > 0 && candidate <= 12 {
@@ -176,6 +181,7 @@ final class CountingPopViewModel {
     private func finishGame() {
         isGameCompleted = true
         starsEarned = result.stars
+        newLevel = GameLevelStore.shared.recordRound(gameID: "num_1", stars: starsEarned)
         mascotMood = .celebrating
         mascotMessage = "You finished all the counting! 🎉"
         SoundService.shared.playRewardCelebration()

@@ -108,6 +108,7 @@ struct ParentSettingsView: View {
                         Button("Reset All Progress", role: .destructive) {
                             CoreDataManager.shared.resetAllData()
                             StickerBook.shared.reset()
+                            GameLevelStore.shared.reset(gameIDs: GameInfo.sampleGames.map(\.id))
                         }
                         Button("Cancel", role: .cancel) { }
                     } message: {

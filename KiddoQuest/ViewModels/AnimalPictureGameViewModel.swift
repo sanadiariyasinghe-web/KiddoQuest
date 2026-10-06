@@ -82,8 +82,9 @@ enum AnimalPictureGame: Hashable {
         AnimalChoice(emoji: "🦀", name: "crab")
     ]
     
-    /// Builds random rounds, each with the right answer and two different distractors.
-    func makeRounds(count: Int) -> [AnimalPictureRound] {
+    /// Builds random rounds, each with the right answer and `choiceCount - 1` different distractors.
+    func makeRounds(count: Int, choiceCount: Int = 3) -> [AnimalPictureRound] {
+        let distractorCount = max(1, choiceCount - 1)
         switch self {
         case .feedAnimals:
             return Self.animalFoods.shuffled().prefix(count).map { pair in
@@ -91,7 +92,7 @@ enum AnimalPictureGame: Hashable {
                     .map(\.food)
                     .filter { $0 != pair.food }
                     .shuffled()
-                    .prefix(2)
+                    .prefix(distractorCount)
                 return AnimalPictureRound(
                     animal: pair.animal,
                     answer: pair.food,
@@ -103,7 +104,7 @@ enum AnimalPictureGame: Hashable {
                 let distractors = Self.shadowAnimals
                     .filter { $0 != animal }
                     .shuffled()
-                    .prefix(2)
+                    .prefix(distractorCount)
                 return AnimalPictureRound(
                     animal: animal,
                     answer: animal,
@@ -119,6 +120,9 @@ enum AnimalPictureGame: Hashable {
 final class AnimalPictureGameViewModel {
     let game: AnimalPictureGame
     let totalRounds = 5
+    /// Gentle level: decides how many pictures to choose from.
+    let level: Int
+    private(set) var newLevel: Int? = nil
     
     var rounds: [AnimalPictureRound] = []
     var currentRoundIndex: Int = 0
@@ -150,13 +154,15 @@ final class AnimalPictureGameViewModel {
             score: score,
             stars: GameScoring.finalStars(correct: correctAnswers, total: totalRounds),
             correctAnswers: correctAnswers,
-            totalQuestions: totalRounds
+            totalQuestions: totalRounds,
+            newLevel: newLevel
         )
     }
     
     init(game: AnimalPictureGame) {
         self.game = game
-        rounds = game.makeRounds(count: totalRounds)
+        level = GameLevelStore.shared.level(for: game.gameID)
+        rounds = game.makeRounds(count: totalRounds, choiceCount: GameLevels.choiceCount(forLevel: level))
         setupRound()
     }
     
@@ -220,6 +226,7 @@ final class AnimalPictureGameViewModel {
     private func finishGame() {
         isGameCompleted = true
         starsEarned = result.stars
+        newLevel = GameLevelStore.shared.recordRound(gameID: game.gameID, stars: starsEarned)
         mascotMood = .celebrating
         mascotMessage = "You did it! 🎉"
         SoundService.shared.playRewardCelebration()

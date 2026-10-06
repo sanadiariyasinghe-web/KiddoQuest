@@ -23,14 +23,22 @@ final class ShapeSortViewModel {
         SortBin(id: "square", name: "SQUARE", symbol: "□", color: Theme.ColorPalette.animalsGreen)
     ]
     
-    var queue: [FallingShape] = [
-        FallingShape(name: "Triangle", symbol: "△", targetBinId: "triangle", color: Theme.ColorPalette.shapesPurple),
-        FallingShape(name: "Circle", symbol: "○", targetBinId: "circle", color: Theme.ColorPalette.lettersBlue),
-        FallingShape(name: "Square", symbol: "□", targetBinId: "square", color: Theme.ColorPalette.animalsGreen),
+    /// One of each shape to sort.
+    private static let shapeKinds: [FallingShape] = [
         FallingShape(name: "Triangle", symbol: "△", targetBinId: "triangle", color: Theme.ColorPalette.shapesPurple),
         FallingShape(name: "Circle", symbol: "○", targetBinId: "circle", color: Theme.ColorPalette.lettersBlue),
         FallingShape(name: "Square", symbol: "□", targetBinId: "square", color: Theme.ColorPalette.animalsGreen)
     ]
+
+    /// 6 shapes in a fresh random order each game: every kind appears at least once.
+    static func makeQueue(count: Int = 6) -> [FallingShape] {
+        let extras = (0..<max(0, count - shapeKinds.count)).compactMap { _ in shapeKinds.randomElement() }
+        return (shapeKinds + extras)
+            .map { FallingShape(name: $0.name, symbol: $0.symbol, targetBinId: $0.targetBinId, color: $0.color) }
+            .shuffled()
+    }
+
+    var queue: [FallingShape] = ShapeSortViewModel.makeQueue()
     
     var currentShapeIndex: Int = 0
     var bouncingBinId: String? = nil
