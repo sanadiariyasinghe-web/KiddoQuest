@@ -7,6 +7,7 @@ struct CelebratingOwlView: View {
     let stars: Int
     
     @State private var isDancing = false
+    @CalmModeEnabled private var isCalm
     
     private var isBigCelebration: Bool { stars >= 3 }
     private var jumpHeight: CGFloat { isBigCelebration ? -22 : -10 }
@@ -37,7 +38,7 @@ struct CelebratingOwlView: View {
         }
         .frame(height: 130)
         .animation(.easeInOut(duration: beat).repeatForever(autoreverses: true), value: isDancing)
-        .onAppear { isDancing = true }
+        .onAppear { isDancing = !isCalm }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(isBigCelebration ? "Buddy the owl is doing a big happy dance" : "Buddy the owl is dancing")
     }

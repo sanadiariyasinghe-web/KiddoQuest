@@ -21,15 +21,6 @@ struct CountingPopGameView: View {
         }
         .navigationTitle("Counting Pop")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Exit") {
-                    navigationPath.removeLast()
-                }
-                .font(Theme.Typography.body(size: 16))
-                .foregroundStyle(Theme.ColorPalette.secondaryText)
-            }
-        }
     }
     
     // MARK: - Game Content

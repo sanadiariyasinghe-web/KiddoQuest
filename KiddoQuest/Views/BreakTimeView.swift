@@ -9,6 +9,7 @@ struct BreakTimeView: View {
     
     @State private var isShowingParentGate = false
     @State private var isOwlResting = false
+    @CalmModeEnabled private var isCalm
     
     var body: some View {
         ZStack {
@@ -91,7 +92,7 @@ struct BreakTimeView: View {
             .accessibilityIdentifier("breakTime.grownUps")
             .padding(.bottom, Theme.Spacing.xlarge)
         }
-        .onAppear { isOwlResting = true }
+        .onAppear { isOwlResting = !isCalm }
     }
 }
 

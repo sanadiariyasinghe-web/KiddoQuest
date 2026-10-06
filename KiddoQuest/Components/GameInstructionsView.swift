@@ -11,7 +11,8 @@ struct GameInstructionsView: View {
     
     @State private var hasAppeared = false
     @State private var isPulsing = false
-    
+    @CalmModeEnabled private var isCalm
+
     var body: some View {
         ZStack {
             Color.black.opacity(0.3)
@@ -58,7 +59,7 @@ struct GameInstructionsView: View {
         }
         .onAppear {
             hasAppeared = true
-            isPulsing = true
+            isPulsing = !isCalm
         }
     }
     

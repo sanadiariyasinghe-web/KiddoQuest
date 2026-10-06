@@ -5,6 +5,7 @@ struct HomeView: View {
     @State private var viewModel = HomeViewModel()
     @State private var cloudOffset: CGFloat = 0
     @State private var bounceOffset: CGFloat = 0
+    @CalmModeEnabled private var isCalm
     
     var body: some View {
         ZStack {
@@ -76,6 +77,7 @@ struct HomeView: View {
             }
         }
         .onAppear {
+            guard !isCalm else { return }
             withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
                 cloudOffset = 18
                 bounceOffset = -6

@@ -40,7 +40,8 @@ struct MascotView: View {
     
     @State private var bounceOffset: CGFloat = 0
     @State private var rotationAngle: Double = 0
-    
+    @CalmModeEnabled private var isCalm
+
     var body: some View {
         HStack(alignment: .center, spacing: 14) {
             // Mascot Character Avatar
@@ -88,6 +89,12 @@ struct MascotView: View {
     }
     
     private func applyMoodAnimation() {
+        // Calm Mode: Buddy stays still
+        guard !isCalm else {
+            bounceOffset = 0
+            rotationAngle = 0
+            return
+        }
         switch mood {
         case .idle:
             withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
