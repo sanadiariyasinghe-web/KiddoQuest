@@ -123,20 +123,29 @@ struct ARLearningView: View {
     }
     
     // MARK: - Actual AR Camera View (for supported devices)
+    /// Real AR: 3D picture cards are placed on a detected table or floor and tapped directly.
     private var actualARCameraView: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             ARRealityViewRepresentable(viewModel: viewModel)
                 .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
                 .overlay(
                     RoundedRectangle(cornerRadius: Theme.Radius.large)
                         .stroke(Theme.ColorPalette.arOrange, lineWidth: 3)
                 )
-            
-            // Overlay target touch cards mapped to detected surface locations
-            ForEach(viewModel.targetObjects) { item in
-                arObjectCard(for: item)
-                    .offset(x: item.xPosition, y: item.yPosition)
-            }
+
+            // Simple status so the child knows what to do next
+            Label(
+                viewModel.isSurfaceFound ? "Tap the 3D cards on the table!" : "Point at a table or the floor 📱",
+                systemImage: viewModel.isSurfaceFound ? "hand.tap.fill" : "viewfinder"
+            )
+            .font(Theme.Typography.headline(size: 15))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(.black.opacity(0.45))
+            .clipShape(Capsule())
+            .padding(.top, 12)
+            .allowsHitTesting(false)
         }
         .padding(.horizontal, Theme.Spacing.medium)
     }
@@ -218,22 +227,30 @@ struct ARLearningView: View {
     }
 }
 
-// MARK: - ARKit RealityView Representable
+// MARK: - ARKit + RealityKit View
 struct ARRealityViewRepresentable: UIViewRepresentable {
     var viewModel: ARLearningViewModel
-    
+
+    func makeCoordinator() -> ARSceneController {
+        ARSceneController(viewModel: viewModel)
+    }
+
     func makeUIView(context: Context) -> ARView {
-        let arView = ARView(frame: .zero)
-        let config = ARService.shared.createConfiguration()
-        arView.session.run(config)
+        let arView = ARView(frame: .zero, cameraMode: .ar, automaticallyConfigureSession: false)
+        context.coordinator.attach(to: arView)
+        context.coordinator.update()
         return arView
     }
-    
+
     func updateUIView(_ uiView: ARView, context: Context) {
-        // Updated when mode changes
+        // Reading these tells SwiftUI to call update when the mode or found items change
+        _ = viewModel.layoutID
+        _ = viewModel.targetObjects
+        context.coordinator.viewModel = viewModel
+        context.coordinator.update()
     }
-    
-    static func dismantleUIView(_ uiView: ARView, coordinator: ()) {
-        uiView.session.pause()
+
+    static func dismantleUIView(_ uiView: ARView, coordinator: ARSceneController) {
+        coordinator.pause()
     }
 }
