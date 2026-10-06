@@ -100,6 +100,9 @@ struct ProfileView: View {
                     .padding(.horizontal, Theme.Spacing.medium)
                 }
                 .padding(.top, Theme.Spacing.medium)
+                // Comfortable reading width on iPad and in landscape
+                .frame(maxWidth: Theme.Layout.maxContentWidth)
+                .frame(maxWidth: .infinity)
                 .padding(.bottom, Theme.Spacing.xlarge)
             }
         }

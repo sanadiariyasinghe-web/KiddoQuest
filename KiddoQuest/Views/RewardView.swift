@@ -82,6 +82,9 @@ struct RewardView: View {
                     .padding(.bottom, Theme.Spacing.xlarge)
                 }
                 .padding(.top, Theme.Spacing.medium)
+                // Comfortable reading width on iPad and in landscape
+                .frame(maxWidth: Theme.Layout.maxContentWidth)
+                .frame(maxWidth: .infinity)
             }
         }
         .navigationTitle("Rewards & Badges")

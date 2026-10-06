@@ -52,6 +52,7 @@ struct GameInstructionsView: View {
                 .accessibilityIdentifier("instructions.play")
             }
             .padding(Theme.Spacing.large)
+            .frame(maxWidth: Theme.Layout.maxCardWidth)
             .background(Theme.ColorPalette.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
             .shadow(color: .black.opacity(0.15), radius: 20, y: 10)
