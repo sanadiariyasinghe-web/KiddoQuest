@@ -1,16 +1,16 @@
 import SwiftUI
 
-/// Simplified, focus-based TV prototypes of the remaining Part A games:
-/// Drag-to-Match, Tap-to-Reveal, Animal Match and Shape Sort.
+/// The five focus-based choice games from KiddoQuest iOS:
+/// Tap-to-Match, Tap-to-Reveal, Feed the Animals, Animal Shadows and Shape Sort.
 ///
-/// Mobile drag gestures don't suit a Siri Remote, so each prototype turns
-/// the interaction into "move focus to the target, then press select".
-struct TVOtherGamePrototypeView: View {
+/// Touch gestures don't suit a Siri Remote, so each game turns the
+/// interaction into "move focus to the answer, then press select".
+struct TVChoiceGameView: View {
     let game: TVGame
     let player: TVPlayer?
     let onFinish: (TVSessionResult) -> Void
 
-    @State private var model: TVPrototypeGameViewModel
+    @State private var model: TVChoiceGameViewModel
     @Environment(TVSoundService.self) private var sound
     @Environment(TVRouter.self) private var router
 
@@ -29,14 +29,14 @@ struct TVOtherGamePrototypeView: View {
         self.game = game
         self.player = player
         self.onFinish = onFinish
-        _model = State(initialValue: TVPrototypeGameViewModel(kind: game.kind, category: category))
+        _model = State(initialValue: TVChoiceGameViewModel(kind: game.kind, category: category))
     }
 
     var body: some View {
         if let round = model.currentRound {
             gameBody(round)
         } else {
-            TVEmptyStateView(title: "Coming soon!", message: "This prototype has no rounds for this world yet.") {
+            TVEmptyStateView(title: "Coming soon!", message: "This game has no rounds for this world yet.") {
                 router.pop()
             }
         }
@@ -49,8 +49,7 @@ struct TVOtherGamePrototypeView: View {
                 roundLabel: model.roundLabel,
                 points: model.tracker.points,
                 starsThisGame: model.tracker.correctAnswers,
-                player: player,
-                isPrototype: true
+                player: player
             )
 
             Text(round.prompt)
@@ -58,11 +57,11 @@ struct TVOtherGamePrototypeView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
                 .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("prototype.prompt")
+                .accessibilityIdentifier("choice.prompt")
 
             HStack(spacing: 60) {
                 ZStack {
-                    TVPrototypeSubjectView(subject: round.subject, isSolved: model.isShowingSuccess)
+                    TVRoundSubjectView(subject: round.subject, isSolved: model.isShowingSuccess)
                     TVSparkleBurst(trigger: celebrationTrigger, distance: 300)
                 }
                 .frame(maxWidth: .infinity)
@@ -79,7 +78,7 @@ struct TVOtherGamePrototypeView: View {
                     Button {
                         choose(option)
                     } label: {
-                        TVPrototypeOptionView(option: option, isWinner: isWinner)
+                        TVChoiceOptionView(option: option, isWinner: isWinner)
                             .frame(width: optionSize.width, height: optionSize.height)
                     }
                     .tvCardButtonStyle(
@@ -90,7 +89,7 @@ struct TVOtherGamePrototypeView: View {
                     .modifier(TVShakeEffect(animatableData: CGFloat(shakeCounts[option.id, default: 0])))
                     .focused($focusedOption, equals: focusValue)
                     .accessibilityLabel(option.label)
-                    .accessibilityIdentifier("prototype.option.\(option.id)")
+                    .accessibilityIdentifier("choice.option.\(option.id)")
                 }
             }
             .focusSection()
@@ -128,8 +127,8 @@ struct TVOtherGamePrototypeView: View {
                     .transition(.scale(scale: 0.8).combined(with: .opacity))
             } else {
                 Label(
-                    "Prototype: a focus-based TV version of \(game.title) from KiddoQuest iOS",
-                    systemImage: "info.circle"
+                    "Move to an answer, then press the remote to choose it",
+                    systemImage: "hand.tap.fill"
                 )
                 .font(TVTheme.Typography.caption)
                 .foregroundStyle(TVTheme.Palette.textSecondary)
@@ -158,8 +157,8 @@ struct TVOtherGamePrototypeView: View {
 // MARK: - Subject artwork
 
 /// The picture the player is answering about, with a "solved" animation
-/// specific to each prototype (snap, colour reveal, join, or drop-in).
-struct TVPrototypeSubjectView: View {
+/// specific to each game (snap, colour reveal, feeding, shadow reveal, or drop-in).
+struct TVRoundSubjectView: View {
     let subject: TVRoundSubject
     let isSolved: Bool
 
@@ -168,7 +167,7 @@ struct TVPrototypeSubjectView: View {
             .animation(TVTheme.Motion.pop, value: isSolved)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(accessibilityText)
-            .accessibilityIdentifier("prototype.subject")
+            .accessibilityIdentifier("choice.subject")
     }
 
     @ViewBuilder
@@ -219,20 +218,31 @@ struct TVPrototypeSubjectView: View {
                 .scaleEffect(isSolved ? 1.12 : 1)
                 .contentTransition(.symbolEffect(.replace))
 
-        case .animalHalf(let emoji, _):
-            // Animal Match: the back half slides in to complete the animal.
-            HStack(spacing: isSolved ? 0 : 30) {
-                TVAnimalHalfView(emoji: emoji, side: .leading, size: 300)
+        case .hungryAnimal(let emoji, _, let food):
+            // Feed the Animals: the food appears next to the happy animal.
+            HStack(spacing: 40) {
+                Text(emoji)
+                    .font(.system(size: 260))
+                    .scaleEffect(isSolved ? 1.1 : 1)
                 if isSolved {
-                    TVAnimalHalfView(emoji: emoji, side: .trailing, size: 300)
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
-                } else {
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .strokeBorder(TVTheme.Palette.muted, style: StrokeStyle(lineWidth: 6, dash: [18, 12]))
-                        .frame(width: 150, height: 300)
-                        .overlay(Text("?").font(.system(size: 100, weight: .heavy, design: .rounded)))
+                    VStack(spacing: 10) {
+                        Text(food).font(.system(size: 150))
+                        Text("Yum!")
+                            .font(.system(size: 70, weight: .heavy, design: .rounded))
+                            .foregroundStyle(TVTheme.Palette.success)
+                    }
+                    .transition(.scale.combined(with: .opacity))
                 }
             }
+
+        case .animalShadow(let emoji, _):
+            // Animal Shadows: the dark silhouette turns into the real animal.
+            Text(emoji)
+                .font(.system(size: 300))
+                .colorMultiply(isSolved ? .white : .black)
+                .opacity(isSolved ? 1 : 0.85)
+                .scaleEffect(isSolved ? 1.12 : 1)
+                .animation(.easeInOut(duration: 0.6), value: isSolved)
 
         case .shape(let kind):
             // Shape Sort: the shape drops down into its bin.
@@ -262,32 +272,16 @@ struct TVPrototypeSubjectView: View {
         case .group(let emoji, let count): return "A group of \(count) \(emoji)"
         case .letter(let letter): return "Capital letter \(letter)"
         case .colorReveal(_, let name, let answer): return isSolved ? "\(answer.name) \(name)" : "Uncoloured \(name)"
-        case .animalHalf(_, let name): return isSolved ? "Complete \(name)" : "Front half of an animal"
+        case .hungryAnimal(_, let name, _): return "Hungry \(name)"
+        case .animalShadow(_, let name): return isSolved ? name.capitalized : "Animal shadow"
         case .shape(let kind): return isSolved ? "\(kind.name) sorted" : kind.name
         case .none: return ""
         }
     }
 }
 
-/// Shows the front (leading) or back (trailing) half of an emoji animal.
-struct TVAnimalHalfView: View {
-    enum Side { case leading, trailing }
-
-    let emoji: String
-    let side: Side
-    var size: CGFloat = 160
-
-    var body: some View {
-        Text(emoji)
-            .font(.system(size: size * 0.9))
-            .frame(width: size, height: size)
-            .frame(width: size / 2, alignment: side == .leading ? .leading : .trailing)
-            .clipped()
-    }
-}
-
 /// Visual for one answer option.
-struct TVPrototypeOptionView: View {
+struct TVChoiceOptionView: View {
     let option: TVChoiceOption
     let isWinner: Bool
 
@@ -323,8 +317,6 @@ struct TVPrototypeOptionView: View {
                 .fill(choice.color)
                 .frame(width: 100, height: 100)
                 .overlay(Circle().strokeBorder(Color.white, lineWidth: 4))
-        case .animalBackHalf(let emoji):
-            TVAnimalHalfView(emoji: emoji, side: .trailing, size: 150)
         case .animal(let emoji):
             Text(emoji).font(.system(size: 110))
         case .shapeBin(let kind):

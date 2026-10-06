@@ -18,8 +18,8 @@ struct TVGamePlayView: View {
                 TVCountingPopView(category: launchCategory, player: store.activePlayer, onFinish: finish)
             case .shapeHunt:
                 TVShapeHuntView(category: launchCategory, player: store.activePlayer, onFinish: finish)
-            case .dragToMatch, .tapToReveal, .animalMatch, .shapeSort:
-                TVOtherGamePrototypeView(game: game, category: launchCategory, player: store.activePlayer, onFinish: finish)
+            case .dragToMatch, .tapToReveal, .feedAnimals, .animalShadows, .shapeSort:
+                TVChoiceGameView(game: game, category: launchCategory, player: store.activePlayer, onFinish: finish)
             }
         } else {
             TVEmptyStateView(title: "Oops!", message: "This game isn't available right now.") {

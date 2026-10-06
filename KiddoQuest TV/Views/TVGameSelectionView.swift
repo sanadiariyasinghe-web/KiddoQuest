@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The full game library showing all six KiddoQuest games.
+/// The full game library showing all seven KiddoQuest games.
 struct TVGameSelectionView: View {
     let initialFilter: TVCategory?
 
@@ -24,7 +24,7 @@ struct TVGameSelectionView: View {
             VStack(alignment: .leading, spacing: 40) {
                 TVScreenHeader(
                     title: "Game Library",
-                    subtitle: "2 full TV games + 4 focus-based prototypes. Family Challenge lives in the Learning World.",
+                    subtitle: "7 games to play with the remote. Family Challenge lives in the Learning World.",
                     icon: "🎮"
                 )
 
@@ -40,7 +40,7 @@ struct TVGameSelectionView: View {
                 }
                 .focusSection()
 
-                // Only six cards, so build them eagerly; every card then exists for
+                // Only seven cards, so build them eagerly; every card then exists for
                 // the focus engine, VoiceOver and UI tests even before scrolling.
                 VStack(alignment: .leading, spacing: 50) {
                     ForEach(rows, id: \.first?.kind) { row in

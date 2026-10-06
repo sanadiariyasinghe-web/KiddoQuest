@@ -13,7 +13,7 @@ nonisolated enum TVRoute: Hashable {
     case playerSelection(TVPlayerSelectionMode)
     case world
     case category(TVCategory)
-    /// The full six-game library, optionally pre-filtered to a category.
+    /// The full seven-game library, optionally pre-filtered to a category.
     case gameLibrary(TVCategory?)
     case game(TVGameKind, TVCategory)
     case familyChallenge
