@@ -88,21 +88,41 @@ enum Theme {
     }
     
     // MARK: - Typography
+    // Rounded fonts that scale with the user's Dynamic Type text size.
+    // Growth is capped so very large text sizes can't break the child-sized layouts.
     enum Typography {
+        /// Largest growth allowed over the design size (e.g. 20pt → at most 30pt).
+        static let maxDynamicTypeScale: CGFloat = 1.5
+
         static func title(size: CGFloat = 28) -> Font {
-            .system(size: size, weight: .heavy, design: .rounded)
+            .system(size: scaled(size, relativeTo: .title1), weight: .heavy, design: .rounded)
         }
-        
+
         static func headline(size: CGFloat = 22) -> Font {
-            .system(size: size, weight: .bold, design: .rounded)
+            .system(size: scaled(size, relativeTo: .headline), weight: .bold, design: .rounded)
         }
-        
+
         static func body(size: CGFloat = 18) -> Font {
-            .system(size: size, weight: .medium, design: .rounded)
+            .system(size: scaled(size, relativeTo: .body), weight: .medium, design: .rounded)
         }
-        
+
         static func caption(size: CGFloat = 14) -> Font {
-            .system(size: size, weight: .semibold, design: .rounded)
+            .system(size: scaled(size, relativeTo: .caption1), weight: .semibold, design: .rounded)
         }
+
+        /// Scales a design size with Dynamic Type, never smaller than the design size
+        /// and never more than `maxDynamicTypeScale` times bigger.
+        static func scaled(_ size: CGFloat, relativeTo style: UIFont.TextStyle) -> CGFloat {
+            let scaledSize = UIFontMetrics(forTextStyle: style).scaledValue(for: size)
+            return min(max(scaledSize, size), size * maxDynamicTypeScale)
+        }
+    }
+
+    // MARK: - Layout
+    enum Layout {
+        /// Comfortable maximum width for game screens on iPad and in landscape.
+        static let maxContentWidth: CGFloat = 760
+        /// Maximum width for cards such as instructions and pop-ups.
+        static let maxCardWidth: CGFloat = 560
     }
 }

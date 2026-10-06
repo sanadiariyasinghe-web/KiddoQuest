@@ -30,7 +30,12 @@ struct GameFlowContainer<Content: View>: View {
     
     var body: some View {
         ZStack {
+            // Full-screen background so games can stay a comfortable width on iPad / landscape
+            Theme.ColorPalette.mainBackground
+                .ignoresSafeArea()
+
             content()
+                .frame(maxWidth: Theme.Layout.maxContentWidth)
                 .overlayPreferenceValue(HintTargetKey.self) { anchor in
                     GeometryReader { proxy in
                         if isShowingHint, phase == .playing, !isFinished, let anchor {
@@ -143,6 +148,7 @@ struct GameFlowContainer<Content: View>: View {
                 }
             }
             .padding(Theme.Spacing.large)
+            .frame(maxWidth: Theme.Layout.maxCardWidth)
             .background(Theme.ColorPalette.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
             .shadow(color: .black.opacity(0.15), radius: 20, y: 10)

@@ -60,6 +60,9 @@ struct CategoryView: View {
                     .padding(.horizontal, Theme.Spacing.medium)
                 }
                 .padding(Theme.Spacing.medium)
+                // Comfortable reading width on iPad and in landscape
+                .frame(maxWidth: Theme.Layout.maxContentWidth)
+                .frame(maxWidth: .infinity)
             }
         }
         .navigationTitle(category.rawValue)

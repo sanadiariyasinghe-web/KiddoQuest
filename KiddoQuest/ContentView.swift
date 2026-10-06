@@ -5,6 +5,7 @@ struct ContentView: View {
     @AppStorage("has_seen_intro") private var hasSeenIntro: Bool = false
     @State private var showWelcomeScreen: Bool = true
     @State private var playTime = PlayTimeTracker.shared
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     /// How often the daily play-time clock is updated while the app is open.
     private let playTimeCheckInterval: Duration = .seconds(20)
@@ -18,6 +19,9 @@ struct ContentView: View {
                     mainNavigationView
                 }
             }
+            // Theme fonts are sized from Dynamic Type, so redraw when the text size changes
+            // (the navigation path lives here, so the child stays on the same screen)
+            .id(dynamicTypeSize)
             .accessibilityHidden(playTime.isLimitReached)
             
             // Daily limit reached: a calm break screen covers the whole app

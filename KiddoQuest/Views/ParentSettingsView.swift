@@ -183,6 +183,9 @@ struct ParentSettingsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
             }
             .padding(Theme.Spacing.medium)
+            // Comfortable reading width on iPad and in landscape
+            .frame(maxWidth: Theme.Layout.maxContentWidth)
+            .frame(maxWidth: .infinity)
         }
     }
 
