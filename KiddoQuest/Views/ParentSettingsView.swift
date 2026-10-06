@@ -36,6 +36,8 @@ struct ParentSettingsView: View {
     private var settingsContentView: some View {
         ScrollView {
             VStack(spacing: Theme.Spacing.large) {
+                weeklySummarySection
+
                 // Audio Preferences
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Audio Controls")
@@ -182,5 +184,51 @@ struct ParentSettingsView: View {
             }
             .padding(Theme.Spacing.medium)
         }
+    }
+
+    // MARK: - This Week's Learning
+    /// "What my child learned this week", built from saved game progress and sessions.
+    private var weeklySummarySection: some View {
+        let coreData = CoreDataManager.shared
+        let skills = WeeklyLearningSummary.skillsLearned(progress: coreData.progressByGame)
+        let weekStart = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        let totals = coreData.sessionTotals(since: weekStart)
+
+        return VStack(alignment: .leading, spacing: 14) {
+            Text("What \(coreData.currentProfile.name) learned this week")
+                .font(Theme.Typography.headline(size: 18))
+                .foregroundStyle(Theme.ColorPalette.primaryText)
+
+            HStack(spacing: Theme.Spacing.medium) {
+                Label("\(totals.gamesPlayed) games", systemImage: "gamecontroller.fill")
+                Label("\(totals.starsEarned) stars", systemImage: "star.fill")
+                Label("\(StickerBook.shared.stickers.count) stickers", systemImage: "seal.fill")
+            }
+            .font(Theme.Typography.caption())
+            .foregroundStyle(Theme.ColorPalette.secondaryText)
+
+            if skills.isEmpty {
+                Text("No games finished this week yet. Skills appear here after each finished game.")
+                    .font(Theme.Typography.body(size: 14))
+                    .foregroundStyle(Theme.ColorPalette.secondaryText)
+            } else {
+                ForEach(skills) { skill in
+                    HStack(spacing: 10) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(Theme.ColorPalette.successGreen)
+                        Text(skill.skill)
+                            .font(Theme.Typography.body(size: 15))
+                            .foregroundStyle(Theme.ColorPalette.primaryText)
+                        Spacer()
+                        ProgressStarBar(stars: skill.stars, maxStars: 3, starSize: 12, showBackground: false)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(20)
+        .background(Theme.ColorPalette.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
     }
 }
