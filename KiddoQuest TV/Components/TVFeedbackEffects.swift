@@ -21,6 +21,7 @@ struct TVSparkleBurst: View {
     var distance: CGFloat = 220
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.tvCalmMode) private var isCalmMode
     @State private var isExpanded = false
     @State private var isVisible = false
 
@@ -50,7 +51,8 @@ struct TVSparkleBurst: View {
     }
 
     private func fire() async {
-        guard !reduceMotion else { return }
+        // No confetti with Reduce Motion or Calm Mode
+        guard !reduceMotion, !isCalmMode else { return }
         // Reset without animation, then expand on the next frame so the
         // burst replays every time rather than coalescing into one update.
         var reset = Transaction()

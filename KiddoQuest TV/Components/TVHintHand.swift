@@ -5,7 +5,7 @@ import SwiftUI
 // Games mark the correct answer with `.tvHintTarget(true)` and report answer
 // activity with `.tvHintActivity(_:)`. `TVHintOverlay` then shows a friendly 👆
 // over the right answer shortly after play starts and again after 8 seconds
-// without an answer.
+// without an answer. Hints stay on in Calm Mode.
 
 /// Carries the bounds of the current hint target up to the game container.
 struct TVHintTargetKey: PreferenceKey {
@@ -79,7 +79,7 @@ struct TVHintHandView: View {
 
 /// Shows the hint hand over the marked answer at the start and after idle periods.
 struct TVHintOverlay: ViewModifier {
-    @Environment(\.tvAmbientMotionEnabled) private var isMotionEnabled
+    @Environment(\.tvHintsEnabled) private var isHintsEnabled
 
     @State private var isShowingHint = false
     @State private var lastActivity = ContinuousClock.now
@@ -110,8 +110,8 @@ struct TVHintOverlay: ViewModifier {
                 }
             }
             .task {
-                // Looping hints are skipped when ambient motion is off (UI tests).
-                guard isMotionEnabled else { return }
+                // Hints are switched off for UI tests only.
+                guard isHintsEnabled else { return }
                 try? await Task.sleep(for: firstHintDelay)
                 await showHint()
                 while !Task.isCancelled {
