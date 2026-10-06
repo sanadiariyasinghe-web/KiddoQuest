@@ -18,7 +18,11 @@ final class ARLearningViewModel {
     
     var instructionText: String = "Find the letter A!"
     var targetObjects: [ARObjectItem] = []
-    
+    /// Changes whenever a new set of objects is created, so the AR scene re-places its 3D cards.
+    var layoutID = UUID()
+    /// True once ARKit has found a real table or floor to place objects on.
+    var isSurfaceFound: Bool = false
+
     var foundCount: Int = 0
     var totalRequired: Int = 2
     var score: Int = 0
@@ -47,7 +51,8 @@ final class ARLearningViewModel {
         showConfetti = false
         isGentleRetry = false
         mascotMood = .idle
-        
+        layoutID = UUID()
+
         switch mode {
         case .letterHunt:
             instructionText = "Find the letter A!"
