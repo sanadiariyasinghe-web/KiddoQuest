@@ -321,6 +321,22 @@ final class CoreDataManager {
         }
     }
     
+    /// Games finished and stars earned since `date` (used for the parent's weekly summary).
+    func sessionTotals(since date: Date) -> (gamesPlayed: Int, starsEarned: Int) {
+        let request: NSFetchRequest<SessionHistoryEntity> = NSFetchRequest(entityName: "SessionHistoryEntity")
+        request.predicate = NSPredicate(format: "date >= %@", date as NSDate)
+
+        do {
+            let results = try context.fetch(request)
+            let games = results.reduce(0) { $0 + Int($1.gamesPlayed) }
+            let stars = results.reduce(0) { $0 + Int($1.starsEarned) }
+            return (games, stars)
+        } catch {
+            print("Failed to fetch session totals: \(error)")
+            return (0, 0)
+        }
+    }
+
     // MARK: - Reset All Data
     func resetAllData() {
         let entities = ["ChildProfileEntity", "GameProgressEntity", "SessionHistoryEntity", "BadgeEntity"]
