@@ -58,11 +58,11 @@ KiddoQuest TV turns individual learning into a **shared living-room activity**:
 | Player Selection | "Who's Playing?" cards with avatar, name, 5-star rating and best category (e.g. *Animals 90%*). Selection is saved locally |
 | Learning World | Four category cards (icon, name, % complete, stars) plus Family Challenge, Game Library and My Rewards. The player chip switches player |
 | Category | Category progress summary and the games inside that world |
-| Game Library | All six KiddoQuest games with category filters and an honest **FULL GAME / PROTOTYPE** badge |
-| Game Play | Counting Pop TV, Shape Hunt TV and four prototypes (see §11) |
-| Results / Rewards | Session stars (pop-in animation), points, newly unlocked badges (scale + sparkle + glow), total stars and all five badges |
+| Game Library | All seven KiddoQuest games (the same set as the iOS app) with category filters |
+| Game Play | Picture instructions → game with pointing-hand hints → Results (see §11) |
+| Results / Rewards | Learn → Play → Stars trail, session stars (pop-in animation), points, a **new sticker**, Buddy's dance (bigger at 3 stars), newly unlocked badges, total stars, all five badges and **My Sticker Book** |
 | Family Progress | Family Stars, Family Challenges, Games Played, Most Played Category, plus a panel per player (4 category bars, games, stars, categories completed) |
-| Settings | Sound, Music, Player Profiles, Load Demo Family, Reset Progress (with confirmation) |
+| Settings | Sound, Music, **Calm Mode**, **Daily Time Limit**, Player Profiles, Load Demo Family, Reset Progress (with confirmation) |
 
 ## 8. tvOS-specific capabilities
 
@@ -110,17 +110,35 @@ Focus is never shown by colour alone: the border thickness and size change as we
 
 ## 11. Game descriptions
 
-| # | Game | TV status | Interaction on TV |
-| --- | --- | --- | --- |
-| 1 | **Counting Pop TV** | ✅ **Full game** (5 rounds; Numbers and Animals sets) | "How many apples?" Large emoji objects pop in, and the player focuses one of four big numbers (3 / 5 / 7 / 9). A correct answer triggers a sparkle burst, a bounce, a celebrating Buddy, "Great job! +10" and the next round. A wrong answer gives a gentle shake, "Almost! Try again!" and dims the tried option; there are no lives |
-| 2 | **Drag-to-Match** | 🔨 Prototype (3 rounds; Numbers and Letters) | Drag replaced by focus: focus the matching number/letter and select. The group "snaps" a number badge on (A → a for letters) |
-| 3 | **Tap-to-Reveal** | 🔨 Prototype (4 rounds) | "What colour should this sun be?" Four labelled swatches (Red / Blue / Yellow / Green). The correct choice fills the outline with an animated colour reveal |
-| 4 | **Letter / Shape Hunt → Shape Hunt TV** | ✅ **Full game** (3 hunts; Shapes and Letters sets) | "Find all the TRIANGLES!" Every shape is focusable, and a counter shows *Found: 0 / 2 → 1 / 2 → 2 / 2*. Each find gets a sparkle and a "Found!" tag. Finishing shows "Great job!" ⭐⭐⭐ and a **Next Challenge** button. From Letters it becomes Letter Hunt |
-| 5 | **Animal Match** | 🔨 Prototype (4 rounds) | Front half of an animal on screen. Focus the matching back half (Lion, Dog, Cat, Elephant, Monkey) and the animal joins with a celebration |
-| 6 | **Shape Sort** | 🔨 Prototype (3 rounds) | A shape plus Triangle / Circle / Square bins. Focus the right bin and the shape drops in |
-| ★ | **Family Challenge** | ✅ **Full mode** | See §10 |
+The TV app has the **same seven games as the iOS app (Part A)**. Every game is a full game:
 
-Prototype screens carry a visible **PROTOTYPE** badge and a footer explaining that they are focus-based versions of the Part A games. They do work end-to-end: scoring, stars and saved progress all function. They are deliberately shorter and simpler than the full games.
+1. **Instructions:** a picture sentence children can follow without reading (e.g. 🐰 → 👆 → 🥕), two short steps for grown-ups, and a pre-focused **Let's Play!** button. The Learn → Play → Stars trail shows where the child is.
+2. **Play:** an animated 👆 points at the right answer shortly after play starts and again after 8 seconds without an answer.
+3. **Results:** stars, points, a new sticker, Buddy's dance, and Play Again / More Games / Home.
+
+| # | Game | Worlds | Interaction on TV |
+| --- | --- | --- | --- |
+| 1 | **Counting Pop TV** | Numbers, Animals | "How many apples?" Large emoji objects pop in; focus one of four big numbers. Correct → sparkle burst, bounce, "Great job! +10", next round. Wrong → gentle shake, "Almost! Try again!", the tried option dims; no lives |
+| 2 | **Tap-to-Match** (Numbers) / **Letter Match** (Letters) | Numbers, Letters | Count a group and choose its number, or choose the little letter that matches a capital. 5 shuffled rounds |
+| 3 | **Tap-to-Reveal** | Shapes | "What colour should this sun be?" Four labelled swatches; the right one fills the outline with an animated colour reveal. 5 shuffled rounds |
+| 4 | **Shape Hunt TV / Letter Hunt TV** | Shapes, Letters | "Find all the TRIANGLES!" Every item is focusable; *Found: 0 / 2 → 2 / 2*, then **Next Challenge**. 3 hunts |
+| 5 | **Feed the Animals** | Animals | A hungry animal (🐰 🐶 🐵 🐱 🐭 🐼 🐝 🐔); choose the food it loves and it appears beside the animal with "Yum!". 5 shuffled rounds |
+| 6 | **Animal Shadows** | Animals | A dark shadow of an animal; choose the matching animal and the shadow turns into the full-colour animal. 5 shuffled rounds |
+| 7 | **Shape Sort** | Shapes | A shape plus Triangle / Circle / Square bins; choose the right bin and the shape drops in. 5 rounds, every shape at least once |
+| ★ | **Family Challenge** | All | See §10 |
+
+> Animal Match was retired (as on iOS) because it was hard for young children to understand. Saved progress that mentions it loads as Feed the Animals.
+
+### Kindergarten features shared with the iOS app
+
+| Feature | TV implementation |
+| --- | --- |
+| Picture instructions | `TVInstructionsView` + `TVGameInstructions` (same picture sentences as iOS) |
+| Pointing-hand hints | `TVHintOverlay`, `.tvHintTarget(_:)`, `.tvHintActivity(_:)` (`Components/TVHintHand.swift`) |
+| Sticker book | Per-player stickers (`TVStickerRules`, `TVStickerBookView`), one per finished game |
+| Owl celebration | `TVDanceModifier`: Buddy dances on Results, more at 3 stars |
+| Calm Mode | Settings toggle: no confetti and no ambient motion (hints stay on) |
+| Daily time limit | `TVPlayTimeTracker` + `TVBreakTimeView`: "Time for a break! 🌙", unlocked by a grown-up answering an addition question with the remote |
 
 ## 12. Architecture
 
@@ -131,7 +149,8 @@ KiddoQuest TV/
 ├── KiddoQuest_TVApp.swift      App entry: creates store, router, sound; injects via .environment
 ├── Models/                     Pure value types (nonisolated, Codable/Hashable, unit-testable)
 │   ├── TVCategory.swift        Numbers / Letters / Shapes / Animals (colour, emoji, tagline)
-│   ├── TVGame.swift            TVGameKind, TVGameAvailability (FULL GAME / PROTOTYPE), TVGame
+│   ├── TVGame.swift            TVGameKind (with legacy decoding), TVGameAvailability, TVGame
+│   ├── TVGameInstructions.swift Picture-sentence instructions for every game
 │   ├── TVGameContent.swift     Counting rounds, hunt challenges, choice rounds, family challenges
 │   ├── TVGameProgress.swift    Per-category stars / correct answers / games played
 │   ├── TVPlayer.swift          Local profile (avatar, colour, role, progress, badges)
@@ -146,33 +165,36 @@ KiddoQuest TV/
 │   ├── TVPlayerSelectionViewModel.swift
 │   ├── TVCountingPopViewModel.swift    Full game engine
 │   ├── TVShapeHuntViewModel.swift      Full game engine (shapes + letters)
-│   ├── TVPrototypeGameViewModel.swift  Shared engine for the 4 prototypes
+│   ├── TVChoiceGameViewModel.swift     Shared engine for the 5 choice games
 │   ├── TVFamilyChallengeViewModel.swift Turn-taking + family goal
 │   ├── TVRewardsViewModel.swift
 │   └── TVFamilyProgressViewModel.swift
 ├── Views/                      One file per screen (Root, Home, PlayerSelection, World, Category,
-│                               GameSelection, GamePlay, CountingPop, ShapeHunt, FamilyChallenge,
-│                               OtherGamePrototype, Reward, FamilyProgress, Settings)
+│                               GameSelection, GamePlay, Instructions, CountingPop, ShapeHunt,
+│                               ChoiceGame, FamilyChallenge, Reward, FamilyProgress, Settings, BreakTime)
 ├── Components/                 Reusable focus-based UI: TVFocusStyle, TVFocusCard, TVPrimaryButton,
 │                               TVCategoryCard, TVGameCard, TVPlayerCard, TVRewardCard, TVProgressBar,
 │                               TVStarRewardView, TVMascotView, TVScoreBoard, TVShapeView,
-│                               TVFeedbackEffects (shake, sparkle burst, banner), TVScreenHeader
+│                               TVFeedbackEffects (shake, sparkle burst, banner), TVScreenHeader,
+│                               TVHintHand (hints), TVJourneyTrail, TVStickerBookView (+ dance)
 ├── Services/
 │   ├── TVAppStore.swift            @Observable source of truth; saves on every change
 │   ├── TVPersistenceService.swift  Protocol + UserDefaults and in-memory implementations
 │   ├── TVGameDataService.swift     Bundled game content and demo family
 │   ├── TVSoundService.swift        Synthesized tones with a silent fallback
+│   ├── TVPlayTimeTracker.swift     Daily play time and the break screen rule
 │   └── TVLaunchConfiguration.swift UI-test launch arguments
 └── Theme/                      TVTheme tokens, TVBackgroundView, TVMotionEnvironment
 ```
 
-**Data flow:** Views read `TVAppStore` from the environment → game views own an `@Observable` view model → on finish, `TVGamePlayView` calls `store.recordSession(_:)` and `router.replaceTop(with: .results(...))`. The Results screen therefore replaces the game, so **Back** from Results returns to the category rather than to a finished game.
+**Data flow:** Views read `TVAppStore` from the environment → `TVGamePlayView` shows the instructions, then the game (which owns an `@Observable` view model) → on finish, `TVGamePlayView` calls `store.recordSession(_:)` and `router.replaceTop(with: .results(...))`. The Results screen therefore replaces the game, so **Back** from Results returns to the category rather than to a finished game.
 
 **Concurrency:** the target uses Swift's default MainActor isolation. Models and pure rules are explicitly `nonisolated`. Delayed transitions (auto-advance after a correct answer) use `.task(id:)`, so they are **cancelled automatically** if the player presses Back mid-celebration and can never navigate from a screen that has already gone.
 
 ## 13. Persistence
 
-- `TVAppSnapshot` (players, selected player, family score, settings, last category) is JSON-encoded into **`UserDefaults`** after every change.
+- `TVAppSnapshot` (players with their stickers, selected player, family score, settings including Calm Mode and the daily limit, last category) is JSON-encoded into **`UserDefaults`** after every change. Daily play time is kept separately in `UserDefaults` and resets each day.
+- **Backward compatible:** profiles and settings saved by earlier versions still load (custom `init(from:)` with `decodeIfPresent`), and the retired `animalMatch` game kind maps to Feed the Animals.
 - Why `UserDefaults`: tvOS does not guarantee persistent local file storage (the caches directory can be purged), but small `UserDefaults` data is kept. The snapshot is only a few kilobytes.
 - **Safe defaults:** missing, corrupt or wrong-version data is ignored and the demo family loads. A stale selected-player ID is dropped. If no player is selected, games fall back to the first child profile.
 - **Reset Progress** clears stars, scores, badges and the family score but keeps profiles. **Load Demo Family** restores the sample data for demonstrations.
@@ -180,28 +202,29 @@ KiddoQuest TV/
 
 ## 14. Testing
 
-**Unit tests (Swift Testing), `KiddoQuest TVTests/`:**
+**Unit tests (Swift Testing), `KiddoQuest TVTests/` (85 test cases):**
 
 | File | Covers |
 | --- | --- |
 | `TVScoreTests.swift` | Points, session stars (parameterised), % and 5-star rating, progress recording, demo data matches the brief, reward unlocking, rewards view model |
-| `TVGameLogicTests.swift` | Counting Pop correct/incorrect/ignored/finish/restart/empty data; Shape Hunt found counter (0/2 → 2/2), wrong shape, no double counting, next challenge, letter variant; prototype rounds; library has 6 games with honest status |
-| `TVPlayerTests.swift` | Player switching, persistence round trip, corrupt data, stale IDs, session recording and badge unlock, reset, settings, player-card and home view models, router |
+| `TVGameLogicTests.swift` | Counting Pop correct/incorrect/ignored/finish/restart/empty data; Shape Hunt found counter, wrong shape, no double counting, next challenge, letter variant; all five choice games have 5 valid shuffled rounds; Feed the Animals pairs; Animal Shadows answers; Shape Sort uses every shape; library has 7 full games; legacy `animalMatch` decoding |
+| `TVPlayerTests.swift` | Player switching, persistence round trip, corrupt data, stale IDs, session recording and badge unlock, stickers awarded and saved, sticker rules, profiles saved before stickers, reset, settings, player-card and home view models, router |
 | `TVFamilyChallengeTests.swift` | Minimum players, turn order, player and family scores, wrong-answer retry, goal → celebration, store recording for all participants, play again, family dashboard |
+| `TVComfortTests.swift` | Daily-limit rules, break after the limit and grown-up unlock, new-day reset, limit choices, settings saved before Calm Mode, persistence, parent question |
 
-**UI tests (XCTest / XCUIAutomation), `KiddoQuest TVUITests/`:** driven entirely with `XCUIRemote` (directional presses + Select + Menu). A helper moves focus step by step towards a target, and tests assert `hasFocus` where focus behaviour matters. They cover Home and default focus, Player Selection and switching, Continue without a player, Learning World, Category with Back, Game Library (6 games plus status labels), Counting Pop (wrong → right → next round, and a full run to Results), Shape Hunt (0/2 → 2/2 → Next Challenge), a prototype, Family Challenge turns, Rewards, Family Progress, Settings toggles, Reset confirmation and back navigation to Home.
+**UI tests (XCTest / XCUIAutomation), `KiddoQuest TVUITests/` (20 tests):** driven entirely with `XCUIRemote` (directional presses + Select + Menu). A helper moves focus step by step towards a target, and tests assert `hasFocus` where focus behaviour matters. They cover Home and default focus, Player Selection and switching, Continue without a player, Learning World, Category with Back, Game Library (7 full games), picture instructions with Let's Play! pre-focused, Counting Pop (wrong → right → next round, and a full run to Results with a new sticker), Shape Hunt (0/2 → 2/2 → Next Challenge), Feed the Animals, Family Challenge turns, Rewards with the sticker book, Family Progress, Settings toggles, Calm Mode and Daily Time Limit, Reset confirmation, back navigation to Home, and launch performance.
 
-UI tests launch with `-uiTesting`: in-memory demo data, sound off, and looping ambient motion off so XCTest can detect when the app is idle.
+UI tests launch with `-uiTesting`: in-memory demo data, a cleared play-time store, sound off, and looping ambient motion and hints off so XCTest can detect when the app is idle.
 
-> The results of the final test run are recorded in `AI_ASSISTANCE.md` (§ Testing performed).
+> The results of the final test run are recorded in [`AI_ASSISTANCE.md`](AI_ASSISTANCE.md) (§ Testing performed).
 
 ## 15. Performance
 
 - **No image or audio assets in the UI:** shapes, Buddy and stars are SwiftUI vector drawing, and sounds are synthesized once and cached as tiny PCM buffers. The only bitmaps are the App Icon and Top Shelf images (about 2.4 MB in total).
-- **Limited continuous animation:** only Home and Results use the drifting background, with six shapes that animate transforms only. The drift stops on `onDisappear` and is disabled with Reduce Motion. Buddy's idle bob is a single repeating offset.
+- **Limited continuous animation:** only Home and Results use the drifting background, with six shapes that animate transforms only. The drift stops on `onDisappear` and is disabled with Reduce Motion or Calm Mode. Buddy's idle bob is a single repeating offset.
 - Feedback animations are one-shot. The sparkle burst uses 14 particles and replays without re-creating views.
 - The audio engine starts lazily on the first sound, so there is no cost when sound is off.
-- Small, bounded data; the game library uses eager rows because it only ever has six cards.
+- Small, bounded data; the game library uses eager rows because it only ever has seven cards.
 
 ## 16. Similar apps / competitor research
 
@@ -251,7 +274,7 @@ UI tests launch with `-uiTesting`: in-memory demo data, sound off, and looping a
 
 | FREE | PREMIUM (monthly or annual Family plan, via App Store in-app subscription with Family Sharing) |
 | --- | --- |
-| Basic games (Counting Pop TV, Shape Hunt TV) | Full game library (all six games with extended rounds) |
+| Basic games (Counting Pop TV, Shape Hunt TV) | Full game library (all seven games with extended rounds) |
 | Limited categories (e.g. Numbers and Shapes) | All four learning worlds and seasonal worlds |
 | Basic progress tracking | **Family Challenge mode** (more challenges, larger families) |
 | Up to 2 profiles | **Advanced progress reports** (trends, suggestions, export to the iOS app) |
@@ -282,8 +305,7 @@ Further options: an **education licence** for centres and schools, and a **bundl
 
 ## 22. Known limitations
 
-- **Prototypes:** Drag-to-Match, Tap-to-Reveal, Animal Match and Shape Sort are simplified, short (3–4 round) prototypes, clearly labelled in the app.
-- **Content depth:** each full game has a fixed set of 5 (Counting Pop) or 3 (Shape Hunt) rounds; there is no adaptive difficulty yet.
+- **Content depth:** games have 5 rounds (3 hunts for Shape Hunt). Choice games shuffle their rounds, but there is no adaptive difficulty (levels) on TV yet.
 - **No profile editor on TV:** profiles are the demo family (Ava, Liam, Parent). Adding or renaming profiles is a future feature, best done from the companion iOS app because text entry with a remote is slow.
 - **Local only:** progress lives in `UserDefaults` on one Apple TV, with no iCloud sync to the Part A app yet.
 - **Shared-remote multiplayer:** Family Challenge uses one remote passed between players. Multiple controllers / iPhone-as-remote is not implemented.
@@ -296,9 +318,9 @@ Further options: an **education licence** for centres and schools, and a **bundl
 - iCloud (CloudKit / key-value store) sync between the iOS app and Apple TV.
 - **Multiple controllers** (each child with their own remote or game controller) and **iPhone as a controller** using the GameController framework.
 - **SharePlay** for grandparents or relatives to join a Family Challenge remotely.
-- Spoken prompts with AVSpeechSynthesizer and recorded voice-over for pre-readers.
+- Recorded human voice-over for pre-readers (synthesised speech was removed from the iOS app because it was too fast and robotic for young children).
 - Adaptive difficulty and spaced repetition per player.
-- Full versions of the four prototype games and more Family Challenges.
+- Adaptive levels (as on iOS) and more Family Challenges.
 - Profile management in the iOS app, with parental controls and a screen-time summary.
 
 ## 24. How to build and run
