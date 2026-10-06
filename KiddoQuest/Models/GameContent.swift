@@ -88,10 +88,10 @@ struct GameInfo: Identifiable, Hashable, Codable {
         ),
         GameInfo(
             id: "num_2",
-            title: "Drag-to-Match",
+            title: "Tap-to-Match",
             category: .numbers,
-            description: "Match number cards to the groups of cute objects.",
-            iconName: "hand.draw.fill",
+            description: "Tap the fruits, then tap their number.",
+            iconName: "hand.tap.fill",
             gameType: .dragMatch,
             isUnlocked: true
         ),
@@ -99,9 +99,9 @@ struct GameInfo: Identifiable, Hashable, Codable {
         // Letters Island
         GameInfo(
             id: "let_1",
-            title: "Letter Drag-Match",
+            title: "Letter Tap-Match",
             category: .letters,
-            description: "Match uppercase and lowercase letters together.",
+            description: "Tap a big letter, then its small letter.",
             iconName: "textformat.abc",
             gameType: .dragMatch,
             isUnlocked: true
@@ -130,7 +130,7 @@ struct GameInfo: Identifiable, Hashable, Codable {
             id: "shp_2",
             title: "Shape Sort",
             category: .shapes,
-            description: "Drag dropping shapes into their matching bins.",
+            description: "Tap the box that matches each shape.",
             iconName: "tray.2.fill",
             gameType: .shapeSort,
             isUnlocked: true

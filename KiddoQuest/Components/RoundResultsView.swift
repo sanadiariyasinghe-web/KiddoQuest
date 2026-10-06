@@ -176,6 +176,12 @@ struct RoundResultsView: View {
             summaryRow(icon: "checkmark.circle.fill", iconColor: Theme.ColorPalette.successGreen, label: result.correctLabel) {
                 Text("\(result.correctAnswers) / \(result.totalQuestions)")
             }
+            
+            if let newLevel = result.newLevel {
+                summaryRow(icon: "arrow.up.circle.fill", iconColor: Theme.ColorPalette.lettersBlue, label: "Level up!") {
+                    Text("Level \(newLevel)")
+                }
+            }
         }
         .padding(Theme.Spacing.large)
         .frame(maxWidth: .infinity)

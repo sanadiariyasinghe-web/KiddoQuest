@@ -14,7 +14,7 @@ struct LetterShapeHuntGameView: View {
     
     var body: some View {
         GameFlowContainer(
-            instructions: .hunt(isShapeMode: viewModel.isShapeMode),
+            instructions: .hunt(isShapeMode: viewModel.isShapeMode, targetSymbol: viewModel.targetSymbol),
             navigationPath: $navigationPath,
             isFinished: viewModel.isCompleted,
             result: viewModel.result,

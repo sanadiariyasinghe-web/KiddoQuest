@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Game 2: Drag-to-Match View
+// MARK: - Game 2: Tap-to-Match View
 // Children drag or connect items from the left column to the corresponding target on the right.
 
 struct DragMatchGameView: View {

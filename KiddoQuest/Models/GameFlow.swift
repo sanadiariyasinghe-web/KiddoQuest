@@ -151,6 +151,8 @@ struct RoundResult: Equatable {
     var correctAnswers: Int
     var totalQuestions: Int
     var correctLabel: String = "Correct Answers"
+    /// Set when this round moved the child up to a new level.
+    var newLevel: Int? = nil
 }
 
 // MARK: - Shared Scoring Rules
