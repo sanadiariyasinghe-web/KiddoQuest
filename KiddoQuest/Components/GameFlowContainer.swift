@@ -18,7 +18,8 @@ struct GameFlowContainer<Content: View>: View {
     @State private var earnedSticker: Sticker?
     @State private var isShowingHint = false
     @State private var lastInteraction = ContinuousClock.now
-    
+    @State private var isConfirmingHome = false
+
     /// Short pause so the child sees the success celebration before the results appear.
     private let celebrationDelay: Duration = .seconds(1.4)
     /// The pointing hand appears shortly after play starts...
@@ -65,8 +66,22 @@ struct GameFlowContainer<Content: View>: View {
                 )
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
+
+            if isConfirmingHome {
+                homeConfirmation
+                    .transition(.scale(scale: 0.9).combined(with: .opacity))
+                    .zIndex(1)
+            }
         }
-        .navigationBarBackButtonHidden(phase == .results)
+        // Children leave a game only through the big 🏠 button (or the results screen)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            if phase != .results {
+                ToolbarItem(placement: .topBarLeading) {
+                    homeButton
+                }
+            }
+        }
         .task(id: phase) {
             await runHintLoop()
         }
@@ -83,6 +98,87 @@ struct GameFlowContainer<Content: View>: View {
         }
     }
     
+    // MARK: - Big Home Button
+    private var homeButton: some View {
+        Button {
+            SoundService.shared.playButtonClick()
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                isConfirmingHome = true
+            }
+        } label: {
+            Text("🏠")
+                .font(.system(size: 26))
+                .frame(width: 48, height: 48)
+                .background(Circle().fill(Theme.ColorPalette.cardBackground))
+                .overlay(Circle().stroke(instructions.themeColor, lineWidth: 2.5))
+        }
+        .buttonStyle(BouncyButtonStyle())
+        .accessibilityLabel("Home")
+        .accessibilityIdentifier("game.home")
+    }
+
+    /// "Go home?" check with two big picture buttons, so a stray tap doesn't end the game.
+    private var homeConfirmation: some View {
+        ZStack {
+            Color.black.opacity(0.35)
+                .ignoresSafeArea()
+                .onTapGesture { dismissHomeConfirmation() }
+
+            VStack(spacing: Theme.Spacing.large) {
+                Text("Go home?")
+                    .font(Theme.Typography.title(size: 30))
+                    .foregroundStyle(Theme.ColorPalette.primaryText)
+
+                HStack(spacing: 16) {
+                    confirmationButton(emoji: "🏠", title: "Home", color: Theme.ColorPalette.lettersBlue) {
+                        isConfirmingHome = false
+                        goHome()
+                    }
+                    .accessibilityIdentifier("game.confirmHome")
+
+                    confirmationButton(emoji: "▶️", title: "Keep playing", color: Theme.ColorPalette.successGreen) {
+                        dismissHomeConfirmation()
+                    }
+                    .accessibilityIdentifier("game.keepPlaying")
+                }
+            }
+            .padding(Theme.Spacing.large)
+            .background(Theme.ColorPalette.cardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
+            .shadow(color: .black.opacity(0.15), radius: 20, y: 10)
+            .padding(.horizontal, Theme.Spacing.large)
+        }
+    }
+
+    private func confirmationButton(emoji: String, title: String, color: Color, action: @escaping () -> Void) -> some View {
+        Button {
+            SoundService.shared.playButtonClick()
+            action()
+        } label: {
+            VStack(spacing: 6) {
+                Text(emoji)
+                    .font(.system(size: 40))
+                Text(title)
+                    .font(Theme.Typography.headline(size: 18))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 110)
+            .background(color)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.button))
+        }
+        .buttonStyle(BouncyButtonStyle())
+        .accessibilityLabel(title)
+    }
+
+    private func dismissHomeConfirmation() {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+            isConfirmingHome = false
+        }
+    }
+
     // MARK: - Pointing-Hand Hints
     /// Shows the hint once at the start of play, then again after each idle period.
     private func runHintLoop() async {

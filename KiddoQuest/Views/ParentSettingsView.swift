@@ -10,8 +10,9 @@ struct ParentSettingsView: View {
     @AppStorage("sound_effects_enabled") private var soundEnabled: Bool = true
     @AppStorage(MusicService.settingsKey) private var musicEnabled: Bool = true
     @AppStorage(PlayTimeTracker.limitKey) private var sessionLimitMinutes: Int = PlayTimeTracker.defaultLimitMinutes
+    @AppStorage(CalmMode.settingsKey) private var calmModeEnabled: Bool = false
     @State private var showResetConfirmation: Bool = false
-    
+
     var body: some View {
         ZStack {
             Theme.ColorPalette.mainBackground
@@ -63,7 +64,28 @@ struct ParentSettingsView: View {
                 .padding(20)
                 .background(Theme.ColorPalette.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
-                
+
+                // Comfort
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Comfort")
+                        .font(Theme.Typography.headline(size: 18))
+                        .foregroundStyle(Theme.ColorPalette.primaryText)
+
+                    Toggle(isOn: $calmModeEnabled) {
+                        Label("Calm Mode", systemImage: "leaf.fill")
+                            .font(Theme.Typography.body(size: 16))
+                            .foregroundStyle(Theme.ColorPalette.primaryText)
+                    }
+                    .tint(Theme.ColorPalette.successGreen)
+
+                    Text("Turns off confetti and floating animations. Also on when the device's Reduce Motion setting is on.")
+                        .font(Theme.Typography.caption())
+                        .foregroundStyle(Theme.ColorPalette.secondaryText)
+                }
+                .padding(20)
+                .background(Theme.ColorPalette.cardBackground)
+                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
+
                 // Session Limits
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Daily Session Preference")

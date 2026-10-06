@@ -8,7 +8,8 @@ struct ParticleBurstView: View {
     var particleCount: Int = 24
     
     @State private var particles: [ParticleItem] = []
-    
+    @CalmModeEnabled private var isCalm
+
     struct ParticleItem: Identifiable {
         let id = UUID()
         var x: CGFloat = 0
@@ -44,7 +45,11 @@ struct ParticleBurstView: View {
         }
         .allowsHitTesting(false)
         .onChange(of: isEmitting) { _, newValue in
-            if newValue {
+            guard newValue else { return }
+            if isCalm {
+                // Calm Mode: no confetti, just acknowledge the request
+                isEmitting = false
+            } else {
                 triggerBurst()
             }
         }
