@@ -86,6 +86,9 @@ final class TVAppStore {
 
         recorded.playerID = players[index].id
         recorded.newRewards = unlockRewards(at: index)
+        let sticker = TVStickerRules.nextSticker(collected: Set(players[index].stickers))
+        players[index].stickers.append(sticker)
+        recorded.newSticker = sticker
         selectedPlayerID = players[index].id
         save()
         return recorded

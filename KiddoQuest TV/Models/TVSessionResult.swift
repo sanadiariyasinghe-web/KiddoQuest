@@ -11,6 +11,8 @@ nonisolated struct TVSessionResult: Hashable, Codable {
     let stars: Int
     /// Filled in by the store when the session is recorded.
     var newRewards: [TVRewardKind] = []
+    /// The sticker added to the player's sticker book for finishing this game.
+    var newSticker: String?
 
     init(gameKind: TVGameKind, category: TVCategory, tracker: TVRoundTracker, playerID: UUID? = nil) {
         self.gameKind = gameKind

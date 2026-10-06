@@ -134,6 +134,7 @@ final class KiddoQuestTVUITests: XCTestCase {
         waitForLabel(of: "results.headline", containing: "Great job, Ava!", in: app)
         XCTAssertTrue(element("results.playAgain", in: app).exists)
         XCTAssertTrue(element("rewards.totalStars", in: app).exists)
+        XCTAssertTrue(element("results.newSticker", in: app).exists, "Finishing a game should give a sticker")
     }
 
     @MainActor
@@ -222,6 +223,7 @@ final class KiddoQuestTVUITests: XCTestCase {
         goToLearningWorld(in: app)
         select("world.rewards", in: app)
         waitFor("rewards.totalStars", in: app)
+        XCTAssertTrue(element("rewards.stickerBook", in: app).exists)
         for reward in ["numberExplorer", "letterExplorer", "shapeMaster", "animalFriend", "familyLearner"] {
             XCTAssertTrue(element("reward.\(reward)", in: app).exists, "\(reward) badge missing")
         }

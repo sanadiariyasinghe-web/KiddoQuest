@@ -32,6 +32,8 @@ nonisolated struct TVPlayer: Identifiable, Codable, Hashable {
     var familyChallengesPlayed: Int = 0
     var progress = TVGameProgress()
     var earnedRewards: Set<TVRewardKind> = []
+    /// Stickers collected in this player's sticker book (one per finished game).
+    var stickers: [String] = []
 
     init(
         id: UUID = UUID(),
@@ -42,7 +44,8 @@ nonisolated struct TVPlayer: Identifiable, Codable, Hashable {
         points: Int = 0,
         familyChallengesPlayed: Int = 0,
         progress: TVGameProgress = TVGameProgress(),
-        earnedRewards: Set<TVRewardKind> = []
+        earnedRewards: Set<TVRewardKind> = [],
+        stickers: [String] = []
     ) {
         self.id = id
         self.name = name
@@ -53,6 +56,22 @@ nonisolated struct TVPlayer: Identifiable, Codable, Hashable {
         self.familyChallengesPlayed = familyChallengesPlayed
         self.progress = progress
         self.earnedRewards = earnedRewards
+        self.stickers = stickers
+    }
+
+    /// Decodes saved profiles, including ones saved before stickers existed.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        avatar = try container.decode(String.self, forKey: .avatar)
+        color = try container.decode(TVPlayerColor.self, forKey: .color)
+        role = try container.decode(TVPlayerRole.self, forKey: .role)
+        points = try container.decodeIfPresent(Int.self, forKey: .points) ?? 0
+        familyChallengesPlayed = try container.decodeIfPresent(Int.self, forKey: .familyChallengesPlayed) ?? 0
+        progress = try container.decodeIfPresent(TVGameProgress.self, forKey: .progress) ?? TVGameProgress()
+        earnedRewards = try container.decodeIfPresent(Set<TVRewardKind>.self, forKey: .earnedRewards) ?? []
+        stickers = try container.decodeIfPresent([String].self, forKey: .stickers) ?? []
     }
 
     var totalStars: Int { progress.totalStars }

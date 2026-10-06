@@ -79,6 +79,41 @@ struct TVPlayerTests {
         #expect(updated.earnedRewards.contains(.numberExplorer))
     }
 
+    @Test func finishingAGameAddsANewStickerToThatPlayersBook() throws {
+        let (store, persistence) = makeStore()
+        let ava = try #require(store.players.first { $0.name == "Ava" })
+        store.selectPlayer(ava.id)
+
+        var tracker = TVRoundTracker()
+        tracker.registerCorrect()
+        let first = store.recordSession(TVSessionResult(gameKind: .feedAnimals, category: .animals, tracker: tracker))
+        let second = store.recordSession(TVSessionResult(gameKind: .animalShadows, category: .animals, tracker: tracker))
+
+        let stickers = try #require(store.player(withID: ava.id)?.stickers)
+        #expect(stickers.count == 2)
+        #expect(first.newSticker != second.newSticker, "New stickers should prefer ones not collected yet")
+        #expect(stickers.allSatisfy { TVStickerRules.allStickers.contains($0) })
+        #expect(persistence.snapshot?.players.first { $0.id == ava.id }?.stickers == stickers)
+    }
+
+    @Test func stickerRulesPreferMissingStickers() {
+        let pool = ["🦁", "🐼", "🦄"]
+        for _ in 0..<20 {
+            #expect(TVStickerRules.nextSticker(collected: ["🦁", "🐼"], pool: pool) == "🦄")
+        }
+        #expect(pool.contains(TVStickerRules.nextSticker(collected: Set(pool), pool: pool)))
+    }
+
+    @Test func profilesSavedBeforeStickersStillLoad() throws {
+        // A player encoded without the "stickers" key (older app version).
+        let json = #"{"id":"11111111-1111-1111-1111-111111111111","name":"Mia","avatar":"👧","color":"coral","role":"child","points":20,"familyChallengesPlayed":0,"progress":{"categories":[],"completedGames":["animalMatch"]},"earnedRewards":[]}"#
+        let player = try JSONDecoder().decode(TVPlayer.self, from: Data(json.utf8))
+        #expect(player.name == "Mia")
+        #expect(player.points == 20)
+        #expect(player.stickers.isEmpty)
+        #expect(player.progress.completedGames == [.feedAnimals])
+    }
+
     @Test func recordingWithoutASelectedPlayerUsesTheFallback() {
         let (store, _) = makeStore()
         var tracker = TVRoundTracker()

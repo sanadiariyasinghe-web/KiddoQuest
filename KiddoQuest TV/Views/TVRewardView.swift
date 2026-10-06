@@ -37,6 +37,10 @@ struct TVRewardView: View {
 
                 totalStars
 
+                if result == nil {
+                    TVStickerBookView(collected: player?.stickers ?? [])
+                }
+
                 VStack(alignment: .leading, spacing: 24) {
                     Text("BADGES · \(model.earnedBadgeCount) of \(TVRewardKind.allCases.count)")
                         .font(TVTheme.Typography.headline)
@@ -68,6 +72,8 @@ struct TVRewardView: View {
 
             HStack(spacing: 50) {
                 TVMascotView(mood: .correct, message: result.newRewards.isEmpty ? "Awesome!" : "New badge!", size: 200)
+                    // Buddy dances, with a bigger dance for 3 stars
+                    .tvDance(stars: result.stars)
                 VStack(alignment: .leading, spacing: 12) {
                     Text(model.headline)
                         .font(TVTheme.Typography.hero)
@@ -93,6 +99,10 @@ struct TVRewardView: View {
             }
             .accessibilityIdentifier("results.sessionStars")
 
+            if let sticker = result.newSticker {
+                newStickerCard(sticker)
+            }
+
             HStack(spacing: 40) {
                 TVPrimaryButton(title: "Play Again", systemImage: "arrow.clockwise", tint: TVTheme.Palette.numbersYellow, minWidth: 400) {
                     router.replaceTop(with: .game(result.gameKind, result.category))
@@ -112,6 +122,31 @@ struct TVRewardView: View {
             }
             .focusSection()
         }
+    }
+
+    private func newStickerCard(_ sticker: String) -> some View {
+        HStack(spacing: 30) {
+            Text(sticker)
+                .font(.system(size: 110))
+                .rotationEffect(.degrees(-8))
+            VStack(alignment: .leading, spacing: 6) {
+                Text("New sticker!")
+                    .font(TVTheme.Typography.title)
+                Text("It's in your sticker book.")
+                    .font(TVTheme.Typography.body)
+                    .foregroundStyle(TVTheme.Palette.textSecondary)
+            }
+        }
+        .padding(.horizontal, 50)
+        .padding(.vertical, 24)
+        .background(RoundedRectangle(cornerRadius: TVTheme.Metrics.cardCorner, style: .continuous).fill(TVTheme.Palette.numbersYellow.opacity(0.2)))
+        .overlay(
+            RoundedRectangle(cornerRadius: TVTheme.Metrics.cardCorner, style: .continuous)
+                .strokeBorder(TVTheme.Palette.numbersYellow, style: StrokeStyle(lineWidth: 4, dash: [14, 10]))
+        )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("New sticker added to your sticker book")
+        .accessibilityIdentifier("results.newSticker")
     }
 
     private var totalStars: some View {
