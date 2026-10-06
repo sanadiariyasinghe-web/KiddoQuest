@@ -64,6 +64,8 @@ struct TVRewardView: View {
 
     private func sessionSummary(_ result: TVSessionResult) -> some View {
         VStack(spacing: 34) {
+            TVJourneyTrail(current: .stars, tint: result.category.color)
+
             HStack(spacing: 50) {
                 TVMascotView(mood: .correct, message: result.newRewards.isEmpty ? "Awesome!" : "New badge!", size: 200)
                 VStack(alignment: .leading, spacing: 12) {

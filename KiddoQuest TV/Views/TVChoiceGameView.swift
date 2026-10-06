@@ -90,6 +90,7 @@ struct TVChoiceGameView: View {
                     .focused($focusedOption, equals: focusValue)
                     .accessibilityLabel(option.label)
                     .accessibilityIdentifier("choice.option.\(option.id)")
+                    .tvHintTarget(!model.isShowingSuccess && round.isCorrect(option.id))
                 }
             }
             .focusSection()
@@ -100,6 +101,7 @@ struct TVChoiceGameView: View {
         .padding(.vertical, 36)
         .tvScreenBackground()
         .defaultFocus($focusedOption, round.options.first.map { OptionFocus(round: model.roundIndex, optionID: $0.id) })
+        .tvHintActivity(model.tracker.correctAnswers + model.tracker.mistakes)
         .onChange(of: model.roundIndex) { _, _ in
             shakeCounts = [:]
             focusedOption = model.currentRound?.options.first.map { OptionFocus(round: model.roundIndex, optionID: $0.id) }

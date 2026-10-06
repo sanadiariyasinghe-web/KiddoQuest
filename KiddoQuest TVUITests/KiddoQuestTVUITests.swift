@@ -106,6 +106,7 @@ final class KiddoQuestTVUITests: XCTestCase {
         goToLearningWorld(in: app)
         select("category.numbers", in: app)
         select("game.countingPop", in: app)
+        startGameFromInstructions(in: app)
         waitForLabel(of: "countingPop.question", containing: "How many apples?", in: app)
 
         select("countingPop.option.3", in: app)
@@ -123,6 +124,7 @@ final class KiddoQuestTVUITests: XCTestCase {
         goToLearningWorld(in: app)
         select("category.numbers", in: app)
         select("game.countingPop", in: app)
+        startGameFromInstructions(in: app)
         let answers = [("apples", 5), ("bananas", 3), ("strawberries", 7), ("oranges", 4), ("grapes", 6)]
         for (object, answer) in answers {
             waitForLabel(of: "countingPop.question", containing: object, in: app)
@@ -140,6 +142,7 @@ final class KiddoQuestTVUITests: XCTestCase {
         goToLearningWorld(in: app)
         select("category.shapes", in: app)
         select("game.shapeHunt", in: app)
+        startGameFromInstructions(in: app)
         waitForLabel(of: "shapeHunt.prompt", containing: "TRIANGLES", in: app)
         waitForLabel(of: "shapeHunt.foundCount", containing: "Found: 0 / 2", in: app)
 
@@ -158,6 +161,19 @@ final class KiddoQuestTVUITests: XCTestCase {
         moveFocus(to: next, in: app)
         XCUIRemote.shared.press(.select)
         waitForLabel(of: "shapeHunt.prompt", containing: "CIRCLES", in: app)
+    }
+
+    @MainActor
+    func testEveryGameStartsWithPictureInstructions() {
+        let app = launchKiddoQuestTV()
+        goToLearningWorld(in: app)
+        select("category.animals", in: app)
+        select("game.animalShadows", in: app)
+        waitForLabel(of: "instructions.title", containing: "Animal Shadows", in: app)
+        XCTAssertTrue(element("instructions.pictures", in: app).exists)
+        XCTAssertTrue(element("instructions.play", in: app).hasFocus, "Let's Play! should already have focus")
+        XCUIRemote.shared.press(.select)
+        waitForLabel(of: "choice.prompt", containing: "shadow", in: app)
     }
 
     @MainActor
