@@ -28,3 +28,10 @@ picture-based games, collect stars and stickers, and find 3D objects in their ro
 | [PartA_TestingReport.md](Documentation/PartA_TestingReport.md) | Unit, UI and acceptance testing, and results |
 | [PartA_Report.md](Documentation/PartA_Report.md) | Design decisions, challenges and reflections |
 | [AI_Usage_Log.md](Documentation/AI_Usage_Log.md) | How AI tools were used during development |
+
+## Part B documentation
+
+| Document | What it covers |
+| --- | --- |
+| [PartB_README.md](Documentation/PartB_README.md) | Concept, tvOS features, games, architecture, testing and pitch |
+| [AI_ASSISTANCE.md](Documentation/AI_ASSISTANCE.md) | AI use for the tvOS app and final test results |
