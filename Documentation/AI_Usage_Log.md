@@ -23,6 +23,7 @@ they helped. This log covers the Xcode coding-assistant session of **6 October 2
 | 4 | "Give your ideas to improve KiddoQuest" | Suggested real progress, a time limit, pointing-hand hints, picture instructions, a sticker book, levels, Calm Mode, a parent summary | — (ideas only) |
 | 5 | Compare the app with my assignment brief | Mapped each requirement and rubric item to the code. Found the missing camera permission, shallow AR, no iOS tests and no Part A documentation | Read the brief and checked each finding in the project |
 | 6 | "Do all" (the ideas from #4 and the fixes from #5) | Feature branches, each built and merged: camera permission; real Core Data progress; daily time limit + break screen; picture instructions + hints + no score; sticker book + owl dance; random targets + gentle levels + Tap-to-Match rename; big Home button + Calm Mode + soft chimes; weekly parent summary; RealityKit AR; Dynamic Type + adaptive layouts; unit + UI tests; this documentation | Build after each feature; 37 unit test cases and 5 UI tests passing; reviewed each diff and commit |
+| 7 | "Anything else to get more marks?" → "do that all" | Feature branches, each built and merged: iOS app icon; **Find It!** (Vision `ClassifyImageRequest` + centre-colour check, camera/photo picker); Siri & Shortcuts (App Intents); launch, memory and CPU performance tests; Sinhala & Tamil String Catalog; TV adaptive levels; TV Top Shelf extension + `kiddoquesttv://` deep links; TV game controllers in Family Challenge; pitch outline | iOS: 47 unit cases passing, Home UI test and both performance tests passing. TV: 103 unit cases passing. *To do myself:* real-device camera, controller and launch tests; a native speaker to review the Sinhala/Tamil text |
 
 ## How AI assistance was used
 
@@ -46,3 +47,5 @@ they helped. This log covers the Xcode coding-assistant session of **6 October 2
 - Edits applied in parallel sometimes overwrote each other; this was found by checking files on disk and fixed.
 - AR placement could not be verified in the simulator. It needs testing on a real device.
 - Simulator UI testing was unreliable on the overloaded 8 GB Mac and needed retries.
+- The Sinhala and Tamil translations were written by the AI and are marked *needs review*; they must be checked by a native speaker.
+- Some Vision label names used by Find It! (e.g. `mug`, `sneaker`) were not confirmed to exist in Vision's taxonomy. Unknown labels never match, so they do no harm.
