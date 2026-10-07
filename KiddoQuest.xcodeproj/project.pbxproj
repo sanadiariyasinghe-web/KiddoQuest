@@ -552,7 +552,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "KiddoQuest uses the camera for AR Learning Mode, so children can find letters, shapes and animals placed in their room.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "KiddoQuest uses the camera for AR Learning Mode and the Find It! game, so children can find letters, shapes, colours and things in their room. Photos are checked on the device and never saved or shared.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -591,7 +591,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "KiddoQuest uses the camera for AR Learning Mode, so children can find letters, shapes and animals placed in their room.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "KiddoQuest uses the camera for AR Learning Mode and the Find It! game, so children can find letters, shapes, colours and things in their room. Photos are checked on the device and never saved or shared.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

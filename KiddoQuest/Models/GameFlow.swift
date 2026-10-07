@@ -121,6 +121,17 @@ extension GameInstructions {
         ]
     )
     
+    static let findIt = GameInstructions(
+        title: "Find It!",
+        emoji: "📷",
+        themeColor: Theme.ColorPalette.shapesPurple,
+        pictureStory: [PictureStep(symbol: "⚽"), PictureStep(symbol: "📷"), PictureStep(symbol: "✅")],
+        steps: [
+            InstructionStep(icon: "magnifyingglass", text: "Find the thing in your house."),
+            InstructionStep(icon: "camera.fill", text: "Take a photo of it.")
+        ]
+    )
+
     static let feedAnimals = GameInstructions(
         title: "Feed the Animals",
         emoji: "🥕",
