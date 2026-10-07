@@ -13,6 +13,8 @@ nonisolated struct TVSessionResult: Hashable, Codable {
     var newRewards: [TVRewardKind] = []
     /// The sticker added to the player's sticker book for finishing this game.
     var newSticker: String?
+    /// Set when this round moved the player up a level.
+    var newLevel: Int?
 
     init(gameKind: TVGameKind, category: TVCategory, tracker: TVRoundTracker, playerID: UUID? = nil) {
         self.gameKind = gameKind

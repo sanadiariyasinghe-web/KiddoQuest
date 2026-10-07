@@ -103,6 +103,13 @@ struct TVRewardView: View {
                 newStickerCard(sticker)
             }
 
+            if let level = result.newLevel {
+                Text("⬆️ Level up! Level \(level)")
+                    .font(TVTheme.Typography.title)
+                    .foregroundStyle(TVTheme.Palette.animalsGreen)
+                    .accessibilityIdentifier("results.levelUp")
+            }
+
             HStack(spacing: 40) {
                 TVPrimaryButton(title: "Play Again", systemImage: "arrow.clockwise", tint: TVTheme.Palette.numbersYellow, minWidth: 400) {
                     router.replaceTop(with: .game(result.gameKind, result.category))

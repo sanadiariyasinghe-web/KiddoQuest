@@ -19,10 +19,14 @@ final class TVChoiceGameViewModel {
     private(set) var tracker = TVRoundTracker()
     private(set) var isFinished = false
 
-    init(kind: TVGameKind, category: TVCategory, rounds: [TVChoiceRound]? = nil) {
+    let level: Int
+
+    init(kind: TVGameKind, category: TVCategory, level: Int = TVLevelRules.startLevel, rounds: [TVChoiceRound]? = nil) {
         self.kind = kind
         self.category = category
-        self.rounds = rounds ?? TVGameDataService.choiceRounds(for: kind, category: category)
+        self.level = level
+        self.rounds = (rounds ?? TVGameDataService.choiceRounds(for: kind, category: category))
+            .map { TVLevelRules.trim($0, toLevel: level) }
         isFinished = self.rounds.isEmpty
     }
 

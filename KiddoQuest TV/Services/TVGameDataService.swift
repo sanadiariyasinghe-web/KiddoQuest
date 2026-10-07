@@ -190,7 +190,7 @@ nonisolated enum TVGameDataService {
         ]
         return groups.shuffled().prefix(choiceRoundCount).map { group in
             let count = Int.random(in: 1...5)
-            let others = (1...6).filter { $0 != count }.shuffled().prefix(2).map(numberOption)
+            let others = (1...6).filter { $0 != count }.shuffled().prefix(TVLevelRules.maxChoices - 1).map(numberOption)
             return TVChoiceRound(
                 id: 0, prompt: "Match the \(group.name) to their number!",
                 subject: .group(emoji: group.emoji, count: count),
@@ -208,7 +208,7 @@ nonisolated enum TVGameDataService {
         let letters = ["A", "B", "C", "D", "E", "M", "S", "T"]
         return letters.shuffled().prefix(choiceRoundCount).map { letter in
             let small = letter.lowercased()
-            let others = letters.map { $0.lowercased() }.filter { $0 != small }.shuffled().prefix(2).map(letterOption)
+            let others = letters.map { $0.lowercased() }.filter { $0 != small }.shuffled().prefix(TVLevelRules.maxChoices - 1).map(letterOption)
             return TVChoiceRound(
                 id: 0, prompt: "Find the little letter that matches \(letter)!",
                 subject: .letter(letter),
@@ -259,7 +259,7 @@ nonisolated enum TVGameDataService {
     private static func feedAnimalsRounds() -> [TVChoiceRound] {
         animalFoods.shuffled().prefix(choiceRoundCount).map { pair in
             let others = animalFoods.filter { $0.foodName != pair.foodName }
-                .shuffled().prefix(2)
+                .shuffled().prefix(TVLevelRules.maxChoices - 1)
                 .map { pictureOption($0.food, $0.foodName) }
             return TVChoiceRound(
                 id: 0, prompt: "What does the \(pair.name) eat?",
@@ -280,7 +280,7 @@ nonisolated enum TVGameDataService {
     private static func animalShadowRounds() -> [TVChoiceRound] {
         shadowAnimals.shuffled().prefix(choiceRoundCount).map { animal in
             let others = shadowAnimals.filter { $0.name != animal.name }
-                .shuffled().prefix(2)
+                .shuffled().prefix(TVLevelRules.maxChoices - 1)
                 .map { pictureOption($0.emoji, $0.name) }
             return TVChoiceRound(
                 id: 0, prompt: "Whose shadow is this?",
