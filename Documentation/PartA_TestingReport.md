@@ -14,7 +14,7 @@ Test isolation:
 - UI tests launch the app with `-uiTesting`. `AppEnvironment` then uses an in-memory store and resets settings: intro skipped, no time limit, Calm Mode on (no moving targets), sound and music off.
 - The time-limit tracker receives an injected clock (`now:`), so day changes and limits are tested without waiting.
 
-## 2. Unit tests — `KiddoQuestTests` (27 tests, 37 cases)
+## 2. Unit tests — `KiddoQuestTests` (36 tests, 49 cases)
 
 | Suite | What is checked |
 | --- | --- |
@@ -26,10 +26,13 @@ Test isolation:
 | `WeeklyLearningSummaryTests` | Only finished games from the last 7 days are listed; every catalogue game has a skill |
 | `GameContentTests` | Animal rounds contain the answer with unique choices (2–4); Shape Sort includes every shape; Letter Hunt has 3 targets; only first-try finds count; Counting Pop options include the answer |
 | `CoreDataManagerTests` | New profile has 0 stars; best stars kept and added to the profile; badges unlock; session totals |
+| `FindItTests` | A round has 5 different hunts incl. 2 colours; matching needs the right Vision label and enough confidence; friendly best guess; colour naming (red/blue/yellow/green, parameterised); grey/dark not guessed; first-try vs retry scoring; Find It is in the catalogue |
+| `ShortcutTests` | Every Siri island maps to an island; the Open Island intent queues the right route |
 
 **Result (6 October 2026, iPhone simulator, iOS 27):** all 37 cases passed.
+**Result (7 October 2026):** after adding Find It!, all 47 cases passed. The 2 `ShortcutTests` were added afterwards and still need a run.
 
-## 3. UI tests — `KiddoQuestUITests` (5 tests)
+## 3. UI tests — `KiddoQuestUITests` (5 tests) and `KiddoQuestPerformanceTests` (2 tests)
 
 | Test | Journey |
 | --- | --- |
@@ -42,6 +45,17 @@ Test isolation:
 **Result (6 October 2026, iPhone simulator, iOS 27):** all 5 passed.
 The first attempt failed before any test ran: the test runner stalled while loading accessibility,
 because the 8 GB Mac was overloaded. Re-running with fewer simulators open passed.
+
+| Performance test | What is measured |
+| --- | --- |
+| `testLaunchPerformance` | `XCTApplicationLaunchMetric` (time until the first frame is responsive), averaged over 5 launches |
+| `testOpeningAGameUsesLittleMemoryAndCPU` | `XCTMemoryMetric` + `XCTCPUMetric` while opening Numbers Island → Counting Pop → 🏠 Home (3 iterations) |
+
+**Result (7 October 2026, iPhone 11 simulator):** both passed. Launch averaged **8.1 s** (4.4–15.4 s, 48 % deviation)
+because the 8 GB Mac was under heavy memory pressure; simulator numbers are not representative.
+**To do before submission:** run both tests on a real iPhone (and capture an Instruments *App Launch* trace) and record the numbers here.
+After the Find It!, Siri and language changes only `testHomeShowsAllIslandsWithFreshProgress` was re-run (passed);
+the other 4 UI tests should be re-run once more.
 
 ## 4. Manual and user acceptance testing
 

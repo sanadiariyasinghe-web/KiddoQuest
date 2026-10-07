@@ -26,7 +26,7 @@ audio settings and a weekly "What my child learned" summary.
 
 ## 3. Features
 
-### Learning islands and games (8 games)
+### Learning islands and games (9 games)
 
 | Island | Game | What the child does |
 | --- | --- | --- |
@@ -36,6 +36,7 @@ audio settings and a weekly "What my child learned" summary.
 | Letters | Letter Hunt | Find every bubble with today's letter (random each game) |
 | Shapes | Tap-to-Reveal Colouring | Paint each shape the right colour |
 | Shapes | Shape Sort | Tap the box that matches each shape (random order) |
+| Shapes | **Find It! 📷** | Find a real object (ball, cup, book…) or a colour at home and take a photo; on-device **Vision** checks it |
 | Animals | Feed the Animals | Give each hungry animal the food it loves |
 | Animals | Animal Shadows | Match a shadow to the right animal |
 
@@ -54,6 +55,25 @@ Choice-based games have **gentle levels** (2 → 3 → 4 choices). A child moves
 - 3D picture cards (letters, shapes or animals) are placed on a **real table or floor** and always face the camera.
 - The child taps the real 3D objects (hit-testing). Correct cards lift and grow, and wrong ones wobble gently.
 - Devices without AR (including the simulator) get a 2D "simulated room" fallback.
+
+### Find It! (Vision, on-device machine learning)
+
+- Each round has 5 hunts: 3 everyday objects and 2 colours, chosen at random.
+- Objects are checked with Vision's built-in image classifier (`ClassifyImageRequest`). Colours are checked
+  from the average hue of the centre of the photo.
+- Wrong guesses are gentle: Buddy says what he saw ("I see a dog! Try again 🌟"). **Skip** means a child is never stuck.
+- Photos never leave the device and are not saved. The simulator (no camera) uses the photo picker.
+
+### Siri and Shortcuts (App Intents)
+
+- "Open Numbers Island in KiddoQuest", "Play Find It in KiddoQuest", "How many stars do I have in KiddoQuest?"
+- They appear automatically in the Shortcuts app and Spotlight, with no setup needed.
+
+### Languages
+
+- English, plus **Sinhala (සිංහල)** and **Tamil (தமிழ்)** for the main child screens (Home, islands, game buttons,
+  results, sticker book, break screen, Find It!) in a String Catalog. The translations are marked *needs review*
+  and should be checked by a native speaker.
 
 ### Rewards
 
