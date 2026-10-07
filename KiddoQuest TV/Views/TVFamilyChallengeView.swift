@@ -144,6 +144,7 @@ private struct TVFamilyChallengePlayView: View {
     let challengesCompleted: Int
 
     @Environment(TVSoundService.self) private var sound
+    @Environment(TVGameControllerService.self) private var controllers
     /// Question-qualified focus so a repeated shape still gets focus on the next turn.
     private struct OptionFocus: Hashable {
         let question: Int
@@ -190,6 +191,10 @@ private struct TVFamilyChallengePlayView: View {
             sound.play(.turnChange)
             focusedOption = model.currentQuestion?.options.first.map { OptionFocus(question: model.questionIndex, optionID: $0.id) }
         }
+        .onAppear { controllers.light(seats: seats, players: model.participants) }
+        .onChange(of: controllers.controllerIDs) { _, _ in
+            controllers.light(seats: seats, players: model.participants)
+        }
         .task(id: celebrationTrigger) {
             guard celebrationTrigger > 0 else { return }
             try? await Task.sleep(for: .seconds(1.6))
@@ -208,6 +213,12 @@ private struct TVFamilyChallengePlayView: View {
                 Text(model.turnTitle)
                     .font(TVTheme.Typography.screenTitle)
                     .foregroundStyle(TVTheme.Palette.ink)
+                if let seat = seats.seat(for: player.id, controllerIDs: controllers.controllerIDs) {
+                    Label("\(seat + 1)", systemImage: "gamecontroller.fill")
+                        .font(TVTheme.Typography.headline)
+                        .foregroundStyle(TVTheme.Palette.ink)
+                        .accessibilityLabel("Controller \(seat + 1)")
+                }
             }
             .padding(.vertical, 16)
             .padding(.horizontal, 40)
@@ -275,7 +286,20 @@ private struct TVFamilyChallengePlayView: View {
         .animation(TVTheme.Motion.pop, value: model.feedbackMessage)
     }
 
+    /// Controller 1 belongs to the first player, controller 2 to the second, and so on.
+    private var seats: TVControllerSeats {
+        TVControllerSeats(controllerIDs: controllers.controllerIDs, participants: model.participants.map(\.id))
+    }
+
     private func choose(_ option: TVChoiceOption) {
+        // Someone pressed with their own controller during another child's turn: a kind reminder, no penalty.
+        let pressedBy = controllers.lastActiveControllerID
+        if !seats.allows(pressFrom: pressedBy, currentPlayer: model.currentPlayer?.id),
+           let ownerID = pressedBy.flatMap(seats.player(for:)),
+           let owner = model.participants.first(where: { $0.id == ownerID }) {
+            model.remindToWait(owner)
+            return
+        }
         switch model.answer(optionID: option.id) {
         case .correct:
             sound.play(.correct)

@@ -14,6 +14,7 @@ struct KiddoQuestTVApp: App {
     @State private var router = TVRouter()
     @State private var sound: TVSoundService
     @State private var playTime: TVPlayTimeTracker
+    @State private var controllers = TVGameControllerService()
     private let configuration = TVLaunchConfiguration()
 
     init() {
@@ -29,6 +30,8 @@ struct KiddoQuestTVApp: App {
                 .environment(router)
                 .environment(sound)
                 .environment(playTime)
+                .environment(controllers)
+                .task { await controllers.observe() }
                 .environment(\.tvAmbientMotionEnabled, !configuration.isUITesting)
                 .environment(\.tvHintsEnabled, !configuration.isUITesting)
                 .preferredColorScheme(configuration.forcedColorScheme)

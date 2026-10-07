@@ -18,6 +18,7 @@ final class TVFamilyChallengeViewModel {
         case none
         case correct(playerName: String)
         case tryAgain(optionID: String)
+        case waitYourTurn(playerName: String, turnName: String)
     }
 
     static let minimumPlayers = 2
@@ -124,7 +125,14 @@ final class TVFamilyChallengeViewModel {
         case .none: return nil
         case .correct(let name): return "Great job, \(name)! +1 for the family"
         case .tryAgain: return "Almost! Try again!"
+        case .waitYourTurn(let name, let turnName): return "Wait for your turn, \(name)! It's \(turnName)'s go."
         }
+    }
+
+    /// A child pressed with their own controller while it was someone else's turn.
+    func remindToWait(_ player: TVPlayer) {
+        guard phase == .playing, !isShowingSuccess, let current = currentPlayer, current.id != player.id else { return }
+        feedback = .waitYourTurn(playerName: player.name, turnName: current.name)
     }
 
     @discardableResult
