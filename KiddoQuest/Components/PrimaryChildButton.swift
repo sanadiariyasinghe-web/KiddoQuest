@@ -20,7 +20,7 @@ struct PrimaryChildButton: View {
                         .font(.system(size: 24, weight: .bold))
                 }
                 
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(Theme.Typography.headline(size: 20))
             }
             .foregroundStyle(foregroundColor)

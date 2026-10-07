@@ -164,7 +164,7 @@ struct GameFlowContainer<Content: View>: View {
             VStack(spacing: 6) {
                 Text(emoji)
                     .font(.system(size: 40))
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(Theme.Typography.headline(size: 18))
                     .foregroundStyle(.white)
                     .lineLimit(1)

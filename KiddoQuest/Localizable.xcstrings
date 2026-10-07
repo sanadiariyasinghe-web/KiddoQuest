@@ -1,0 +1,1135 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "?" : {
+
+    },
+    "%@ bin" : {
+
+    },
+    "%@ Games" : {
+
+    },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%@, %lld percent complete, %lld of %lld stars earned" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$lld percent complete, %3$lld of %4$lld stars earned"
+          }
+        }
+      }
+    },
+    "%@, %lld stars earned, %lld percent complete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$lld stars earned, %3$lld percent complete"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld + %lld = ?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld + %2$lld = ?"
+          }
+        }
+      }
+    },
+    "%lld games" : {
+
+    },
+    "%lld games played • %llds active" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld games played • %2$llds active"
+          }
+        }
+      }
+    },
+    "%lld of %lld stars earned%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld stars earned%3$@"
+          }
+        }
+      }
+    },
+    "%lld stars" : {
+
+    },
+    "%lld stickers" : {
+
+    },
+    "%lld%%" : {
+
+    },
+    "%lld%% Complete" : {
+
+    },
+    "+%lld" : {
+
+    },
+    "✨" : {
+
+    },
+    "🌙" : {
+
+    },
+    "🎉" : {
+
+    },
+    "🏠" : {
+
+    },
+    "👆" : {
+
+    },
+    "💤" : {
+
+    },
+    "📷" : {
+
+    },
+    "🦉" : {
+
+    },
+    "1 · Tap" : {
+
+    },
+    "2 · Match" : {
+
+    },
+    "15 Minutes" : {
+
+    },
+    "20 Minutes" : {
+
+    },
+    "30 Minutes" : {
+
+    },
+    "Age %lld • Little Adventurer" : {
+
+    },
+    "Already popped" : {
+
+    },
+    "Animal %lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Animal %1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "Animals" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "සතුන්"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "விலங்குகள்"
+          }
+        }
+      }
+    },
+    "Animals Island" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "සතුන්ගේ දූපත"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "விலங்குகள் தீவு"
+          }
+        }
+      }
+    },
+    "Answer" : {
+
+    },
+    "Answer: %lld" : {
+
+    },
+    "AR Learning Mode" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "AR ඉගෙනුම් ක්‍රමය"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "AR கற்றல் முறை"
+          }
+        }
+      }
+    },
+    "AR Mode" : {
+
+    },
+    "Audio Controls" : {
+
+    },
+    "Avatar %@" : {
+
+    },
+    "Back" : {
+
+    },
+    "Background Music" : {
+
+    },
+    "Bubble: %@" : {
+
+    },
+    "Buddy" : {
+
+    },
+    "Buddy is resting. Let's play again later!" : {
+
+    },
+    "Buddy the owl is dancing" : {
+
+    },
+    "Buddy the owl is doing a big happy dance" : {
+
+    },
+    "Calm Mode" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Change Explorer Name" : {
+
+    },
+    "Checking your photo" : {
+
+    },
+    "Child Profile" : {
+
+    },
+    "Child profile: %@" : {
+
+    },
+    "Choose a Mini-Game" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "කුඩා ක්‍රීඩාවක් තෝරන්න"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ஒரு சிறு விளையாட்டைத் தேர்ந்தெடு"
+          }
+        }
+      }
+    },
+    "Choose a photo" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ඡායාරූපයක් තෝරන්න"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ஒரு புகைப்படத்தைத் தேர்ந்தெடு"
+          }
+        }
+      }
+    },
+    "Choose a photo 📷" : {
+
+    },
+    "Comfort" : {
+
+    },
+    "Counting Pop" : {
+
+    },
+    "Daily Session Preference" : {
+
+    },
+    "Data Management" : {
+
+    },
+    "Earned Badges" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ලැබුණු ලාංඡන"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "பெற்ற பதக்கங்கள்"
+          }
+        }
+      }
+    },
+    "Edit name" : {
+
+    },
+    "Empty sticker space" : {
+
+    },
+    "Exit AR to World Map" : {
+
+    },
+    "Explore letters, shapes & animals in real 3D space!" : {
+
+    },
+    "Find %lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Find %1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "Find colours and things in your house!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ඔබේ ගෙදර වර්ණ සහ දේවල් සොයා ගන්න!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "உன் வீட்டில் நிறங்களையும் பொருட்களையும் கண்டுபிடி!"
+          }
+        }
+      }
+    },
+    "Find It!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "සොයා ගන්න!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "கண்டுபிடி!"
+          }
+        }
+      }
+    },
+    "Find It! 📷" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "සොයා ගන්න! 📷"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "கண்டுபிடி! 📷"
+          }
+        }
+      }
+    },
+    "Finish a game to get your first sticker!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "පළමු ස්ටිකරය ගන්න ක්‍රීඩාවක් අවසන් කරන්න!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "முதல் ஸ்டிக்கரைப் பெற ஒரு விளையாட்டை முடி!"
+          }
+        }
+      }
+    },
+    "FOUND:" : {
+
+    },
+    "Found: %lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Found: %1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "Go home?" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "මුල් පිටුවට යනවද?"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "முகப்புக்குப் போகலாமா?"
+          }
+        }
+      }
+    },
+    "Great Job, Explorer!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "නියමයි, ගවේෂකයා!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "அருமை, ஆய்வாளரே!"
+          }
+        }
+      }
+    },
+    "Great Job! 🎉" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "නියමයි! 🎉"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "அருமை! 🎉"
+          }
+        }
+      }
+    },
+    "Grown-ups" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "වැඩිහිටියන්"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "பெரியவர்கள்"
+          }
+        }
+      }
+    },
+    "Grown-Ups Only" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "වැඩිහිටියන්ට පමණයි"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "பெரியவர்களுக்கு மட்டும்"
+          }
+        }
+      }
+    },
+    "Home" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "මුල් පිටුව"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "முகப்பு"
+          }
+        }
+      }
+    },
+    "How Many Stars?" : {
+
+    },
+    "Hungry %@" : {
+
+    },
+    "Island" : {
+
+    },
+    "It's in your sticker book." : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "එය ඔබේ ස්ටිකර් පොතේ තියෙනවා."
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "அது உன் ஸ்டிக்கர் புத்தகத்தில் உள்ளது."
+          }
+        }
+      }
+    },
+    "Keep playing" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "තව සෙල්ලම් කරමු"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "தொடர்ந்து விளையாடு"
+          }
+        }
+      }
+    },
+    "KiddoQuest" : {
+
+    },
+    "KiddoQuest World" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "KiddoQuest ලෝකය"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "KiddoQuest உலகம்"
+          }
+        }
+      }
+    },
+    "Let's Begin!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "අපි පටන් ගමු!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "தொடங்குவோம்!"
+          }
+        }
+      }
+    },
+    "Let's Play!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "සෙල්ලම් කරමු!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "விளையாடுவோம்!"
+          }
+        }
+      }
+    },
+    "Letter Hunt" : {
+
+    },
+    "Letter Match" : {
+
+    },
+    "Letters" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "අකුරු"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "எழுத்துகள்"
+          }
+        }
+      }
+    },
+    "Letters Island" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "අකුරු දූපත"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "எழுத்துகள் தீவு"
+          }
+        }
+      }
+    },
+    "Level %lld" : {
+
+    },
+    "Locked" : {
+
+    },
+    "Match target: %@" : {
+
+    },
+    "More Games" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "තවත් ක්‍රීඩා"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "மேலும் விளையாட்டுகள்"
+          }
+        }
+      }
+    },
+    "Move your device slowly and make sure you are in a safe place." : {
+
+    },
+    "My Stars" : {
+
+    },
+    "My Sticker Book" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "මගේ ස්ටිකර් පොත"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "என் ஸ்டிக்கர் புத்தகம்"
+          }
+        }
+      }
+    },
+    "Name" : {
+
+    },
+    "New sticker added to your sticker book" : {
+
+    },
+    "New sticker!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "අලුත් ස්ටිකරයක්!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "புதிய ஸ்டிக்கர்!"
+          }
+        }
+      }
+    },
+    "No games finished this week yet. Skills appear here after each finished game." : {
+
+    },
+    "No Limit" : {
+
+    },
+    "No sessions recorded yet. Play a game to start tracking!" : {
+
+    },
+    "Number Match" : {
+
+    },
+    "Numbers" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "අංක"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "எண்கள்"
+          }
+        }
+      }
+    },
+    "Numbers Island" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "අංක දූපත"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "எண்கள் தீவு"
+          }
+        }
+      }
+    },
+    "Open an Island" : {
+
+    },
+    "Open AR Learning Mode" : {
+
+    },
+    "Open Find It, the camera game" : {
+
+    },
+    "Open Island" : {
+
+    },
+    "Opens a KiddoQuest learning island." : {
+
+    },
+    "Paint %@" : {
+
+    },
+    "Paint the %@ %@!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Paint the %1$@ %2$@!"
+          }
+        }
+      }
+    },
+    "Parent settings" : {
+
+    },
+    "Parent Settings" : {
+
+    },
+    "Pick Your Buddy Avatar" : {
+
+    },
+    "Play • Learn • Discover!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "සෙල්ලම් කරමු • ඉගෙන ගනිමු • සොයා ගනිමු!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "விளையாடு • கற்றுக்கொள் • கண்டுபிடி!"
+          }
+        }
+      }
+    },
+    "Play Again" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ආයෙත් සෙල්ලම් කරමු"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "மீண்டும் விளையாடு"
+          }
+        }
+      }
+    },
+    "Play Find It!" : {
+
+    },
+    "Play Island Games" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "දූපතේ ක්‍රීඩා කරන්න"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "தீவு விளையாட்டுகளை விளையாடு"
+          }
+        }
+      }
+    },
+    "Play this game again" : {
+
+    },
+    "Played today: %lld min. When the limit is reached, KiddoQuest shows a calm break screen." : {
+
+    },
+    "Please solve this math question to continue:" : {
+
+    },
+    "Please try again." : {
+
+    },
+    "Point at a table or the floor 📱" : {
+
+    },
+    "Recent Learning Sessions" : {
+
+    },
+    "Reset All Learning Progress" : {
+
+    },
+    "Reset All Progress" : {
+
+    },
+    "Reset Progress?" : {
+
+    },
+    "Rewards & Badges" : {
+
+    },
+    "Round %lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Round %1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "Save" : {
+
+    },
+    "Says how many stars and stickers have been collected." : {
+
+    },
+    "Session Limit" : {
+
+    },
+    "Shape %lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Shape %1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "Shape Hunt" : {
+
+    },
+    "Shape Sort" : {
+
+    },
+    "Shapes" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "හැඩ"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "வடிவங்கள்"
+          }
+        }
+      }
+    },
+    "Shapes Island" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "හැඩ දූපත"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "வடிவங்கள் தீவு"
+          }
+        }
+      }
+    },
+    "Simulated Learning Room (AR Unavailable on this device)" : {
+
+    },
+    "Skip" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "මඟ හරින්න"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "தவிர்"
+          }
+        }
+      }
+    },
+    "Sound Effects" : {
+
+    },
+    "Stars: %lld of 3" : {
+
+    },
+    "Starts the Find It! camera game." : {
+
+    },
+    "Step %lld: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Step %1$lld: %2$@"
+          }
+        }
+      }
+    },
+    "Sticker %@" : {
+
+    },
+    "Take a photo" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ඡායාරූපයක් ගන්න"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ஒரு புகைப்படம் எடு"
+          }
+        }
+      }
+    },
+    "Tap any adventure to start playing!" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "සෙල්ලම් කරන්න ඕනෑම වික්‍රමයක් ඔබන්න!"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "விளையாட ஏதேனும் சாகசத்தைத் தட்டு!"
+          }
+        }
+      }
+    },
+    "Tap the 3D cards on the table!" : {
+
+    },
+    "Tap the matching box ⬇︎" : {
+
+    },
+    "Tap-to-Reveal Coloring" : {
+
+    },
+    "This Round" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "මෙම වටය"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "இந்தச் சுற்று"
+          }
+        }
+      }
+    },
+    "This will reset all earned stars, stickers and island completions." : {
+
+    },
+    "Time for a break! 🌙" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "විවේක ගන්න වෙලාවයි! 🌙"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ஓய்வு நேரம்! 🌙"
+          }
+        }
+      }
+    },
+    "Total stars: %lld" : {
+
+    },
+    "Turns off confetti and floating animations. Also on when the device's Reduce Motion setting is on." : {
+
+    },
+    "Unlocked" : {
+
+    },
+    "Welcome to %@! Let's play friendly games and earn shiny stars together." : {
+
+    },
+    "What %@ learned this week" : {
+
+    },
+    "What's next?" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ඊළඟට මොකක්ද?"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "அடுத்து என்ன?"
+          }
+        }
+      }
+    },
+    "Where does it go?" : {
+
+    },
+    "You earned shiny stars and unlocked learning badges!" : {
+
+    },
+    "You have %lld stars and %lld stickers. Great job! 🌟" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You have %1$lld stars and %2$lld stickers. Great job! 🌟"
+          }
+        }
+      }
+    },
+    "Your photo" : {
+
+    },
+    "Your photo goes here" : {
+      "localizations" : {
+        "si" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ඔබේ ඡායාරූපය මෙතන"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "உன் புகைப்படம் இங்கே"
+          }
+        }
+      }
+    },
+    "Yum!" : {
+
+    }
+  },
+  "version" : "1.0"
+}
