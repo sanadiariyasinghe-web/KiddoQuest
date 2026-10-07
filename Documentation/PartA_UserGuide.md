@@ -78,7 +78,10 @@ Tap the ⭐ star counter on the Home screen to open **Rewards**. Your stickers a
 1. On Home, tap **AR Learning Mode**.
 2. Choose *Letter Hunt*, *Shape Hunt* or *Animal Discovery*.
 3. Point the camera at a table or the floor and move slowly until the coaching animation finishes.
-4. 3D cards appear on the table. Tap the ones the instruction asks for.
+4. When the pill says **"Tap the table to place the toys!"**, tap the table. Five 3D letters, shapes or animals pop up there.
+   (Tap **Move** to put them somewhere else.)
+5. Tap any object to explore it: it hops and Buddy tells you something about it.
+6. Find the one Buddy asks for ("Find the Triangle!"). After three finds you get stars and a sticker. Tap **Play Again** for new objects.
 
 Always play AR in a safe place with a grown-up.
 
