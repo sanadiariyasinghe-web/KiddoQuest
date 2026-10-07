@@ -89,6 +89,12 @@ final class TVAppStore {
         let sticker = TVStickerRules.nextSticker(collected: Set(players[index].stickers))
         players[index].stickers.append(sticker)
         recorded.newSticker = sticker
+        if TVLevelRules.supports(result.gameKind) {
+            let current = players[index].level(for: result.gameKind)
+            let next = TVLevelRules.nextLevel(after: current, stars: result.stars)
+            players[index].levels[result.gameKind.rawValue] = next
+            if next > current { recorded.newLevel = next }
+        }
         selectedPlayerID = players[index].id
         save()
         return recorded

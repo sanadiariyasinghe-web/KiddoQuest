@@ -34,6 +34,8 @@ nonisolated struct TVPlayer: Identifiable, Codable, Hashable {
     var earnedRewards: Set<TVRewardKind> = []
     /// Stickers collected in this player's sticker book (one per finished game).
     var stickers: [String] = []
+    /// Adaptive level for each choice game, keyed by `TVGameKind.rawValue`.
+    var levels: [String: Int] = [:]
 
     init(
         id: UUID = UUID(),
@@ -72,6 +74,12 @@ nonisolated struct TVPlayer: Identifiable, Codable, Hashable {
         progress = try container.decodeIfPresent(TVGameProgress.self, forKey: .progress) ?? TVGameProgress()
         earnedRewards = try container.decodeIfPresent(Set<TVRewardKind>.self, forKey: .earnedRewards) ?? []
         stickers = try container.decodeIfPresent([String].self, forKey: .stickers) ?? []
+        levels = try container.decodeIfPresent([String: Int].self, forKey: .levels) ?? [:]
+    }
+
+    /// The current level for a game (new players start at `TVLevelRules.startLevel`).
+    func level(for kind: TVGameKind) -> Int {
+        levels[kind.rawValue] ?? TVLevelRules.startLevel
     }
 
     var totalStars: Int { progress.totalStars }

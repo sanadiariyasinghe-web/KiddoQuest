@@ -29,7 +29,11 @@ struct TVChoiceGameView: View {
         self.game = game
         self.player = player
         self.onFinish = onFinish
-        _model = State(initialValue: TVChoiceGameViewModel(kind: game.kind, category: category))
+        _model = State(initialValue: TVChoiceGameViewModel(
+            kind: game.kind,
+            category: category,
+            level: player?.level(for: game.kind) ?? TVLevelRules.startLevel
+        ))
     }
 
     var body: some View {
