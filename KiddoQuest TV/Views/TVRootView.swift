@@ -23,6 +23,12 @@ struct TVRootView: View {
                         destination(for: route)
                     }
             }
+            // Top Shelf shortcuts open straight into a game or island
+            .onOpenURL { url in
+                if let path = TVDeepLink.path(for: url, hasPlayer: store.selectedPlayer != nil) {
+                    router.path = path
+                }
+            }
             .environment(\.tvAmbientMotionEnabled, baseAmbientMotion && !store.settings.calmMode)
             .environment(\.tvCalmMode, store.settings.calmMode)
             .disabled(playTime.isLimitReached)
