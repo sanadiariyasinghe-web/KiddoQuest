@@ -364,3 +364,20 @@ struct FindItTests {
         #expect(game?.category == .shapes)
     }
 }
+
+// MARK: - Siri & Shortcuts
+@MainActor
+struct ShortcutTests {
+    @Test func everySiriIslandOpensTheMatchingIsland() {
+        let categories = ShortcutIsland.allCases.map(\.category)
+        #expect(Set(categories) == Set(IslandCategory.allCases))
+    }
+
+    @Test func openIslandIntentQueuesTheIslandRoute() async throws {
+        let intent = OpenIslandIntent()
+        intent.island = .animals
+        _ = try await intent.perform()
+        #expect(ShortcutRouter.shared.pendingRoute == .category(.animals))
+        ShortcutRouter.shared.pendingRoute = nil
+    }
+}
