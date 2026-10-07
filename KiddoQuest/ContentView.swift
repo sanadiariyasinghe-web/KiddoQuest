@@ -5,6 +5,7 @@ struct ContentView: View {
     @AppStorage("has_seen_intro") private var hasSeenIntro: Bool = false
     @State private var showWelcomeScreen: Bool = true
     @State private var playTime = PlayTimeTracker.shared
+    @State private var shortcuts = ShortcutRouter.shared
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     /// How often the daily play-time clock is updated while the app is open.
@@ -36,6 +37,16 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.6), value: playTime.isLimitReached)
+        // Siri / Shortcuts: jump straight to the requested island or game
+        .onChange(of: shortcuts.pendingRoute, initial: true) { _, route in
+            guard let route else { return }
+            showWelcomeScreen = false
+            hasSeenIntro = true
+            var path = NavigationPath()
+            path.append(route)
+            navigationPath = path
+            shortcuts.pendingRoute = nil
+        }
         .task {
             while !Task.isCancelled {
                 try? await Task.sleep(for: playTimeCheckInterval)
