@@ -14,7 +14,7 @@ Test isolation:
 - UI tests launch the app with `-uiTesting`. `AppEnvironment` then uses an in-memory store and resets settings: intro skipped, no time limit, Calm Mode on (no moving targets), sound and music off.
 - The time-limit tracker receives an injected clock (`now:`), so day changes and limits are tested without waiting.
 
-## 2. Unit tests — `KiddoQuestTests` (36 tests, 49 cases)
+## 2. Unit tests — `KiddoQuestTests` (44 tests, 63 cases)
 
 | Suite | What is checked |
 | --- | --- |
@@ -28,9 +28,12 @@ Test isolation:
 | `CoreDataManagerTests` | New profile has 0 stars; best stars kept and added to the profile; badges unlock; session totals |
 | `FindItTests` | A round has 5 different hunts incl. 2 colours; matching needs the right Vision label and enough confidence; friendly best guess; colour naming (red/blue/yellow/green, parameterised); grey/dark not guessed; first-try vs retry scoring; Find It is in the catalogue |
 | `ShortcutTests` | Every Siri island maps to an island; the Open Island intent queues the right route |
+| `ARLearningTests` | Each AR mode places 5 different objects (with facts) and 3 different challenges; prompts read naturally; exploring tells a fact and is not a miss; three finds complete the session with 3 stars and a sticker; a find after exploring scores retry points; Play Again resets; the animal picture loads as a RealityKit texture; every shape extrudes into a 3D mesh |
 
 **Result (6 October 2026, iPhone simulator, iOS 27):** all 37 cases passed.
-**Result (7 October 2026):** after adding Find It!, all 47 cases passed. The 2 `ShortcutTests` were added afterwards and still need a run.
+**Result (7 October 2026):** after adding Find It!, all 47 cases passed.
+**Result (7 October 2026, after the AR 3D challenges):** all 63 cases passed, all 5 UI tests passed (on a re-run) and both performance tests passed.
+The 3D letters, shapes and stands were also checked visually in a non-AR `ARView` preview in the simulator. **AR placement on a real surface still needs a real-device test.**
 
 ## 3. UI tests — `KiddoQuestUITests` (5 tests) and `KiddoQuestPerformanceTests` (2 tests)
 

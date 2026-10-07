@@ -47,5 +47,6 @@ they helped. This log covers the Xcode coding-assistant session of **6 October 2
 - Edits applied in parallel sometimes overwrote each other; this was found by checking files on disk and fixed.
 - AR placement could not be verified in the simulator. It needs testing on a real device.
 - Simulator UI testing was unreliable on the overloaded 8 GB Mac and needed retries.
+- AR Learning Mode 3D upgrade (tap-to-place, extruded 3D letters/shapes, animal cubes, explore + 3 challenges, stickers): verified with 14 new unit test cases and a non-AR RealityKit preview. A preview crash in the animal texture code turned out to be a preview JIT quirk: the same code passes in a unit test. Placement on a real table has not been tested on a device.
 - The Sinhala and Tamil translations were written by the AI and are marked *needs review*; they must be checked by a native speaker.
 - Some Vision label names used by Find It! (e.g. `mug`, `sneaker`) were not confirmed to exist in Vision's taxonomy. Unknown labels never match, so they do no harm.

@@ -1,5 +1,7 @@
 import CoreData
 import Foundation
+import RealityKit
+import SwiftUI
 import Testing
 @testable import KiddoQuest
 
@@ -379,5 +381,100 @@ struct ShortcutTests {
         _ = try await intent.perform()
         #expect(ShortcutRouter.shared.pendingRoute == .category(.animals))
         ShortcutRouter.shared.pendingRoute = nil
+    }
+}
+
+// MARK: - AR Learning Mode (3D challenges)
+@MainActor
+struct ARLearningTests {
+    @Test(arguments: ARMode.allCases)
+    func eachModePlacesFiveDifferentObjectsWithThreeChallenges(mode: ARMode) {
+        let objects = ARChallengeRules.makeObjects(for: mode)
+        #expect(objects.count == ARChallengeRules.objectCount)
+        #expect(Set(objects.map(\.name)).count == objects.count)
+        #expect(objects.allSatisfy { !$0.fact.isEmpty })
+
+        let rounds = ARChallengeRules.makeRounds(from: objects)
+        #expect(rounds.count == ARChallengeRules.roundCount)
+        #expect(Set(rounds).count == rounds.count)
+        #expect(Set(rounds).isSubset(of: Set(objects.map(\.id))))
+    }
+
+    @Test func promptsReadNaturally() {
+        let objects = ARChallengeRules.makeObjects(for: .shapeHunt)
+        let triangle = objects.first { $0.name == "Triangle" }
+        #expect(triangle.map { ARChallengeRules.prompt(for: $0) } == "Find the Triangle!")
+        let letter = ARChallengeRules.makeObjects(for: .letterHunt)[0]
+        #expect(ARChallengeRules.prompt(for: letter) == "Find the letter \(letter.display)!")
+    }
+
+    @Test func exploringIsNotFailingAndTellsAFact() throws {
+        let viewModel = ARLearningViewModel()
+        viewModel.switchMode(to: .animalDiscovery)
+        let target = try #require(viewModel.currentTarget)
+        let other = try #require(viewModel.targetObjects.first { $0.id != target.id })
+
+        viewModel.tapObject(other)
+        #expect(viewModel.mascotMessage.contains(other.fact))
+        #expect(viewModel.mascotMessage.contains(target.name))
+        #expect(viewModel.foundCount == 0)
+        #expect(viewModel.targetObjects.first { $0.id == other.id }?.isDiscovered == false)
+    }
+
+    @Test func threeFindsCompleteTheSessionWithStarsAndASticker() throws {
+        let viewModel = ARLearningViewModel()
+        viewModel.switchMode(to: .shapeHunt)
+
+        for round in 0..<ARChallengeRules.roundCount {
+            let target = try #require(viewModel.currentTarget)
+            viewModel.tapObject(target)
+            #expect(viewModel.foundCount == round + 1)
+            if round < ARChallengeRules.roundCount - 1 {
+                // Taps during the celebration are ignored, then the next challenge starts
+                #expect(viewModel.isAdvancing)
+                viewModel.advanceToNextRound()
+            }
+        }
+
+        #expect(viewModel.isCompleted)
+        #expect(viewModel.starsEarned == 3)
+        #expect(viewModel.newSticker != nil)
+        #expect(viewModel.score == ARChallengeRules.roundCount * GameScoring.firstTryPoints)
+    }
+
+    @Test func findingAfterExploringScoresLessButStillCounts() throws {
+        let viewModel = ARLearningViewModel()
+        let target = try #require(viewModel.currentTarget)
+        let other = try #require(viewModel.targetObjects.first { $0.id != target.id })
+        viewModel.tapObject(other)
+        viewModel.tapObject(target)
+        #expect(viewModel.foundCount == 1)
+        #expect(viewModel.score == GameScoring.retryPoints)
+        #expect(viewModel.firstTryFinds == 0)
+    }
+
+    @Test func playAgainStartsFresh() throws {
+        let viewModel = ARLearningViewModel()
+        let target = try #require(viewModel.currentTarget)
+        viewModel.tapObject(target)
+        viewModel.playAgain()
+        #expect(viewModel.foundCount == 0)
+        #expect(viewModel.targetObjects.allSatisfy { !$0.isDiscovered })
+        #expect(!viewModel.isCompleted)
+    }
+
+    @Test func animalPictureBecomesATexture() async throws {
+        let image = try #require(ARSceneController.pictureImage(for: "🦁"))
+        let texture = try await TextureResource(image: image, options: .init(semantic: .color))
+        #expect(texture.width == image.width)
+    }
+
+    @Test(arguments: ARShapeKind.allCases)
+    func everyShapeCanBeExtrudedIn3D(shape: ARShapeKind) throws {
+        var options = MeshResource.ShapeExtrusionOptions()
+        options.extrusionMethod = .linear(depth: 0.025)
+        let mesh = try MeshResource(extruding: ARSceneController.path(for: shape, size: 0.08), extrusionOptions: options)
+        #expect(mesh.bounds.extents.x > 0.05)
+        #expect(mesh.bounds.extents.z > 0.02)
     }
 }

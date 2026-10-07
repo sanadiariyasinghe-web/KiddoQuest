@@ -52,9 +52,14 @@ Choice-based games have **gentle levels** (2 → 3 → 4 choices). A child moves
 ### AR Learning Mode (ARKit + RealityKit)
 
 - ARKit world tracking with horizontal plane detection and Apple's coaching overlay.
-- 3D picture cards (letters, shapes or animals) are placed on a **real table or floor** and always face the camera.
-- The child taps the real 3D objects (hit-testing). Correct cards lift and grow, and wrong ones wobble gently.
-- Devices without AR (including the simulator) get a 2D "simulated room" fallback.
+- When a surface is found, the child **taps the real table or floor** to place five **3D learning objects** there
+  (ARKit raycast). A **Move** button lets them place the objects somewhere else.
+- Real 3D content made in code: **extruded 3D letters**, **thick 3D shapes** (triangle, circle, square, star, heart)
+  and **animal picture cubes**, each on a small stand. They pop in one by one and turn gently (not in Calm Mode).
+- **Explore:** tapping any object makes it hop while Buddy shares a fact ("A triangle has 3 sides, like a slice of pizza!").
+- **Challenges:** three random "Find the Triangle!" / "Find the letter B!" / "Find the Lion!" rounds. A find makes the object
+  lift and its stand turn green. At the end there are stars (first-try finds), a **sticker**, saved progress and the AR Explorer badge.
+- Devices without AR (including the simulator) get the 2D "simulated room" fallback with the same challenges.
 
 ### Find It! (Vision, on-device machine learning)
 

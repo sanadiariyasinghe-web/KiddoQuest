@@ -68,11 +68,19 @@ struct ARLearningView: View {
                 .padding(.horizontal, Theme.Spacing.medium)
                 
                 // AR Camera View or Fallback Interactive Canvas
-                if viewModel.isARSupported {
-                    actualARCameraView
-                } else {
-                    fallbackSpatialView
+                ZStack {
+                    if viewModel.isARSupported {
+                        actualARCameraView
+                    } else {
+                        fallbackSpatialView
+                    }
+
+                    if viewModel.isCompleted {
+                        completionCard
+                            .transition(.scale(scale: 0.85).combined(with: .opacity))
+                    }
                 }
+                .animation(.spring(response: 0.4, dampingFraction: 0.75), value: viewModel.isCompleted)
                 
                 // Mascot Feedback
                 MascotView(
@@ -85,6 +93,15 @@ struct ARLearningView: View {
                 // Bottom Persistent "Exit AR" & "Celebrate" Buttons
                 HStack(spacing: 12) {
                     if viewModel.isCompleted {
+                        PrimaryChildButton(
+                            title: "Play Again",
+                            iconName: "arrow.clockwise",
+                            backgroundColor: Theme.ColorPalette.animalsGreen
+                        ) {
+                            viewModel.playAgain()
+                        }
+                        .accessibilityIdentifier("ar.playAgain")
+
                         PrimaryChildButton(
                             title: "View AR Rewards",
                             iconName: "trophy.fill",
@@ -134,20 +151,89 @@ struct ARLearningView: View {
                 )
 
             // Simple status so the child knows what to do next
-            Label(
-                viewModel.isSurfaceFound ? "Tap the 3D cards on the table!" : "Point at a table or the floor 📱",
-                systemImage: viewModel.isSurfaceFound ? "hand.tap.fill" : "viewfinder"
-            )
-            .font(Theme.Typography.headline(size: 15))
-            .foregroundStyle(.white)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(.black.opacity(0.45))
-            .clipShape(Capsule())
-            .padding(.top, 12)
-            .allowsHitTesting(false)
+            Label(arStatus.text, systemImage: arStatus.symbol)
+                .font(Theme.Typography.headline(size: 15))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(.black.opacity(0.45))
+                .clipShape(Capsule())
+                .padding(.top, 12)
+                .allowsHitTesting(false)
+                .accessibilityIdentifier("ar.status")
+        }
+        .overlay(alignment: .bottomTrailing) {
+            // Put the objects somewhere else (tap a new spot afterwards)
+            if viewModel.isPlaced && !viewModel.isCompleted {
+                Button {
+                    viewModel.isPlaced = false
+                } label: {
+                    Label("Move", systemImage: "arrow.up.and.down.and.arrow.left.and.right")
+                        .font(Theme.Typography.headline(size: 15))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Theme.ColorPalette.arOrange)
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(BouncyButtonStyle())
+                .padding(12)
+                .accessibilityLabel("Move the learning objects")
+            }
         }
         .padding(.horizontal, Theme.Spacing.medium)
+    }
+
+    /// Step-by-step guidance: find a surface → tap it to place → tap the 3D objects.
+    private var arStatus: (text: String, symbol: String) {
+        if !viewModel.isSurfaceFound {
+            return ("Point at a table or the floor 📱", "viewfinder")
+        } else if !viewModel.isPlaced {
+            return ("Tap the table to place the toys! 👆", "hand.point.up.left.fill")
+        } else {
+            return ("Tap the 3D objects to explore!", "hand.tap.fill")
+        }
+    }
+
+    // MARK: - Completion Card
+    /// Stars and the new sticker after the last "Find the …!" challenge.
+    private var completionCard: some View {
+        VStack(spacing: 12) {
+            Text("Great Job! 🎉")
+                .font(Theme.Typography.title(size: 28))
+                .foregroundStyle(Theme.ColorPalette.primaryText)
+
+            HStack(spacing: 8) {
+                ForEach(0..<3, id: \.self) { index in
+                    Image(systemName: index < viewModel.starsEarned ? "star.fill" : "star")
+                        .font(.system(size: 34))
+                        .foregroundStyle(index < viewModel.starsEarned ? Theme.ColorPalette.starGold : Theme.ColorPalette.secondaryText.opacity(0.4))
+                }
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(viewModel.starsEarned) of 3 stars")
+
+            Text("You found \(viewModel.foundCount) of \(viewModel.totalRequired)!")
+                .font(Theme.Typography.headline(size: 17))
+                .foregroundStyle(Theme.ColorPalette.secondaryText)
+
+            if let sticker = viewModel.newSticker {
+                HStack(spacing: 10) {
+                    Text(sticker.emoji)
+                        .font(.system(size: 40))
+                    Text("New sticker!")
+                        .font(Theme.Typography.headline(size: 17))
+                        .foregroundStyle(Theme.ColorPalette.primaryText)
+                }
+                .accessibilityElement(children: .combine)
+            }
+        }
+        .padding(24)
+        .background(Theme.ColorPalette.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
+        .shadow(color: .black.opacity(0.15), radius: 14, y: 6)
+        .padding(Theme.Spacing.large)
+        .accessibilityIdentifier("ar.completion")
     }
     
     // MARK: - Fallback Spatial Simulated View (Section 10 Fallback Requirement)

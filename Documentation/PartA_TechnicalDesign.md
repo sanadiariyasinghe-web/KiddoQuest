@@ -100,14 +100,18 @@ per-game levels, intro seen, and the sticker book (stored as JSON-encoded `[Stic
 
 1. **Tracking:** runs `ARWorldTrackingConfiguration` with horizontal plane detection and automatic environment texturing.
 2. **Coaching:** adds `ARCoachingOverlayView` (goal `.horizontalPlane`) so children are guided to point at a surface.
-3. **Placement:** creates an `AnchorEntity(.plane(.horizontal, classification: .any, minimumBounds: [0.2, 0.2]))`, which RealityKit attaches to the first suitable real surface.
-4. **Content:** each learning object becomes a container entity with:
-   - a `ModelEntity` card (`MeshResource.generatePlane` with rounded corners) textured at runtime: the symbol is drawn with `UIGraphicsImageRenderer` and loaded with `TextureResource(image:options:)` into an `UnlitMaterial`,
-   - a `BillboardComponent`, so the card always faces the child,
-   - a small cylinder base, and collision shapes for hit-testing.
-5. **Interaction:** a `UITapGestureRecognizer` calls `ARView.entity(at:)`, walks up to the card's container, and passes the item to `ARLearningViewModel.tapObject`.
-6. **Feedback:** correct cards lift and scale (`Entity.move(to:relativeTo:duration:)`), and wrong ones wobble gently.
-7. **State:** `ARSessionDelegate.session(_:didAdd:)` sets `isSurfaceFound` when the first `ARPlaneAnchor` appears, and the SwiftUI status pill updates.
+3. **Placement:** once a plane is found, a tap that misses every object is ray-cast onto the real surface
+   (`ARView.raycast(from:allowing: .estimatedPlane, alignment: .horizontal)`). An `AnchorEntity(world:)` is created at that point,
+   and the row of objects is turned (yaw) to face the camera. **Move** removes the anchor so the child can tap a new spot.
+4. **Content:** each learning object is a container entity with a cylinder stand and a 3D model:
+   - letters: `MeshResource.generateText(_:extrusionDepth:font:…)` (2.5 cm deep, bold rounded colours),
+   - shapes: a SwiftUI `Path` (triangle, circle, square, star, heart) extruded with `MeshResource(extruding:extrusionOptions:)`,
+   - animals: a rounded `generateBox` cube whose faces show the animal, drawn with `UIGraphicsImageRenderer` and loaded with `TextureResource(image:options:)` into an `UnlitMaterial`,
+   - collision shapes for hit-testing. A repeating `FromToByAnimation<Transform>` sways each model (off in Calm Mode / Reduce Motion).
+5. **Interaction:** a `UITapGestureRecognizer` calls `ARView.entity(at:)`, walks up to the object's container, and passes the item to `ARLearningViewModel.tapObject`.
+6. **Feedback:** exploring an object makes it hop. Finding the target lifts and scales it (`Entity.move(to:relativeTo:duration:)`) and turns its stand green.
+7. **Challenges (`ARChallengeRules`, pure and unit-tested):** five random objects per mode, three different targets per session, first-try stars (`GameScoring`), a sticker (`StickerBook`), and progress plus the AR Explorer badge saved in Core Data.
+8. **State:** `ARSessionDelegate.session(_:didAdd:)` sets `isSurfaceFound` when the first `ARPlaneAnchor` appears, and the SwiftUI status pill updates.
 
 If `ARWorldTrackingConfiguration.isSupported` is false (simulator, older devices), the view falls back to
 a 2D "simulated room" with the same game logic.
