@@ -172,13 +172,18 @@ struct HomeView: View {
                     .font(Theme.Typography.headline(size: 18))
                     .foregroundStyle(Theme.ColorPalette.primaryText)
                 
-                // Stars Row
-                HStack(spacing: 3) {
-                    ForEach(0..<progress.maxStars, id: \.self) { index in
-                        Image(systemName: index < progress.stars ? "star.fill" : "star")
-                            .font(.system(size: 14))
-                            .foregroundStyle(index < progress.stars ? Theme.ColorPalette.starGold : Theme.ColorPalette.secondaryText.opacity(0.4))
+                // Stars Row: islands with more games have more stars, so use the largest
+                // size that fits the card (never wider than the card itself)
+                ViewThatFits(in: .horizontal) {
+                    starRow(stars: progress.stars, maxStars: progress.maxStars, size: 14, spacing: 3)
+                    starRow(stars: progress.stars, maxStars: progress.maxStars, size: 10, spacing: 2)
+                    HStack(spacing: 4) {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(Theme.ColorPalette.starGold)
+                        Text("\(progress.stars) / \(progress.maxStars)")
+                            .foregroundStyle(Theme.ColorPalette.secondaryText)
                     }
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
                 }
                 
                 // Completion Text
@@ -199,6 +204,17 @@ struct HomeView: View {
         }
         .buttonStyle(BouncyButtonStyle())
         .accessibilityLabel("\(category.title), \(progress.percentage) percent complete, \(progress.stars) of \(progress.maxStars) stars earned")
+    }
+
+    private func starRow(stars: Int, maxStars: Int, size: CGFloat, spacing: CGFloat) -> some View {
+        HStack(spacing: spacing) {
+            ForEach(0..<maxStars, id: \.self) { index in
+                Image(systemName: index < stars ? "star.fill" : "star")
+                    .font(.system(size: size))
+                    .foregroundStyle(index < stars ? Theme.ColorPalette.starGold : Theme.ColorPalette.secondaryText.opacity(0.4))
+            }
+        }
+        .fixedSize()
     }
     
     // MARK: - Find It! Banner
