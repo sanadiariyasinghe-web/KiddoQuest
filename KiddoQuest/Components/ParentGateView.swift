@@ -27,7 +27,7 @@ struct ParentGateView: View {
             }
             
             VStack(spacing: 8) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(Theme.Typography.title(size: 24))
                     .foregroundStyle(Theme.ColorPalette.primaryText)
                 

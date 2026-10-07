@@ -233,7 +233,7 @@ struct RoundResultsView: View {
             VStack(spacing: 6) {
                 Text(emoji)
                     .font(.system(size: 42))
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(Theme.Typography.title(size: 22))
                     .foregroundStyle(.white)
                     .lineLimit(1)

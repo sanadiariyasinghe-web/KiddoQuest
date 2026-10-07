@@ -11,14 +11,21 @@ enum IslandCategory: String, CaseIterable, Identifiable, Hashable, Codable {
     
     var title: String {
         switch self {
-        case .numbers: return "Numbers Island"
-        case .letters: return "Letters Island"
-        case .shapes: return "Shapes Island"
-        case .animals: return "Animals Island"
+        case .numbers: return String(localized: "Numbers Island")
+        case .letters: return String(localized: "Letters Island")
+        case .shapes: return String(localized: "Shapes Island")
+        case .animals: return String(localized: "Animals Island")
         }
     }
     
-    var shortTitle: String { rawValue.uppercased() }
+    var shortTitle: String {
+        switch self {
+        case .numbers: return String(localized: "Numbers").uppercased()
+        case .letters: return String(localized: "Letters").uppercased()
+        case .shapes: return String(localized: "Shapes").uppercased()
+        case .animals: return String(localized: "Animals").uppercased()
+        }
+    }
     
     var icon: String {
         switch self {
