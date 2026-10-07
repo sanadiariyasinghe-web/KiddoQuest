@@ -304,3 +304,63 @@ struct CoreDataManagerTests {
         #expect(totals.starsEarned == 5)
     }
 }
+
+// MARK: - Find It! (Vision game)
+@MainActor
+struct FindItTests {
+    @Test func roundHasFiveDifferentHuntsIncludingColours() {
+        let round = FindItRules.makeRound()
+        #expect(round.count == 5)
+        #expect(Set(round).count == 5)
+        let colours = round.filter { if case .color = $0 { return true } else { return false } }
+        #expect(colours.count == 2)
+    }
+
+    @Test func matchingNeedsTheRightLabelAndEnoughConfidence() {
+        let labels: Set<String> = ["chair", "armchair"]
+        #expect(FindItRules.matches(labels: labels, observations: [("armchair", 0.6)]))
+        #expect(!FindItRules.matches(labels: labels, observations: [("armchair", 0.05)]))
+        #expect(!FindItRules.matches(labels: labels, observations: [("dog", 0.9)]))
+    }
+
+    @Test func bestGuessIsAFriendlyWord() {
+        #expect(FindItRules.bestGuess(from: [("adult_cat", 0.8), ("dog", 0.3)]) == "adult cat")
+        #expect(FindItRules.bestGuess(from: [("dog", 0.1)]) == nil)
+    }
+
+    @Test(arguments: [
+        (0.9, 0.1, 0.1, FindItColor.red),
+        (0.1, 0.3, 0.9, FindItColor.blue),
+        (0.95, 0.85, 0.1, FindItColor.yellow),
+        (0.1, 0.8, 0.2, FindItColor.green)
+    ])
+    func dominantColourNamesBrightColours(red: Double, green: Double, blue: Double, expected: FindItColor) {
+        #expect(FindItRules.dominantColor(red: red, green: green, blue: blue) == expected)
+    }
+
+    @Test func greyAndDarkColoursAreNotGuessed() {
+        #expect(FindItRules.dominantColor(red: 0.5, green: 0.5, blue: 0.5) == nil)
+        #expect(FindItRules.dominantColor(red: 0.1, green: 0.05, blue: 0.05) == nil)
+    }
+
+    @Test func firstTryFindScoresFullPointsAndRetryScoresHalf() {
+        let viewModel = FindItViewModel(targets: [.color(.red), .color(.blue)])
+        viewModel.evaluate(matched: true, saw: nil)
+        #expect(viewModel.score == GameScoring.firstTryPoints)
+        #expect(viewModel.correctAnswers == 1)
+        #expect(viewModel.isShowingSuccess)
+
+        let retry = FindItViewModel(targets: [.color(.red)])
+        retry.evaluate(matched: false, saw: "something blue")
+        #expect(retry.mascotMessage.contains("something blue"))
+        retry.evaluate(matched: true, saw: nil)
+        #expect(retry.score == GameScoring.retryPoints)
+        #expect(retry.correctAnswers == 0)
+    }
+
+    @Test func findItIsInTheCatalogue() {
+        let game = GameInfo.sampleGames.first { $0.id == FindItViewModel.gameID }
+        #expect(game?.gameType == .findIt)
+        #expect(game?.category == .shapes)
+    }
+}

@@ -21,6 +21,7 @@ enum WeeklyLearningSummary {
         case "let_2": return "Finding letters"
         case "shp_1": return "Colours and shapes"
         case "shp_2": return "Sorting shapes"
+        case "shp_3": return "Finding colours and things at home"
         case "ani_1": return "What animals eat"
         case "ani_2": return "Recognising animals by their shape"
         default: return nil

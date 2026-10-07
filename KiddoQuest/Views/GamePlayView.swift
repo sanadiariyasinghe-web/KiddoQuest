@@ -21,6 +21,8 @@ struct GamePlayView: View {
             AnimalPictureGameView(game: .feedAnimals, navigationPath: $navigationPath)
         case .animalShadows:
             AnimalPictureGameView(game: .animalShadows, navigationPath: $navigationPath)
+        case .findIt:
+            FindItGameView(navigationPath: $navigationPath)
         case .shapeSort:
             ShapeSortGameView(navigationPath: $navigationPath)
         case .arLearning:

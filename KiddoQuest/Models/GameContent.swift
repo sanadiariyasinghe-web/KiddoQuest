@@ -56,6 +56,7 @@ enum GameType: String, CaseIterable, Identifiable, Hashable, Codable {
     case letterHunt = "letter_hunt"
     case feedAnimals = "feed_animals"
     case animalShadows = "animal_shadows"
+    case findIt = "find_it"
     case shapeSort = "shape_sort"
     case arLearning = "ar_learning"
     
@@ -133,6 +134,15 @@ struct GameInfo: Identifiable, Hashable, Codable {
             description: "Tap the box that matches each shape.",
             iconName: "tray.2.fill",
             gameType: .shapeSort,
+            isUnlocked: true
+        ),
+        GameInfo(
+            id: "shp_3",
+            title: "Find It!",
+            category: .shapes,
+            description: "Find colours and things in your house with the camera!",
+            iconName: "camera.viewfinder",
+            gameType: .findIt,
             isUnlocked: true
         ),
         

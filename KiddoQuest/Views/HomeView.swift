@@ -60,6 +60,10 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, Theme.Spacing.medium)
                     
+                    // Find It! (camera) Banner
+                    findItBanner
+                        .padding(.horizontal, Theme.Spacing.medium)
+
                     // AR Learning Banner
                     arBanner
                         .padding(.horizontal, Theme.Spacing.medium)
@@ -197,6 +201,53 @@ struct HomeView: View {
         .accessibilityLabel("\(category.title), \(progress.percentage) percent complete, \(progress.stars) of \(progress.maxStars) stars earned")
     }
     
+    // MARK: - Find It! Banner
+    private var findItBanner: some View {
+        Button {
+            if let game = GameInfo.sampleGames.first(where: { $0.gameType == .findIt }) {
+                navigationPath.append(AppRoute.gamePlay(game))
+            }
+        } label: {
+            HStack(spacing: 16) {
+                ZStack {
+                    Circle()
+                        .fill(Theme.ColorPalette.shapesPurple.opacity(0.2))
+                        .frame(width: 60, height: 60)
+                    Image(systemName: "camera.viewfinder")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundStyle(Theme.ColorPalette.shapesPurple)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Find It! 📷")
+                        .font(Theme.Typography.headline(size: 18))
+                        .foregroundStyle(Theme.ColorPalette.primaryText)
+                    Text("Find colours and things in your house!")
+                        .font(Theme.Typography.caption())
+                        .foregroundStyle(Theme.ColorPalette.secondaryText)
+                        .multilineTextAlignment(.leading)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right.circle.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(Theme.ColorPalette.shapesPurple)
+            }
+            .padding(16)
+            .background(Theme.ColorPalette.cardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.Radius.card)
+                    .stroke(Theme.ColorPalette.shapesPurple.opacity(0.3), lineWidth: 2)
+            )
+            .shadow(color: Theme.ColorPalette.shapesPurple.opacity(0.15), radius: 8, y: 4)
+        }
+        .buttonStyle(BouncyButtonStyle())
+        .accessibilityLabel("Open Find It, the camera game")
+        .accessibilityIdentifier("home.findIt")
+    }
+
     // MARK: - AR Banner
     private var arBanner: some View {
         Button {
