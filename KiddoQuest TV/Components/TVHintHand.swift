@@ -85,7 +85,7 @@ struct TVHintOverlay: ViewModifier {
     @State private var lastActivity = ContinuousClock.now
 
     private let firstHintDelay: Duration = .seconds(1.2)
-    private let idleHintDelay: Duration = .seconds(8)
+    private let idleHintDelay: Duration = .seconds(10)
     private let hintDuration: Duration = .seconds(2.4)
 
     func body(content: Content) -> some View {

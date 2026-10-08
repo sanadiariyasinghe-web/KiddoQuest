@@ -43,7 +43,7 @@ audio settings and a weekly "What my child learned" summary.
 Every game uses the shared **game flow**:
 
 1. **Instructions:** a picture sentence, short text for grown-ups, and a big **Let's Play!** button.
-2. **Play:** an animated 👆 shows what to tap at the start and again after 8 seconds without a tap.
+2. **Play:** an animated 👆 shows what to tap at the start and again after 10 seconds without a tap.
 3. **Results:** "Great Job! 🎉", stars revealed one by one, correct answers, a new sticker, the owl dance,
    and big **🏠 Home** / **🎮 More Games** buttons (plus Play Again).
 
