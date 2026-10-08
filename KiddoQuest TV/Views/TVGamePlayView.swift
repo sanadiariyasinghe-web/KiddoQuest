@@ -13,8 +13,20 @@ struct TVGamePlayView: View {
 
     /// The game starts only after the child presses Let's Play!.
     @State private var hasStarted = false
+    #if DEBUG
+    /// Lets previews open a game straight in play (responsive layout checks).
+    @Environment(\.tvPreviewStartsPlaying) private var previewStartsPlaying
+    #endif
 
     var body: some View {
+        content
+            #if DEBUG
+            .onAppear { if previewStartsPlaying { hasStarted = true } }
+            #endif
+    }
+
+    @ViewBuilder
+    private var content: some View {
         if let game = TVGameDataService.game(for: kind) {
             let launchCategory = game.launchCategory(preferred: category)
             if hasStarted {
@@ -55,3 +67,10 @@ struct TVGamePlayView: View {
         router.replaceTop(with: .results(recorded))
     }
 }
+
+#if DEBUG
+extension EnvironmentValues {
+    /// Preview-only: skip the instructions screen and show the game.
+    @Entry var tvPreviewStartsPlaying = false
+}
+#endif

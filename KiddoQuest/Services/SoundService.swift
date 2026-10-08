@@ -74,7 +74,11 @@ final class SoundService {
         player.scheduleBuffer(buffer, at: nil, options: .interrupts, completionHandler: nil)
         if !player.isPlaying {
             // A failure here just means this chime is skipped
+            if #available(iOS 27.0, *) {
             try? player.playAudio()
+        } else {
+            player.play()
+        }
         }
     }
 
@@ -108,7 +112,12 @@ final class SoundService {
         try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
         let engine = AVAudioEngine()
         engine.attach(player)
-        try engine.connectNode(player, to: engine.mainMixerNode, format: format)
+        // The deployment target is iOS 26.6, so use the older API there
+        if #available(iOS 27.0, *) {
+            try engine.connectNode(player, to: engine.mainMixerNode, format: format)
+        } else {
+            engine.connect(player, to: engine.mainMixerNode, format: format)
+        }
         return engine
     }
 }

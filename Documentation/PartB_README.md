@@ -75,6 +75,9 @@ KiddoQuest TV turns individual learning into a **shared living-room activity**:
 - **Dynamic Top Shelf extension (`KiddoQuestTopShelf`):** a `TVTopShelfContentProvider` shows a "Play & Learn" row of game shortcuts. Selecting one opens the app straight into that game through a `kiddoquesttv://game/<kind>/<world>` deep link (`TVDeepLink`, handled with `onOpenURL`). If no player is chosen yet, "Who's Playing?" is shown first.
 - **Game controllers (GameController framework):** in Family Challenge each child can hold their own controller. Controller 1 goes to the first player, controller 2 to the second, and so on (`TVControllerSeats`). Controllers show their player number, the light bar takes the child's avatar colour, and the turn banner shows 🎮 1 / 🎮 2. Pressing during someone else's turn gives a kind "Wait for your turn, Liam! It's Ava's go." with no penalty. The Siri Remote still works for everyone.
 - **Adaptive levels:** each player has a level per choice game (2 → 3 → 4 answers). A 3-star round moves up (shown as "⬆️ Level up!" on Results), and a 1-star round moves down so a struggling child gets an easier game next time.
+- **Every TV size:** all Apple TVs (HD and 4K) lay apps out in the same 1920 × 1080-point space. Each screen was rendered at that size
+  (`KiddoQuest TV/Previews/TVResponsivePreviews.swift`). All content stays inside an 80-pt TV-safe margin, rows of cards fit
+  the width even at the hardest level (4 answers), and long screens (Family Progress, Settings, Rewards) scroll with the remote.
 - **Living-room audio:** an `.ambient` audio session, so KiddoQuest mixes politely with other audio.
 
 ## 9. Siri Remote / focus navigation
