@@ -41,6 +41,10 @@ struct MascotView: View {
     @State private var bounceOffset: CGFloat = 0
     @State private var rotationAngle: Double = 0
     @CalmModeEnabled private var isCalm
+    @Environment(\.isCompactLayout) private var isCompact
+
+    /// Buddy is a little smaller when the screen is short (small iPhones, landscape).
+    private var avatarSize: CGFloat { isCompact ? size * 0.8 : size }
 
     var body: some View {
         HStack(alignment: .center, spacing: 14) {
@@ -48,10 +52,10 @@ struct MascotView: View {
             ZStack {
                 Circle()
                     .fill(Theme.ColorPalette.numbersYellow.opacity(0.25))
-                    .frame(width: size, height: size)
+                    .frame(width: avatarSize, height: avatarSize)
                 
                 Text("🦉")
-                    .font(.system(size: size * 0.65))
+                    .font(.system(size: avatarSize * 0.65))
                     .offset(y: bounceOffset)
                     .rotationEffect(.degrees(rotationAngle))
             }
@@ -70,7 +74,7 @@ struct MascotView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+                .padding(.vertical, isCompact ? 8 : 12)
                 .background(Theme.ColorPalette.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
                 .overlay(

@@ -10,7 +10,8 @@ struct CategoryView: View {
                 .ignoresSafeArea()
             
             ScrollView {
-                VStack(spacing: Theme.Spacing.large) {
+                // iPhone landscape: island card left, Buddy + Play button right (no scrolling needed)
+                GameScreenLayout(spacing: Theme.Spacing.large) {
                     // Island Hero Card
                     VStack(spacing: Theme.Spacing.medium) {
                         ZStack {
@@ -42,6 +43,7 @@ struct CategoryView: View {
                     )
                     .shadow(color: category.themeColor.opacity(0.15), radius: 12, y: 6)
                     
+                } controls: {
                     // Mascot Encouragement Component
                     MascotView(
                         mood: .idle,

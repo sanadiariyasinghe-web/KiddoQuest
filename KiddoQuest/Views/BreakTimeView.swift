@@ -4,12 +4,14 @@ import SwiftUI
 // Shown over the whole app when today's play time limit is reached.
 // Calm and friendly for the child; a grown-up can unlock with the parent gate.
 
-struct BreakTimeView: View {
+struct BreakTimeView: View, CompactAdaptable {
     let onParentUnlock: () -> Void
     
     @State private var isShowingParentGate = false
     @State private var isOwlResting = false
     @CalmModeEnabled private var isCalm
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
     
     var body: some View {
         ZStack {
@@ -31,34 +33,39 @@ struct BreakTimeView: View {
                     .font(Theme.Typography.headline(size: 18))
                     .foregroundStyle(.white)
                 }
+                .padding(.vertical, Theme.Spacing.medium)
+                .scrollsWhenNeeded()
                 .transition(.scale.combined(with: .opacity))
             } else {
-                restingContent
-                    .transition(.opacity)
+                // Fits as designed, or smaller / scrollable on short screens (iPhone landscape)
+                FitsOrScrolls {
+                    CompactLayoutReader { compact($0).restingContent }
+                }
+                .transition(.opacity)
             }
         }
         .accessibilityIdentifier("breakTime.screen")
     }
     
     private var restingContent: some View {
-        VStack(spacing: Theme.Spacing.large) {
-            Spacer()
+        VStack(spacing: isCompact ? Theme.Spacing.medium : Theme.Spacing.large) {
+            Spacer(minLength: 0)
             
             Text("🌙")
-                .font(.system(size: 64))
+                .font(.system(size: AdaptiveMetric.size(64, compact: isCompact)))
                 .accessibilityHidden(true)
             
             ZStack {
                 Circle()
                     .fill(Theme.ColorPalette.numbersYellow.opacity(0.25))
-                    .frame(width: 150, height: 150)
+                    .frame(width: AdaptiveMetric.size(150, compact: isCompact), height: AdaptiveMetric.size(150, compact: isCompact))
                 Text("🦉")
-                    .font(.system(size: 90))
+                    .font(.system(size: AdaptiveMetric.size(90, compact: isCompact)))
                     .rotationEffect(.degrees(isOwlResting ? -6 : 6))
                     .animation(.easeInOut(duration: 2.5).repeatForever(autoreverses: true), value: isOwlResting)
                 Text("💤")
                     .font(.system(size: 32))
-                    .offset(x: 62, y: -58)
+                    .offset(x: AdaptiveMetric.size(62, compact: isCompact), y: AdaptiveMetric.size(-58, compact: isCompact))
                     .opacity(isOwlResting ? 1 : 0.3)
                     .animation(.easeInOut(duration: 2.5).repeatForever(autoreverses: true), value: isOwlResting)
             }
@@ -76,7 +83,7 @@ struct BreakTimeView: View {
             }
             .padding(.horizontal, Theme.Spacing.large)
             
-            Spacer()
+            Spacer(minLength: 0)
             
             Button {
                 withAnimation(.spring()) { isShowingParentGate = true }
@@ -90,8 +97,9 @@ struct BreakTimeView: View {
                     .clipShape(Capsule())
             }
             .accessibilityIdentifier("breakTime.grownUps")
-            .padding(.bottom, Theme.Spacing.xlarge)
+            .padding(.bottom, isCompact ? Theme.Spacing.medium : Theme.Spacing.xlarge)
         }
+        .padding(.top, isCompact ? Theme.Spacing.medium : 0)
         .onAppear { isOwlResting = !isCalm }
     }
 }

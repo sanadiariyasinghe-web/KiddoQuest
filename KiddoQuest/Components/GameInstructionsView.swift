@@ -12,13 +12,15 @@ struct GameInstructionsView: View {
     @State private var hasAppeared = false
     @State private var isPulsing = false
     @CalmModeEnabled private var isCalm
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     var body: some View {
         ZStack {
             Color.black.opacity(0.3)
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.large) {
+            // Portrait: one column. iPhone landscape: pictures left, steps + Let's Play! right.
+            GameScreenLayout(spacing: Theme.Spacing.large) {
                 GameJourneyIndicator(phase: .instructions, themeColor: instructions.themeColor)
                 
                 Text(instructions.title)
@@ -27,7 +29,7 @@ struct GameInstructionsView: View {
                     .multilineTextAlignment(.center)
                 
                 pictureStory
-                
+            } controls: {
                 // Short text steps for grown-ups reading along
                 VStack(spacing: 8) {
                     ForEach(Array(instructions.steps.enumerated()), id: \.element.id) { index, step in
@@ -52,11 +54,13 @@ struct GameInstructionsView: View {
                 .accessibilityIdentifier("instructions.play")
             }
             .padding(Theme.Spacing.large)
-            .frame(maxWidth: Theme.Layout.maxCardWidth)
+            .frame(maxWidth: verticalSizeClass == .compact ? Theme.Layout.maxContentWidth : Theme.Layout.maxCardWidth)
             .background(Theme.ColorPalette.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
             .shadow(color: .black.opacity(0.15), radius: 20, y: 10)
             .padding(.horizontal, Theme.Spacing.large)
+            .padding(.vertical, Theme.Spacing.small)
+            .scrollsWhenNeeded()
         }
         .onAppear {
             hasAppeared = true
@@ -67,23 +71,10 @@ struct GameInstructionsView: View {
     // MARK: - Picture Sentence
     /// Big pictures joined by arrows, appearing one after another.
     private var pictureStory: some View {
-        HStack(spacing: 8) {
-            ForEach(Array(instructions.pictureStory.enumerated()), id: \.offset) { index, picture in
-                if index > 0 {
-                    Image(systemName: "arrow.right")
-                        .font(.system(size: 22, weight: .heavy))
-                        .foregroundStyle(instructions.themeColor)
-                        .opacity(hasAppeared ? 1 : 0)
-                        .animation(.easeIn(duration: 0.3).delay(Double(index) * 0.45), value: hasAppeared)
-                }
-                pictureTile(picture)
-                    .scaleEffect(hasAppeared ? 1 : 0.4)
-                    .opacity(hasAppeared ? 1 : 0)
-                    .animation(
-                        .spring(response: 0.45, dampingFraction: 0.6).delay(0.15 + Double(index) * 0.45),
-                        value: hasAppeared
-                    )
-            }
+        // Full-size pictures when they fit; slightly smaller ones on narrow phones (iPhone SE / mini)
+        ViewThatFits(in: .horizontal) {
+            pictureRow(tileSize: 64, spacing: 8)
+            pictureRow(tileSize: 46, spacing: 4)
         }
         .padding(.vertical, 14)
         .padding(.horizontal, 12)
@@ -93,15 +84,36 @@ struct GameInstructionsView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(instructions.steps.map(\.text).joined(separator: " "))
     }
+
+    private func pictureRow(tileSize: CGFloat, spacing: CGFloat) -> some View {
+        HStack(spacing: spacing) {
+            ForEach(Array(instructions.pictureStory.enumerated()), id: \.offset) { index, picture in
+                if index > 0 {
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 22, weight: .heavy))
+                        .foregroundStyle(instructions.themeColor)
+                        .opacity(hasAppeared ? 1 : 0)
+                        .animation(.easeIn(duration: 0.3).delay(Double(index) * 0.45), value: hasAppeared)
+                }
+                pictureTile(picture, size: tileSize)
+                    .scaleEffect(hasAppeared ? 1 : 0.4)
+                    .opacity(hasAppeared ? 1 : 0)
+                    .animation(
+                        .spring(response: 0.45, dampingFraction: 0.6).delay(0.15 + Double(index) * 0.45),
+                        value: hasAppeared
+                    )
+            }
+        }
+    }
     
-    private func pictureTile(_ picture: PictureStep) -> some View {
+    private func pictureTile(_ picture: PictureStep, size: CGFloat) -> some View {
         Text(picture.symbol)
-            .font(.system(size: 44, weight: .heavy, design: .rounded))
+            .font(.system(size: size * 0.69, weight: .heavy, design: .rounded))
             .foregroundStyle(Theme.ColorPalette.primaryText)
             .colorMultiply(picture.isShadow ? .black : .white)
             .minimumScaleFactor(0.5)
             .lineLimit(1)
-            .frame(minWidth: 64, minHeight: 64)
+            .frame(minWidth: size, minHeight: size)
             .padding(6)
             .background(Theme.ColorPalette.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.minimum))

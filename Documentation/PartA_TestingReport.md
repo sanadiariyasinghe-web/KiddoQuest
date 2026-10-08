@@ -60,6 +60,23 @@ because the 8 GB Mac was under heavy memory pressure; simulator numbers are not 
 After the Find It!, Siri and language changes only `testHomeShowsAllIslandsWithFreshProgress` was re-run (passed);
 the other 4 UI tests should be re-run once more.
 
+## 3b. Responsive layout testing (8–9 October 2026)
+
+Every screen keeps its designed layout when it fits. On shorter screens it switches to a compact layout
+(smaller pictures and gaps), and only scrolls as a last resort (`FitsOrScrolls`). In iPhone landscape, games,
+instructions, the island screen and AR put the play area and the controls side by side (`GameScreenLayout`).
+
+| Check | How | Result |
+| --- | --- | --- |
+| iPhone SE (375 × 667), all 9 games and 9 other screens | Debug previews in `Previews/ResponsivePreviews.swift` | Everything visible. Fixed: Tap-to-Match tiles wider than the screen, Colouring paints and Find It buttons cut off, instructions card wider than the screen |
+| iPhone landscape (844 × 390), all games and screens | Previews + real iPhone 11 simulator | Side-by-side layouts. Fixed: Parent gate cut off, island "Play" button off screen |
+| iPad portrait / landscape | Previews | No clipping. Home centred, Counting Pop answers fill the row |
+| Largest accessibility text (AX XXXL) | `testVeryLargeTextKeepsTheGamePlayable` | Passed |
+| Landscape journey on a real simulator | `KiddoQuestResponsiveUITests` (3 tests) | All 3 passed on 8 October. In the final run 2 passed and 1 timed out because the simulator was overloaded |
+| Regression | 5 original UI tests + 63 unit cases | All passed |
+
+Also found and fixed: confetti and the 👆 hint layer were visible to VoiceOver. They are now hidden and never block taps.
+
 ## 4. Manual and user acceptance testing
 
 Fill in this checklist during your own testing sessions (with a child where possible, supervised by a parent).

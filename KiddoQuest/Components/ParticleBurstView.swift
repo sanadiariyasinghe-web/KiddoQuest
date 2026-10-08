@@ -44,6 +44,8 @@ struct ParticleBurstView: View {
             }
         }
         .allowsHitTesting(false)
+        // Decoration only: VoiceOver (and UI tests) should see the game underneath, not confetti
+        .accessibilityHidden(true)
         .onChange(of: isEmitting) { _, newValue in
             guard newValue else { return }
             if isCalm {

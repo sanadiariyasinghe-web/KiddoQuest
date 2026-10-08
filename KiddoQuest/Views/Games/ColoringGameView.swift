@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Game 3: Tap-to-Reveal Coloring View
 // Children learn shapes and colors by filling an unpainted outline with the correct color paint.
 
-struct ColoringGameView: View {
+struct ColoringGameView: View, CompactAdaptable {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = ColoringViewModel()
     
@@ -17,19 +17,22 @@ struct ColoringGameView: View {
                 viewModel = ColoringViewModel()
             }
         ) {
-            gameContent
+            CompactLayoutReader { compact($0).gameContent }
         }
         .navigationTitle("Tap-to-Reveal Coloring")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     // MARK: - Game Content
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
+
     private var gameContent: some View {
         ZStack {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.large) {
+            GameScreenLayout(spacing: isCompact ? Theme.Spacing.medium : Theme.Spacing.large) {
                 // Header
                 HStack {
                     ProgressStarBar(stars: viewModel.starsEarned, maxStars: 3, starSize: 18)
@@ -57,6 +60,7 @@ struct ColoringGameView: View {
                 
                 Spacer()
                 
+            } controls: {
                 // Mascot Feedback
                 MascotView(
                     mood: viewModel.mascotMood,
@@ -68,7 +72,7 @@ struct ColoringGameView: View {
                 // Color Paint Palette Buttons
                 colorPaletteView
                     .padding(.horizontal, Theme.Spacing.medium)
-                    .padding(.bottom, Theme.Spacing.large)
+                    .padding(.bottom, isCompact ? Theme.Spacing.medium : Theme.Spacing.large)
             }
             .padding(.top, Theme.Spacing.small)
             
@@ -82,14 +86,14 @@ struct ColoringGameView: View {
         ZStack {
             RoundedRectangle(cornerRadius: Theme.Radius.large)
                 .fill(Theme.ColorPalette.cardBackground)
-                .frame(width: 220, height: 220)
+                .frame(width: AdaptiveMetric.size(220, compact: isCompact), height: AdaptiveMetric.size(220, compact: isCompact))
                 .shadow(color: .black.opacity(0.08), radius: 10, y: 5)
             
             // Outline / Empty shape
             Image(systemName: viewModel.currentTask.shapeSymbol)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 140, height: 140)
+                .frame(width: AdaptiveMetric.size(140, compact: isCompact), height: AdaptiveMetric.size(140, compact: isCompact))
                 .foregroundStyle(
                     viewModel.isFilled
                     ? (viewModel.filledColor ?? .clear)
@@ -111,7 +115,7 @@ struct ColoringGameView: View {
                     VStack(spacing: 8) {
                         Circle()
                             .fill(option.color)
-                            .frame(width: 52, height: 52)
+                            .frame(width: AdaptiveMetric.size(52, compact: isCompact), height: AdaptiveMetric.size(52, compact: isCompact))
                             .shadow(color: option.color.opacity(0.4), radius: 6, y: 3)
                         
                         Text(option.name)
@@ -119,7 +123,7 @@ struct ColoringGameView: View {
                             .foregroundStyle(Theme.ColorPalette.primaryText)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
+                    .padding(.vertical, isCompact ? 8 : 12)
                     .background(Theme.ColorPalette.cardBackground)
                     .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
                     .overlay(

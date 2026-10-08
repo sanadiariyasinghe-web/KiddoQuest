@@ -49,7 +49,11 @@ final class MusicService {
         musicPlayer.stop()
         musicPlayer.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
         // A failure here just means the music is skipped.
-        try? musicPlayer.playAudio()
+        if #available(iOS 27.0, *) {
+            try? musicPlayer.playAudio()
+        } else {
+            musicPlayer.play()
+        }
     }
     
     private func stopMusic() {
@@ -79,7 +83,12 @@ final class MusicService {
         try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
         let engine = AVAudioEngine()
         engine.attach(musicPlayer)
-        try engine.connectNode(musicPlayer, to: engine.mainMixerNode, format: format)
+        // The deployment target is iOS 26.6, so use the older API there
+        if #available(iOS 27.0, *) {
+            try engine.connectNode(musicPlayer, to: engine.mainMixerNode, format: format)
+        } else {
+            engine.connect(musicPlayer, to: engine.mainMixerNode, format: format)
+        }
         return engine
     }
 

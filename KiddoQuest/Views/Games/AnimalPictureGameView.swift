@@ -4,7 +4,7 @@ import SwiftUI
 // Shared view for "Feed the Animals" and "Animal Shadows":
 // a big picture at the top and three large picture buttons to choose from.
 
-struct AnimalPictureGameView: View {
+struct AnimalPictureGameView: View, CompactAdaptable {
     let game: AnimalPictureGame
     @Binding var navigationPath: NavigationPath
     @State private var viewModel: AnimalPictureGameViewModel
@@ -25,19 +25,22 @@ struct AnimalPictureGameView: View {
                 viewModel = AnimalPictureGameViewModel(game: game)
             }
         ) {
-            gameContent
+            CompactLayoutReader { compact($0).gameContent }
         }
         .navigationTitle(game.title)
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
+
     // MARK: - Game Content
     private var gameContent: some View {
         ZStack {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.medium) {
+            GameScreenLayout(spacing: Theme.Spacing.medium) {
                 headerBar
                 
                 Text(viewModel.questionText)
@@ -53,6 +56,7 @@ struct AnimalPictureGameView: View {
                 
                 Spacer(minLength: 8)
                 
+            } controls: {
                 MascotView(
                     mood: viewModel.mascotMood,
                     customMessage: viewModel.mascotMessage,
@@ -62,7 +66,7 @@ struct AnimalPictureGameView: View {
                 
                 choicesRow
                     .padding(.horizontal, Theme.Spacing.medium)
-                    .padding(.bottom, Theme.Spacing.large)
+                    .padding(.bottom, isCompact ? Theme.Spacing.medium : Theme.Spacing.large)
             }
             .padding(.top, Theme.Spacing.small)
             
@@ -101,7 +105,7 @@ struct AnimalPictureGameView: View {
                 shadowPrompt
             }
         }
-        .frame(height: 230)
+        .frame(height: AdaptiveMetric.size(230, compact: isCompact))
         .animatedFeedback(isSuccess: viewModel.isCorrect, isGentleRetry: viewModel.isGentleRetry)
     }
     
@@ -109,13 +113,13 @@ struct AnimalPictureGameView: View {
     private var feedPrompt: some View {
         HStack(spacing: 18) {
             Text(viewModel.currentRound.animal.emoji)
-                .font(.system(size: 110))
+                .font(.system(size: AdaptiveMetric.size(110, compact: isCompact)))
                 .scaleEffect(viewModel.isCorrect ? 1.12 : 1.0)
             
             if viewModel.isCorrect {
                 VStack(spacing: 4) {
                     Text(viewModel.currentRound.answer.emoji)
-                        .font(.system(size: 60))
+                        .font(.system(size: AdaptiveMetric.size(60, compact: isCompact)))
                     Text("Yum!")
                         .font(Theme.Typography.title(size: 24))
                         .foregroundStyle(Theme.ColorPalette.animalsGreen)
@@ -130,7 +134,7 @@ struct AnimalPictureGameView: View {
     /// A dark silhouette that turns into the full-colour animal when matched.
     private var shadowPrompt: some View {
         Text(viewModel.currentRound.animal.emoji)
-            .font(.system(size: 130))
+            .font(.system(size: AdaptiveMetric.size(130, compact: isCompact)))
             .colorMultiply(viewModel.isCorrect ? .white : .black)
             .opacity(viewModel.isCorrect ? 1.0 : 0.8)
             .scaleEffect(viewModel.isCorrect ? 1.12 : 1.0)
@@ -156,9 +160,9 @@ struct AnimalPictureGameView: View {
             viewModel.choose(choice)
         } label: {
             Text(choice.emoji)
-                .font(.system(size: 56))
+                .font(.system(size: AdaptiveMetric.size(56, compact: isCompact)))
                 .frame(maxWidth: .infinity)
-                .frame(height: 112)
+                .frame(height: AdaptiveMetric.size(112, compact: isCompact))
                 .background(isAnswer ? Theme.ColorPalette.successGreen.opacity(0.25) : Theme.ColorPalette.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
                 .overlay(

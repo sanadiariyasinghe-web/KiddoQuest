@@ -70,6 +70,9 @@ struct HomeView: View {
                         .padding(.bottom, Theme.Spacing.xlarge)
                 }
                 .padding(.vertical, Theme.Spacing.medium)
+                // iPad / landscape: keep the islands and banners together in a centred column
+                .frame(maxWidth: Theme.Layout.maxContentWidth)
+                .frame(maxWidth: .infinity)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

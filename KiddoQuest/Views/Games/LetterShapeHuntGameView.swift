@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Game 4: Letter & Shape Hunt View
 // Children find and bubble-pop target letters or shapes floating gently around the screen.
 
-struct LetterShapeHuntGameView: View {
+struct LetterShapeHuntGameView: View, CompactAdaptable {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel: LetterShapeHuntViewModel
     
@@ -22,19 +22,23 @@ struct LetterShapeHuntGameView: View {
                 viewModel = LetterShapeHuntViewModel(isShapeMode: viewModel.isShapeMode)
             }
         ) {
-            gameContent
+            CompactLayoutReader { compact($0).gameContent }
         }
         .navigationTitle(viewModel.isShapeMode ? "Shape Hunt" : "Letter Hunt")
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     // MARK: - Game Content
     private var gameContent: some View {
         ZStack {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.medium) {
+            GameScreenLayout(spacing: Theme.Spacing.medium) {
                 // Header Bar
                 headerBar
                 
@@ -62,6 +66,7 @@ struct LetterShapeHuntGameView: View {
                 
                 Spacer()
                 
+            } controls: {
                 // Floating Bubble Arena
                 floatingBubbleArena
                     .padding(.horizontal, Theme.Spacing.medium)
@@ -75,7 +80,7 @@ struct LetterShapeHuntGameView: View {
                     size: 58
                 )
                 .padding(.horizontal, Theme.Spacing.medium)
-                .padding(.bottom, Theme.Spacing.large)
+                .padding(.bottom, isCompact ? Theme.Spacing.medium : Theme.Spacing.large)
             }
             .padding(.top, Theme.Spacing.small)
             
@@ -95,25 +100,25 @@ struct LetterShapeHuntGameView: View {
     
     // MARK: - Floating Bubble Arena
     private var floatingBubbleArena: some View {
-        let columns = [
-            GridItem(.flexible(), spacing: 18),
-            GridItem(.flexible(), spacing: 18),
-            GridItem(.flexible(), spacing: 18)
-        ]
+        // Three columns in portrait; iPhone landscape is short, so spread the bubbles over two rows
+        let columns = Array(
+            repeating: GridItem(.flexible(), spacing: verticalSizeClass == .compact ? 10 : 18),
+            count: verticalSizeClass == .compact ? 5 : 3
+        )
         
         return ZStack {
             RoundedRectangle(cornerRadius: Theme.Radius.large)
                 .fill(Theme.ColorPalette.cardBackground.opacity(0.7))
                 .shadow(color: .black.opacity(0.05), radius: 10, y: 5)
             
-            LazyVGrid(columns: columns, spacing: 20) {
+            LazyVGrid(columns: columns, spacing: isCompact ? 12 : 20) {
                 ForEach(Array(viewModel.items.enumerated()), id: \.element.id) { index, item in
                     bubbleView(for: item, index: index)
                 }
             }
-            .padding(24)
+            .padding(isCompact ? 16 : 24)
         }
-        .frame(minHeight: 280)
+        .frame(minHeight: AdaptiveMetric.size(280, compact: isCompact))
     }
     
     private func bubbleView(for item: HuntItem, index: Int) -> some View {
@@ -127,7 +132,7 @@ struct LetterShapeHuntGameView: View {
                         ? Theme.ColorPalette.successGreen.opacity(0.2)
                         : Theme.ColorPalette.lettersBlue.opacity(0.18)
                     )
-                    .frame(width: 74, height: 74)
+                    .frame(width: AdaptiveMetric.size(74, compact: isCompact), height: AdaptiveMetric.size(74, compact: isCompact))
                     .overlay(
                         Circle()
                             .stroke(

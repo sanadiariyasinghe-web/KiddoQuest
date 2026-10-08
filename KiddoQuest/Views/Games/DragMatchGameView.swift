@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Game 2: Tap-to-Match View
 // Children drag or connect items from the left column to the corresponding target on the right.
 
-struct DragMatchGameView: View {
+struct DragMatchGameView: View, CompactAdaptable {
     let category: IslandCategory
     @Binding var navigationPath: NavigationPath
     @State private var viewModel: DragMatchViewModel
@@ -28,19 +28,22 @@ struct DragMatchGameView: View {
                 viewModel = DragMatchViewModel(category: category)
             }
         ) {
-            gameContent
+            CompactLayoutReader { compact($0).gameContent }
         }
         .navigationTitle(category == .numbers ? "Number Match" : "Letter Match")
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
+
     // MARK: - Game Content
     private var gameContent: some View {
         ZStack {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.large) {
+            GameScreenLayout(spacing: isCompact ? Theme.Spacing.medium : Theme.Spacing.large) {
                 // Header Bar
                 HStack {
                     ProgressStarBar(stars: viewModel.starsEarned, maxStars: 3, starSize: 18)
@@ -58,10 +61,11 @@ struct DragMatchGameView: View {
                 
                 Spacer()
                 
+            } controls: {
                 // Matching Columns (Left: Sources, Right: Targets)
-                HStack(spacing: 36) {
+                HStack(spacing: isCompact ? 20 : 36) {
                     // LEFT COLUMN: Sources
-                    VStack(spacing: 20) {
+                    VStack(spacing: isCompact ? 12 : 20) {
                         Text("1 · Tap")
                             .font(Theme.Typography.headline(size: 18))
                             .foregroundStyle(Theme.ColorPalette.secondaryText)
@@ -79,7 +83,7 @@ struct DragMatchGameView: View {
                     }
                     
                     // RIGHT COLUMN: Targets
-                    VStack(spacing: 20) {
+                    VStack(spacing: isCompact ? 12 : 20) {
                         Text("2 · Match")
                             .font(Theme.Typography.headline(size: 18))
                             .foregroundStyle(Theme.ColorPalette.secondaryText)
@@ -89,7 +93,7 @@ struct DragMatchGameView: View {
                         }
                     }
                 }
-                .padding(.horizontal, Theme.Spacing.large)
+                .padding(.horizontal, isCompact ? Theme.Spacing.medium : Theme.Spacing.large)
                 
                 Spacer()
             }
@@ -120,7 +124,11 @@ struct DragMatchGameView: View {
                     .font(.system(size: category == .numbers ? 24 : 32, weight: .bold, design: .rounded))
                     .foregroundStyle(isMatched ? Theme.ColorPalette.successGreen : Theme.ColorPalette.primaryText)
             }
-            .frame(width: 120, height: 72)
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+            .padding(.horizontal, 6)
+            .frame(maxWidth: 120)
+            .frame(height: AdaptiveMetric.size(72, compact: isCompact))
             .background(
                 isMatched
                 ? Theme.ColorPalette.successGreen.opacity(0.15)
@@ -175,7 +183,11 @@ struct DragMatchGameView: View {
                     .font(.system(size: 32, weight: .heavy, design: .rounded))
                     .foregroundStyle(isMatched ? .white : Theme.ColorPalette.primaryText)
             }
-            .frame(width: 120, height: 72)
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+            .padding(.horizontal, 6)
+            .frame(maxWidth: 120)
+            .frame(height: AdaptiveMetric.size(72, compact: isCompact))
             .background(
                 isMatched
                 ? Theme.ColorPalette.successGreen

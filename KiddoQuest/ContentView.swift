@@ -57,48 +57,10 @@ struct ContentView: View {
     
     // MARK: - App Startup Screen (Section 33)
     private var welcomeStartupView: some View {
-        ZStack {
-            Theme.ColorPalette.mainBackground
-                .ignoresSafeArea()
-            
-            VStack(spacing: 32) {
-                Spacer()
-                
-                // Animated App Logo / Mascot
-                VStack(spacing: 16) {
-                    ZStack {
-                        Circle()
-                            .fill(Theme.ColorPalette.numbersYellow.opacity(0.3))
-                            .frame(width: 140, height: 140)
-                        
-                        Text("🦉")
-                            .font(.system(size: 72))
-                    }
-                    
-                    Text("KiddoQuest")
-                        .font(Theme.Typography.title(size: 40))
-                        .foregroundStyle(Theme.ColorPalette.primaryText)
-                    
-                    Text("Play • Learn • Discover!")
-                        .font(Theme.Typography.headline(size: 22))
-                        .foregroundStyle(Theme.ColorPalette.secondaryText)
-                }
-                
-                Spacer()
-                
-                // "Let's Begin!" Primary Child Button
-                PrimaryChildButton(
-                    title: "Let's Begin!",
-                    iconName: "sparkles",
-                    backgroundColor: Theme.ColorPalette.animalsGreen
-                ) {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                        hasSeenIntro = true
-                        showWelcomeScreen = false
-                    }
-                }
-                .padding(.horizontal, 32)
-                .padding(.bottom, 48)
+        WelcomeView {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                hasSeenIntro = true
+                showWelcomeScreen = false
             }
         }
     }
@@ -131,4 +93,63 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+// MARK: - Welcome Screen
+/// The first-launch screen. Fits as designed, or a little smaller / scrollable on short screens.
+struct WelcomeView: View, CompactAdaptable {
+    let onBegin: () -> Void
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
+
+    var body: some View {
+        ZStack {
+            Theme.ColorPalette.mainBackground
+                .ignoresSafeArea()
+
+            FitsOrScrolls {
+                CompactLayoutReader { compact($0).content }
+            }
+        }
+    }
+
+    private var content: some View {
+        VStack(spacing: isCompact ? 16 : 32) {
+            Spacer(minLength: 0)
+
+            // Animated App Logo / Mascot
+            VStack(spacing: isCompact ? 8 : 16) {
+                ZStack {
+                    Circle()
+                        .fill(Theme.ColorPalette.numbersYellow.opacity(0.3))
+                        .frame(width: AdaptiveMetric.size(140, compact: isCompact), height: AdaptiveMetric.size(140, compact: isCompact))
+
+                    Text("🦉")
+                        .font(.system(size: AdaptiveMetric.size(72, compact: isCompact)))
+                }
+
+                Text("KiddoQuest")
+                    .font(Theme.Typography.title(size: 40))
+                    .foregroundStyle(Theme.ColorPalette.primaryText)
+
+                Text("Play • Learn • Discover!")
+                    .font(Theme.Typography.headline(size: 22))
+                    .foregroundStyle(Theme.ColorPalette.secondaryText)
+            }
+
+            Spacer(minLength: 0)
+
+            // "Let's Begin!" Primary Child Button
+            PrimaryChildButton(
+                title: "Let's Begin!",
+                iconName: "sparkles",
+                backgroundColor: Theme.ColorPalette.animalsGreen,
+                action: onBegin
+            )
+            .frame(maxWidth: Theme.Layout.maxCardWidth)
+            .padding(.horizontal, 32)
+            .padding(.bottom, isCompact ? 16 : 48)
+        }
+        .padding(.top, isCompact ? 16 : 0)
+    }
 }

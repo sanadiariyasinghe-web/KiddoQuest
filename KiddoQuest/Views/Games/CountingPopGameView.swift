@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Game 1: Counting Pop View
 // Children learn to count objects by watching animated treats appear and selecting the correct number card.
 
-struct CountingPopGameView: View {
+struct CountingPopGameView: View, CompactAdaptable {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = CountingPopViewModel()
     
@@ -17,7 +17,7 @@ struct CountingPopGameView: View {
                 viewModel = CountingPopViewModel()
             }
         ) {
-            gameContent
+            CompactLayoutReader { compact($0).gameContent }
         }
         .navigationTitle("Counting Pop")
         .navigationBarTitleDisplayMode(.inline)
@@ -29,7 +29,7 @@ struct CountingPopGameView: View {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.medium) {
+            GameScreenLayout(spacing: Theme.Spacing.medium) {
                 // Top Game Header
                 headerBar
                 
@@ -48,6 +48,7 @@ struct CountingPopGameView: View {
                 
                 Spacer(minLength: 8)
                 
+            } controls: {
                 // Mascot Feedback
                 MascotView(
                     mood: viewModel.mascotMood,
@@ -88,6 +89,10 @@ struct CountingPopGameView: View {
         .padding(.horizontal, Theme.Spacing.medium)
     }
     
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     // MARK: - Objects Display Area
     private var objectsDisplayArea: some View {
         let columns = [GridItem(.adaptive(minimum: 65, maximum: 90), spacing: 14)]
@@ -100,24 +105,23 @@ struct CountingPopGameView: View {
             LazyVGrid(columns: columns, spacing: 14) {
                 ForEach(Array(viewModel.items.enumerated()), id: \.element.id) { index, item in
                     Text(item.emoji)
-                        .font(.system(size: 48))
+                        .font(.system(size: AdaptiveMetric.size(48, compact: isCompact)))
                         .scaleEffect(viewModel.isCorrect ? 1.15 : 1.0)
                         .floating(yOffset: 5, duration: 2.0 + Double(index) * 0.2)
                         .animation(.spring(response: 0.4, dampingFraction: 0.6), value: viewModel.isCorrect)
                 }
             }
-            .padding(24)
+            .padding(isCompact ? 16 : 24)
         }
-        .frame(maxHeight: 260)
+        .frame(maxHeight: AdaptiveMetric.size(260, compact: isCompact))
         .padding(.horizontal, Theme.Spacing.medium)
     }
     
     // MARK: - Answer Options Grid
     private var answerOptionsGrid: some View {
-        let columns = [
-            GridItem(.flexible(), spacing: 14),
-            GridItem(.flexible(), spacing: 14)
-        ]
+        // Two big buttons per row on phones; wide screens (iPad) show up to four in one row
+        let perRow = horizontalSizeClass == .regular ? min(max(viewModel.options.count, 2), 4) : 2
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 14), count: perRow)
         
         return LazyVGrid(columns: columns, spacing: 14) {
             ForEach(viewModel.options, id: \.self) { option in
@@ -138,7 +142,7 @@ struct CountingPopGameView: View {
                 .font(.system(size: 38, weight: .heavy, design: .rounded))
                 .foregroundStyle(isOptionCorrect ? .white : Theme.ColorPalette.primaryText)
                 .frame(maxWidth: .infinity)
-                .frame(height: 74)
+                .frame(height: AdaptiveMetric.size(74, compact: isCompact))
                 .background(
                     isOptionCorrect
                     ? Theme.ColorPalette.successGreen
