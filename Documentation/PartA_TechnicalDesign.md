@@ -56,7 +56,7 @@ Home ─▶ Category (island) ─▶ Game list ─▶ Game (GamePlayView routes 
 
 **Pointing-hand hints** use an anchor preference. A game marks the correct target with
 `.hintTarget(isCorrect)`; the container reads the anchor with `overlayPreferenceValue` and draws the
-animated 👆 at that spot. It first appears 0.8 s after play starts, then again after 8 s with no taps
+animated 👆 at that spot. It first appears 0.8 s after play starts, then again after 10 s with no taps
 (tracked with a `simultaneousGesture` and `ContinuousClock`).
 
 **Scoring** (`GameScoring`) is shared by all games: 20 points for a first-try answer and 10 after a retry.

@@ -19,7 +19,7 @@ The voice was too fast and robotic for young children, and the text needed an ad
 The final design removes the voice and explains every game with:
 
 - a **picture sentence** (e.g. 🐰 → 👆 → 🥕),
-- an animated **pointing hand** that taps the right kind of answer at the start and again after 8 s without a tap,
+- an animated **pointing hand** that taps the right kind of answer at the start and again after 10 s without a tap,
 - one consistent journey for all games: **Learn → Play → Stars**.
 
 Short text remains for grown-ups reading along.

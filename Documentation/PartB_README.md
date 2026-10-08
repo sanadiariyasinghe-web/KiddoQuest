@@ -119,7 +119,7 @@ Focus is never shown by colour alone: the border thickness and size change as we
 The TV app has the **same seven games as the iOS app (Part A)**. Every game is a full game:
 
 1. **Instructions:** a picture sentence children can follow without reading (e.g. 🐰 → 👆 → 🥕), two short steps for grown-ups, and a pre-focused **Let's Play!** button. The Learn → Play → Stars trail shows where the child is.
-2. **Play:** an animated 👆 points at the right answer shortly after play starts and again after 8 seconds without an answer.
+2. **Play:** an animated 👆 points at the right answer shortly after play starts and again after 10 seconds without an answer.
 3. **Results:** stars, points, a new sticker, Buddy's dance, and Play Again / More Games / Home.
 
 | # | Game | Worlds | Interaction on TV |
