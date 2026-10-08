@@ -9,127 +9,34 @@ struct ARLearningView: View {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = ARLearningViewModel()
     @State private var selectedTab: ARMode = .letterHunt
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     var body: some View {
         ZStack {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.small) {
-                // Child Safety Instruction Banner (Section 32)
-                HStack(spacing: 12) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(Theme.ColorPalette.numbersYellow)
-                    
-                    Text("Move your device slowly and make sure you are in a safe place.")
-                        .font(Theme.Typography.caption())
-                        .foregroundStyle(Theme.ColorPalette.primaryText)
-                    
-                    Spacer()
-                }
-                .padding(12)
-                .background(Theme.ColorPalette.cardBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.horizontal, Theme.Spacing.medium)
-                
-                // AR Mode Segmented Selector (Letter Hunt, Shape Hunt, Animal Discovery)
-                Picker("AR Mode", selection: $selectedTab) {
-                    ForEach(ARMode.allCases) { mode in
-                        Text(mode.rawValue).tag(mode)
+            // Portrait: one column, as designed. iPhone landscape: the camera on the left,
+            // the challenge and buttons on the right, so the AR view keeps a usable size.
+            if verticalSizeClass == .compact {
+                HStack(alignment: .top, spacing: 0) {
+                    arArea
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.vertical, Theme.Spacing.small)
+                    VStack(spacing: Theme.Spacing.small) {
+                        topControls
+                        bottomControls
                     }
+                    .padding(.vertical, Theme.Spacing.small)
+                    .scrollsWhenNeeded()
+                    .frame(width: 360)
                 }
-                .pickerStyle(.segmented)
-                .padding(.horizontal, Theme.Spacing.medium)
-                .onChange(of: selectedTab) { _, newValue in
-                    viewModel.switchMode(to: newValue)
+            } else {
+                VStack(spacing: Theme.Spacing.small) {
+                    topControls
+                    arArea
+                    bottomControls
                 }
-                
-                // Instruction Card
-                HStack(spacing: 12) {
-                    Text(viewModel.instructionText)
-                        .font(Theme.Typography.title(size: 22))
-                        .foregroundStyle(Theme.ColorPalette.primaryText)
-                    
-                    Spacer()
-                    
-                    // Found counter
-                    Text("Found: \(viewModel.foundCount)/\(viewModel.totalRequired)")
-                        .font(Theme.Typography.headline(size: 15))
-                        .foregroundStyle(Theme.ColorPalette.arOrange)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Theme.ColorPalette.arOrange.opacity(0.15))
-                        .clipShape(Capsule())
-                }
-                .padding(14)
-                .background(Theme.ColorPalette.cardBackground)
-                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
-                .padding(.horizontal, Theme.Spacing.medium)
-                
-                // AR Camera View or Fallback Interactive Canvas
-                ZStack {
-                    if viewModel.isARSupported {
-                        actualARCameraView
-                    } else {
-                        fallbackSpatialView
-                    }
-
-                    if viewModel.isCompleted {
-                        completionCard
-                            .transition(.scale(scale: 0.85).combined(with: .opacity))
-                    }
-                }
-                .animation(.spring(response: 0.4, dampingFraction: 0.75), value: viewModel.isCompleted)
-                
-                // Mascot Feedback
-                MascotView(
-                    mood: viewModel.mascotMood,
-                    customMessage: viewModel.mascotMessage,
-                    size: 54
-                )
-                .padding(.horizontal, Theme.Spacing.medium)
-                
-                // Bottom Persistent "Exit AR" & "Celebrate" Buttons
-                HStack(spacing: 12) {
-                    if viewModel.isCompleted {
-                        PrimaryChildButton(
-                            title: "Play Again",
-                            iconName: "arrow.clockwise",
-                            backgroundColor: Theme.ColorPalette.animalsGreen
-                        ) {
-                            viewModel.playAgain()
-                        }
-                        .accessibilityIdentifier("ar.playAgain")
-
-                        PrimaryChildButton(
-                            title: "View AR Rewards",
-                            iconName: "trophy.fill",
-                            backgroundColor: Theme.ColorPalette.arOrange
-                        ) {
-                            navigationPath.append(AppRoute.rewards)
-                        }
-                    } else {
-                        Button {
-                            navigationPath = NavigationPath()
-                        } label: {
-                            HStack {
-                                Image(systemName: "xmark.circle.fill")
-                                    .font(.system(size: 20))
-                                Text("Exit AR to World Map")
-                                    .font(Theme.Typography.headline(size: 16))
-                            }
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 52)
-                            .background(Theme.ColorPalette.softRedWarning)
-                            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.button))
-                        }
-                        .buttonStyle(BouncyButtonStyle())
-                    }
-                }
-                .padding(.horizontal, Theme.Spacing.medium)
-                .padding(.bottom, Theme.Spacing.medium)
             }
             
             // Confetti Burst Overlay
@@ -139,6 +46,133 @@ struct ARLearningView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    // MARK: - Screen Sections
+    /// Safety banner, mode picker and the current challenge.
+    @ViewBuilder
+    private var topControls: some View {
+        // Child Safety Instruction Banner (Section 32)
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 20))
+                .foregroundStyle(Theme.ColorPalette.numbersYellow)
+            
+            Text("Move your device slowly and make sure you are in a safe place.")
+                .font(Theme.Typography.caption())
+                .foregroundStyle(Theme.ColorPalette.primaryText)
+            
+            Spacer()
+        }
+        .padding(12)
+        .background(Theme.ColorPalette.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal, Theme.Spacing.medium)
+        
+        // AR Mode Segmented Selector (Letter Hunt, Shape Hunt, Animal Discovery)
+        Picker("AR Mode", selection: $selectedTab) {
+            ForEach(ARMode.allCases) { mode in
+                Text(mode.rawValue).tag(mode)
+            }
+        }
+        .pickerStyle(.segmented)
+        .padding(.horizontal, Theme.Spacing.medium)
+        .onChange(of: selectedTab) { _, newValue in
+            viewModel.switchMode(to: newValue)
+        }
+        
+        // Instruction Card
+        HStack(spacing: 12) {
+            Text(viewModel.instructionText)
+                .font(Theme.Typography.title(size: 22))
+                .foregroundStyle(Theme.ColorPalette.primaryText)
+            
+            Spacer()
+            
+            // Found counter
+            Text("Found: \(viewModel.foundCount)/\(viewModel.totalRequired)")
+                .font(Theme.Typography.headline(size: 15))
+                .foregroundStyle(Theme.ColorPalette.arOrange)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Theme.ColorPalette.arOrange.opacity(0.15))
+                .clipShape(Capsule())
+        }
+        .padding(14)
+        .background(Theme.ColorPalette.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .padding(.horizontal, Theme.Spacing.medium)
+    }
+
+    /// The AR camera (or 2D fallback) with the completion card on top.
+    private var arArea: some View {
+        // AR Camera View or Fallback Interactive Canvas
+        ZStack {
+            if viewModel.isARSupported {
+                actualARCameraView
+            } else {
+                fallbackSpatialView
+            }
+
+            if viewModel.isCompleted {
+                completionCard
+                    .transition(.scale(scale: 0.85).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.4, dampingFraction: 0.75), value: viewModel.isCompleted)
+    }
+
+    /// Buddy and the Exit / Play Again buttons.
+    @ViewBuilder
+    private var bottomControls: some View {
+        // Mascot Feedback
+        MascotView(
+            mood: viewModel.mascotMood,
+            customMessage: viewModel.mascotMessage,
+            size: 54
+        )
+        .padding(.horizontal, Theme.Spacing.medium)
+        
+        // Bottom Persistent "Exit AR" & "Celebrate" Buttons
+        HStack(spacing: 12) {
+            if viewModel.isCompleted {
+                PrimaryChildButton(
+                    title: "Play Again",
+                    iconName: "arrow.clockwise",
+                    backgroundColor: Theme.ColorPalette.animalsGreen
+                ) {
+                    viewModel.playAgain()
+                }
+                .accessibilityIdentifier("ar.playAgain")
+
+                PrimaryChildButton(
+                    title: "View AR Rewards",
+                    iconName: "trophy.fill",
+                    backgroundColor: Theme.ColorPalette.arOrange
+                ) {
+                    navigationPath.append(AppRoute.rewards)
+                }
+            } else {
+                Button {
+                    navigationPath = NavigationPath()
+                } label: {
+                    HStack {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 20))
+                        Text("Exit AR to World Map")
+                            .font(Theme.Typography.headline(size: 16))
+                    }
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
+                    .background(Theme.ColorPalette.softRedWarning)
+                    .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.button))
+                }
+                .buttonStyle(BouncyButtonStyle())
+            }
+        }
+        .padding(.horizontal, Theme.Spacing.medium)
+        .padding(.bottom, Theme.Spacing.medium)
+    }
+
     // MARK: - Actual AR Camera View (for supported devices)
     /// Real AR: 3D picture cards are placed on a detected table or floor and tapped directly.
     private var actualARCameraView: some View {
@@ -264,13 +298,25 @@ struct ARLearningView: View {
                     }
                 )
             
-            // Floating 3D/2D Learning Objects
-            ForEach(viewModel.targetObjects) { item in
-                arObjectCard(for: item)
-                    .offset(x: item.xPosition, y: item.yPosition)
+            // Floating 3D/2D Learning Objects, spread to fit the room on any screen size
+            // (positions are designed for a room about 280 × 260 pt and scale down when smaller)
+            GeometryReader { proxy in
+                // Keep the caption strip at the top free
+                let captionHeight: CGFloat = 44
+                let roomHeight = max(proxy.size.height - captionHeight, 1)
+                let scale = min(1, proxy.size.width / 280, roomHeight / 260)
+                ZStack {
+                    ForEach(viewModel.targetObjects) { item in
+                        arObjectCard(for: item)
+                            .scaleEffect(max(scale, 0.7))
+                            .offset(x: item.xPosition * scale, y: item.yPosition * scale)
+                    }
+                }
+                .frame(width: proxy.size.width, height: roomHeight)
+                .position(x: proxy.size.width / 2, y: captionHeight + roomHeight / 2)
             }
         }
-        .frame(maxHeight: .infinity)
+        .frame(minHeight: 200, maxHeight: .infinity)
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
         .padding(.horizontal, Theme.Spacing.medium)
     }

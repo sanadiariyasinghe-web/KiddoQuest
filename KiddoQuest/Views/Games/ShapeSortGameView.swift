@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Game 6: Shape Sort View
 // Children drag or sort falling shapes into labelled bottom bins (TRIANGLE, CIRCLE, SQUARE).
 
-struct ShapeSortGameView: View {
+struct ShapeSortGameView: View, CompactAdaptable {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = ShapeSortViewModel()
     
@@ -17,19 +17,22 @@ struct ShapeSortGameView: View {
                 viewModel = ShapeSortViewModel()
             }
         ) {
-            gameContent
+            CompactLayoutReader { compact($0).gameContent }
         }
         .navigationTitle("Shape Sort")
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
+
     // MARK: - Game Content
     private var gameContent: some View {
         ZStack {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: Theme.Spacing.medium) {
+            GameScreenLayout(spacing: Theme.Spacing.medium) {
                 // Header Bar
                 HStack {
                     ProgressStarBar(stars: viewModel.starsEarned, maxStars: 3, starSize: 18)
@@ -50,7 +53,7 @@ struct ShapeSortGameView: View {
                 if let currentShape = viewModel.currentShape {
                     VStack(spacing: 8) {
                         Text(currentShape.symbol)
-                            .font(.system(size: 76, weight: .heavy))
+                            .font(.system(size: AdaptiveMetric.size(76, compact: isCompact), weight: .heavy))
                             .foregroundStyle(currentShape.color)
                             .floating(yOffset: 6, duration: 1.8)
                         
@@ -58,7 +61,8 @@ struct ShapeSortGameView: View {
                             .font(Theme.Typography.headline(size: 15))
                             .foregroundStyle(Theme.ColorPalette.secondaryText)
                     }
-                    .frame(width: 170, height: 160)
+                    .padding(12)
+                    .frame(minWidth: AdaptiveMetric.size(170, compact: isCompact), minHeight: AdaptiveMetric.size(160, compact: isCompact))
                     .background(Theme.ColorPalette.cardBackground)
                     .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.large))
                     .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
@@ -66,6 +70,7 @@ struct ShapeSortGameView: View {
                 
                 Spacer()
                 
+            } controls: {
                 // Mascot Feedback
                 MascotView(
                     mood: viewModel.mascotMood,
@@ -106,7 +111,7 @@ struct ShapeSortGameView: View {
                             .lineLimit(1)
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: 90)
+                    .frame(height: AdaptiveMetric.size(90, compact: isCompact))
                     .background(bin.color.opacity(0.15))
                     .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
                     .overlay(

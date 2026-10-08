@@ -24,6 +24,9 @@ struct ParentSettingsView: View {
                         isGateUnlocked = true
                     }
                 }
+                .padding(.vertical, Theme.Spacing.medium)
+                // Short screens (iPhone landscape): the gate scrolls instead of being cut off
+                .scrollsWhenNeeded()
             } else {
                 settingsContentView
             }

@@ -19,6 +19,10 @@ struct GameFlowContainer<Content: View>: View {
     @State private var isShowingHint = false
     @State private var lastInteraction = ContinuousClock.now
     @State private var isConfirmingHome = false
+    #if DEBUG
+    /// Lets previews open a game straight in the play phase (responsive layout checks).
+    @Environment(\.gameFlowPreviewStartsPlaying) private var previewStartsPlaying
+    #endif
 
     /// Short pause so the child sees the success celebration before the results appear.
     private let celebrationDelay: Duration = .seconds(1.4)
@@ -34,8 +38,12 @@ struct GameFlowContainer<Content: View>: View {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
 
+            // Games keep their designed layout when they fit; on short screens
+            // (small iPhones, landscape, large text) they scroll instead of clipping.
             content()
                 .frame(maxWidth: Theme.Layout.maxContentWidth)
+                .scrollsWhenNeeded()
+                .frame(maxWidth: .infinity)
                 .overlayPreferenceValue(HintTargetKey.self) { anchor in
                     GeometryReader { proxy in
                         if isShowingHint, phase == .playing, !isFinished, let anchor {
@@ -45,6 +53,9 @@ struct GameFlowContainer<Content: View>: View {
                                 .transition(.opacity)
                         }
                     }
+                    // The hint layer never blocks taps (or VoiceOver) on the button it points at
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
                 }
                 .simultaneousGesture(TapGesture().onEnded { childInteracted() })
                 .blur(radius: phase == .playing ? 0 : 6)
@@ -90,6 +101,11 @@ struct GameFlowContainer<Content: View>: View {
         .task(id: phase) {
             await runHintLoop()
         }
+        #if DEBUG
+        .onAppear {
+            if previewStartsPlaying { phase = .playing }
+        }
+        #endif
         .onChange(of: isFinished) { _, finished in
             guard finished, phase == .playing else { return }
             Task {
@@ -234,3 +250,10 @@ struct GameFlowContainer<Content: View>: View {
         onPlayAgain()
     }
 }
+
+#if DEBUG
+extension EnvironmentValues {
+    /// Preview-only: start games in the play phase instead of the instructions card.
+    @Entry var gameFlowPreviewStartsPlaying = false
+}
+#endif

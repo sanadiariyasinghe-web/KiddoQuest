@@ -5,11 +5,13 @@ import SwiftUI
 // "Find something in your house": children photograph a real object or colour,
 // and on-device Vision image classification checks it.
 
-struct FindItGameView: View {
+struct FindItGameView: View, CompactAdaptable {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = FindItViewModel()
     @State private var isShowingCamera = false
     @State private var pickedItem: PhotosPickerItem?
+    /// Set per layout branch by `CompactLayoutReader` (see `FitsOrScrolls`).
+    var isCompact = false
 
     var body: some View {
         GameFlowContainer(
@@ -21,7 +23,7 @@ struct FindItGameView: View {
                 viewModel = FindItViewModel()
             }
         ) {
-            gameContent
+            CompactLayoutReader { compact($0).gameContent }
         }
         .navigationTitle("Find It!")
         .navigationBarTitleDisplayMode(.inline)
@@ -48,7 +50,7 @@ struct FindItGameView: View {
             Theme.ColorPalette.mainBackground
                 .ignoresSafeArea()
 
-            VStack(spacing: Theme.Spacing.medium) {
+            GameScreenLayout(spacing: Theme.Spacing.medium) {
                 HStack {
                     ProgressStarBar(stars: viewModel.starsEarned, maxStars: 3, starSize: 18)
                     Spacer()
@@ -65,10 +67,12 @@ struct FindItGameView: View {
                 targetCard
                     .padding(.horizontal, Theme.Spacing.medium)
 
+                // Grows to fill tall screens; a photo never makes the layout taller than ideal
                 photoArea
                     .padding(.horizontal, Theme.Spacing.medium)
-                    .frame(maxHeight: .infinity)
+                    .frame(minHeight: isCompact ? 110 : 160, idealHeight: isCompact ? 130 : 260, maxHeight: .infinity)
 
+            } controls: {
                 MascotView(mood: viewModel.mascotMood, customMessage: viewModel.mascotMessage, size: 56)
                     .padding(.horizontal, Theme.Spacing.medium)
 
@@ -87,7 +91,7 @@ struct FindItGameView: View {
         HStack(spacing: 16) {
             switch viewModel.currentTarget {
             case .object(_, let emoji, _):
-                Text(emoji).font(.system(size: 56))
+                Text(emoji).font(.system(size: AdaptiveMetric.size(56, compact: isCompact)))
             case .color(let color):
                 Circle()
                     .fill(color.swatch)
@@ -126,7 +130,7 @@ struct FindItGameView: View {
                     .accessibilityLabel("Your photo")
             } else {
                 VStack(spacing: 10) {
-                    Text("📷").font(.system(size: 70))
+                    Text("📷").font(.system(size: AdaptiveMetric.size(70, compact: isCompact)))
                     Text("Your photo goes here")
                         .font(Theme.Typography.body(size: 17))
                         .foregroundStyle(Theme.ColorPalette.secondaryText)
