@@ -29,7 +29,7 @@ struct GameFlowContainer<Content: View>: View {
     /// The pointing hand appears shortly after play starts...
     private let firstHintDelay: Duration = .seconds(0.8)
     /// ...and again whenever the child hasn't tapped anything for this long.
-    private let idleHintDelay: Duration = .seconds(10)
+    private let idleHintDelay: Duration = .seconds(25)
     private let hintDuration: Duration = .seconds(2.2)
     
     var body: some View {
